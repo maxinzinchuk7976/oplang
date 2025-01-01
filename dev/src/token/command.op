@@ -14,10 +14,38 @@
         &fn_token_command_scope
         488d3d*__command_scope
         e8*fn_pstrcmp
-        751*fn_token_command_default
+        751*fn_token_command_define
             485f
             e8*fn_token_command_scope_handler
             e8*fn_envoriment_push_keyword_scope
+            eb1*fn_token_command_end
+        &fn_token_command_define
+        488d3d*__command_def
+        e8*fn_pstrcmp
+        751*fn_token_command_ifdef
+            485f
+            e8*fn_token_command_define_handler
+            eb1*fn_token_command_end
+        &fn_token_command_ifdef
+        488d3d*__command_ifdef
+        e8*fn_pstrcmp
+        751*fn_token_command_ifndef
+            485f
+            e8*fn_token_command_ifdef_handler
+            eb1*fn_token_command_end
+        &fn_token_command_ifndef
+        488d3d*__command_ifndef
+        e8*fn_pstrcmp
+        751*fn_token_command_endif
+            485f
+            e8*fn_token_command_ifndef_handler
+            eb1*fn_token_command_end
+        &fn_token_command_endif
+        488d3d*__command_endif
+        e8*fn_pstrcmp
+        751*fn_token_command_default
+            485f
+            e8*fn_token_command_endif_handler
             eb1*fn_token_command_end
     &fn_token_command_default
     485f

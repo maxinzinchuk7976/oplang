@@ -2,13 +2,105 @@
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
     741*fn_token_command_define_handler_end
-        4856
         4857
-            488bf0 ; mov rsi, rax
-            
+            488b3d*__token_command_define_list
+            e8*fn_slist_push_rax
+            488bf8 ; mov rdi, rax
+            e8*fn_print
+            488d3d*var_has_defined_str
+            e8*fn_print
         485f
-        485e
     &fn_token_command_define_handler_end
 c3
 
+&fn_token_command_endif_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
+    e8*fn_tokenize_string_read
+c3
+
+
+&fn_token_command_ifdef_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_ifdef_handler_end
+        4857
+            488b3d*__token_command_define_list
+            e8*fn_slist_contains
+            741*fn_token_command_ifdef_handler_skip
+            488bf8 ; mov rdi, rax
+            e8*fn_token_command_define_ifloop
+        &fn_token_command_ifdef_handler_skip
+        485f
+    &fn_token_command_ifdef_handler_end
+c3
+
+&fn_token_command_ifndef_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_ifndef_handler_end
+        4857
+            488b3d*__token_command_define_list
+            e8*fn_slist_contains
+            751*fn_token_command_ifndef_handler_skip
+            488bf8 ; mov rdi, rax
+            e8*fn_token_command_define_ifloop
+        &fn_token_command_ifndef_handler_skip
+        485f
+    &fn_token_command_ifndef_handler_end
+c3
+
+&fn_slist_contains ; rdi list, rax name
+4851
+4857
+    488b3f ; mov rdi, [rdi]
+    488b0f ; mov rcx, [rdi]
+    
+    4883f901 ; cmp rcx, 1
+    721*fn_token_command_definelist_check_done
+    &fn_token_command_definelist_check_loop
+        4857
+            488b3ccf ; mov rdi, [rdi+rcx*8]
+            e8*fn_pstrcmp
+        485f
+        741*fn_token_command_definelist_check_done
+        ffc9 ; dec rcx
+        4883f901 ; cmp rcx, 1
+        721*fn_token_command_definelist_check_done
+    eb1*fn_token_command_definelist_check_loop
+    &fn_token_command_definelist_check_done
+485f
+4859
+c3
+
+&fn_token_command_define_ifloop ; rdi name, rsi buffer, rdx size, rcx position
+    &fn_token_command_define_ifloop_loop
+        3b ca ; cmp ecx, rdx
+        7d1*fn_token_command_define_ifloop_end
+        8a040e ; mov al, [rcx+rsi]
+        3c";"751*fn_token_command_define_ifloop_command
+            e8*fn_token_annotation
+            eb1*fn_token_command_define_ifloop_loop
+        &fn_token_command_define_ifloop_command
+        3c"%"751*fn_token_command_define_ifloop_default
+            ffc1
+            e8*fn_tokenize_string_read
+            81f8 ffffffff ; cmp eax, 0xffffffff
+            741*fn_token_command_define_ifloop_loop
+                4857
+                    488d3d*__command_endif
+                    e8*fn_pstrcmp
+                485f
+                751*fn_token_command_define_ifloop
+                e8*fn_tokenize_string_read
+                81f8 ffffffff ; cmp eax, 0xffffffff
+                741*fn_token_command_define_ifloop_loop
+                e8*fn_pstrcmp
+                741*fn_token_command_define_ifloop_end
+            eb1*fn_token_command_define_ifloop_loop
+        &fn_token_command_define_ifloop_default
+        ffc1
+        eb1*fn_token_command_define_ifloop_loop
+    &fn_token_command_define_ifloop_end
+c3
+
+&var_has_defined_str " have been defined" 0a00
 &__token_command_define_list 0000000000000000

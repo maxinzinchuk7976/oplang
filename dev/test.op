@@ -1,5 +1,7 @@
 %include std/elfheader.op
-
+%ifndef LINUX
+%def 1234
+%endif LINUX
 ;%scope main
     488d3d *var_hello_world ; moving hello world to rdi
     e8*fn_print
@@ -7,6 +9,7 @@
 ;}
 
 %include std/etc.op
+%include std/memory.op
 %include std/text.op
 
 &var_hello_world "Hello world!" 0a 00

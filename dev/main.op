@@ -24,7 +24,7 @@ e8 *fn_malloc ; call malloc
 48 03 c6 ; add rax, rsi
 48 8b e0 ; mov rsp, rax
 
-e8*fn_hlist_init
+e8*fn_slist_init
 488905*__token_command_define_list
 
 e8*fn_envoriment_init
@@ -115,6 +115,7 @@ c3
 %include src/assembler.op
 
 %include std/hlist.op
+%include std/slist.op
 %include std/text.op
 %include std/memory.op
 %include std/etc.op

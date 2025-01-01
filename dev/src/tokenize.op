@@ -96,7 +96,7 @@ c3
             e8*fn_chrcmp
         485a
     751*fn_tokenize_string_read_loop2
-    &fn_tokenize_string_read_read_done2
+    &fn_tokenize_string_read_done2
     ffc7 ; inc rdi
     ffc9 ; dev rcx
     4080ff00 ; cmp rdi, 00
