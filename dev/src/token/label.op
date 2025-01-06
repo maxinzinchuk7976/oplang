@@ -31,7 +31,7 @@ c3
 4856
 4857
     4833f6; xor rsi, rsi
-    40b609; mov si, 16
+    40b609; mov si, 17
     e8*fn_envoriment_push_keyword
     c60002 ; mov [rax], 2
     c74009ffffffff

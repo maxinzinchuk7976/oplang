@@ -48,8 +48,48 @@ c3
     488b5102 ; mov rdx, [rcx+2]
     48895002 ; mov [rax+2], rdx
     4889700a ; mov [rax+10], rsi
-    48897812 ; mov [rax+18], rax
+    48897812 ; mov [rax+18], rdi
     488b5710 ; mov rdx, [rdi+0x10]
     4889501a ; mov [rax+26], rdx
 485a
+c3
+
+&fn_backpatch_handle_relative  ; rax token, rsi buffer
+4850
+4851
+4852
+4856
+4857
+    488b780a ; mov rdi, [rax+10]
+    4850 
+        488b4002 
+        e8*fn_envoriment_tree_search_keyword 
+        488bd0 ; rdx, rax
+    4858
+    803a02 ; cmp [rdx],2 
+    751*fn_backpatch_handle_relative_end
+        
+    488bfe ; mov rdi, rsi
+    488b4a09 ; mov rcx, [rdx+9]
+    482b481a ; sub rcx, [rax+0x1a]
+    488b701a ; mov rsi, [rax+0x1a]
+    488b3f ; mov rdi, [rdi]
+    80780101 751*fn_backpatch_handle_relative_4byte
+        884c37ff ; mov [rdi+rsi], cl
+        eb1*fn_backpatch_handle_relative_end
+    &fn_backpatch_handle_relative_4byte
+    80780104 751*fn_backpatch_handle_relative_8byte
+        894c37fc ; mov [rdi+rsi], ecx
+        eb1*fn_backpatch_handle_relative_end
+    &fn_backpatch_handle_relative_8byte
+    80780108 751*fn_backpatch_handle_relative_end
+        48894c37f8 ; mov [rdi+rsi], ecx
+        eb1*fn_backpatch_handle_relative_end
+   
+    &fn_backpatch_handle_relative_end
+485f
+485e
+485a
+4859
+4858
 c3

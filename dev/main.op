@@ -46,6 +46,10 @@ e8*fn_buffer_init
 488b15*var_root_buffer
 e8*fn_assembly_envoriment
 
+488b3d*var_backpacth_list
+488b35*var_root_buffer
+e8*fn_backpatch_buffer
+
 488b3d*var_root_buffer
 488b7710 ; mov rsi, [rdi+0x10]
 488b05*var_align
@@ -137,6 +141,8 @@ c3
 %include src/envoriment.op
 %include src/tokenize.op
 %include src/assembler.op
+%include src/backpatch.op
+
 
 %include std/hlist.op
 %include std/slist.op
