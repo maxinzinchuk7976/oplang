@@ -8,7 +8,7 @@
             3c01 751*field
                 488b4601 ; mov rax, [rsi]
                 4883c609
-                e8*fn_envoriment_tree_search_keyword
+                e8*Environment:TreeSearch
                 751*invalid
                     803801 751*label
                         e8*fn_scope eb1*default
@@ -27,7 +27,7 @@
             3c02 751*default
                 488b4601 ; mov rax, [rsi]
                 4883c609
-                e8*fn_envoriment_search_keyword
+                e8*Environment:Search
                 751*invalid
                     803801 751*label
                         e8*fn_scope eb1*default

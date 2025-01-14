@@ -14,10 +14,10 @@
 48 8b c4 ; mov rax, rsp
 48 83 c0 08 ;
 48 8b 10 ; mov rdx, [rax]
-48 89 15 *var_mainfile ; mov [mainfile], rdx
+48 89 15 *CompilerVaribles:MainFile ; mov [mainfile], rdx
 48 83 c0 08 ;
 48 8b 10 ; mov rdx, [rax]
-48 89 15 *var_output_filename ; mov [output_filename], rdx
+48 89 15 *CompilerVaribles:OutputFile ; mov [output_filename], rdx
 
 be 00 00 01 00 ; mov rsi, 0x010000
 e8 *fn_malloc ; call malloc
@@ -27,33 +27,34 @@ e8 *fn_malloc ; call malloc
 e8*fn_slist_init
 488905*Token:Command:Define:List
 
-e8*fn_envoriment_init
-488905*var_root_envoriment
+e8*Environment:Init
+488905*CompilerVaribles:Environment
 
 488bf0 ; mov rsi, rax
-488b3d*var_mainfile ; mov rdi, [mainfile]
+488b3d*CompilerVaribles:MainFile ; mov rdi, [mainfile]
 e8*fn_start_file
 
 e8*fn_hlist_init
-488905*var_backpacth_list
+488905*CompilerVaribles:BackpatchList
 488bc8 ; mov rcx, rax
 
 e8*fn_buffer_init
-488905*var_root_buffer
+488905*CompilerVaribles:Buffer
 
-488b3d*var_output_filename
-488b35*var_root_envoriment
-488b15*var_root_buffer
-e8*fn_assembly_envoriment
+488b3d*CompilerVaribles:OutputFile
+488b35*CompilerVaribles:Environment
+488b15*CompilerVaribles:Buffer
+e8*Assembler:AssemblyEnvironment
 
 
-488b3d*var_backpacth_list
-488b35*var_root_buffer
+
+488b3d*CompilerVaribles:BackpatchList
+488b35*CompilerVaribles:Buffer
 e8*fn_backpatch_buffer
 
-488b3d*var_root_buffer
+488b3d*CompilerVaribles:Buffer
 488b7710 ; mov rsi, [rdi+0x10]
-488b05*var_align
+488b05*CompilerVaribles:Align
 483d00000000 ; cmp rax, 0
 741*file_no_align
     ffc8 ; dec rax
@@ -62,10 +63,10 @@ e8*fn_backpatch_buffer
     4821c6 ; and rsi, rax
     e8*fn_buffer_resize
 &file_no_align
-488b3d*var_output_filename
+488b3d*CompilerVaribles:OutputFile
 e8*fn_create_file
 488bf8 ; mov rdi, rax
-488b35*var_root_buffer
+488b35*CompilerVaribles:Buffer
 488b5610 ; mov rdx, [rsi+0x10]
 488b36 ; mov rsi, [rsi]
 b801000000
@@ -82,6 +83,7 @@ e8*fn_exit
 ; 0x94-0x9c filename
 ; 0x9c-0xa4 envoriment
 ; 0xf8-0x100 rbp
+
 %scope fn_start_file
     4851
     4852
@@ -150,7 +152,7 @@ e8*fn_exit
 }
 
 
-%include src/envoriment.op
+%include src/environment.op
 %include src/tokenize.op
 %include src/assembler.op
 %include src/backpatch.op
@@ -173,10 +175,11 @@ e8*fn_exit
 &var_opening_file_failed_to_open "Failed to open the file." 0a 00
 &var_bytes_str " bytes" 0a 00
 
-
-&var_mainfile        0000000000000000
-&var_output_filename 0000000000000000
-&var_root_envoriment 0000000000000000
-&var_root_buffer     0000000000000000
-&var_backpacth_list  0000000000000000
-&var_align           0000000000000000
+%scope CompilerVaribles
+    &MainFile       0000000000000000
+    &OutputFile     0000000000000000
+    &Environment     0000000000000000
+    &Buffer         0000000000000000
+    &BackpatchList  0000000000000000
+    &Align          0000000000000000
+}

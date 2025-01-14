@@ -18,7 +18,7 @@
         4833f6; xor rsi, rsi
         40b60a; mov si, 10
         4850
-            e8*fn_envoriment_push_token
+            e8*Environment:PushToken
             488bf0 ; mov rsi, rax
         4858
         c60604 ; mov [rsi], 4

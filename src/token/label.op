@@ -16,7 +16,7 @@
         4850
         4856
         4857
-            4850 e8*fn_envoriment_search_keyword
+            4850 e8*Environment:Search
                 751*okay
                     4858
                     eb1*done
@@ -25,7 +25,7 @@
             4833f6; xor rsi, rsi
             40b609; mov si, 9
             4850
-                e8*fn_envoriment_push_token
+                e8*Environment:PushToken
                 488bf0 ; mov rsi, rax
             4858
             c60603 ; mov [rsi], 3
@@ -40,7 +40,7 @@
     %scope Keyword  ; rax name, rdi envoriment
         4856
         4857
-            4850 e8*fn_envoriment_search_keyword
+            4850 e8*Environment:Search
                 751*okay
                     4858
                     488bf8 e8*fn_print
@@ -50,7 +50,7 @@
             4858
             4833f6; xor rsi, rsi
             40b609; mov si, 17
-            e8*fn_envoriment_push_keyword
+            e8*Environment:PushKeyword
             c60002 ; mov [rax], 2
             c74009ffffffff
             c7400dffffffff
@@ -63,7 +63,7 @@
 
     %scope Handle ; rax token, rsi buffer, rdi envoriment
             488b4001 ; mov rax, [rax+1]
-            e8*fn_envoriment_search_keyword
+            e8*Environment:Search
             741*found 488d3d*NOT_FOUND e8*fn_print c3
             &found
             803802 ; cmp [rax],2

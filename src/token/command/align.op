@@ -6,7 +6,7 @@
                 4857
                     488bf8 ; mov rdi, rax
                     e8*fn_nscan_hex
-                    488905*var_align
+                    488905*CompilerVaribles:Align
                     488d3d*newalign_str
                     e8*fn_print
                     e8*fn_print_rax

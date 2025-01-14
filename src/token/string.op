@@ -25,7 +25,7 @@
     4857
         4856
             488d7302 ; lea rsi, [rbx+2]
-            e8*fn_envoriment_push_token
+            e8*Environment:PushToken
             488bf8 ; mov rdi, rax
             c60702 ; mov [rdi], 2
             48ffc7 ; inc rdi
