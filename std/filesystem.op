@@ -1,0 +1,45 @@
+&fn_close_file ; rdi fd
+    b8 03 00 00 00 ; mov eax, 3
+    0f 05 ; syscall
+c3
+
+
+&fn_rd_file ; rdi fd, rsi buffer, rdx size
+    b8 00 00 00 00 ; mov eax, 0
+    0f 05 ; syscall
+c3
+
+
+&fn_getfstat ; rdi filename, rsi buffer
+    b8 04 00 00 00
+    0f 05
+c3
+
+
+&fn_openfile ; rdi filename
+4851 ; push rcx
+4852 ; push rdx
+4856 ; push rsi
+    48 b8 02 00 00 00 00 00 00 00 ; mov rax, 2
+    48 ba 00 00 00 00 00 00 00 00 ; mov rdx, 0
+    48 be 00 00 00 00 00 00 00 00 ; mov rsi, 0
+    0f 05 ; syscall
+    3d 00 00 00 00 ; cmp rax, 0
+485e ; pop rsi
+485a ; pop rdx
+4859 ; pop rcx
+c3
+
+&fn_crt_file ; rdi filename
+48 51
+48 52
+48 56
+    48 b8 02 00 00 00 00 00 00 00
+    48 ba ed 01 00 00 00 00 00 00
+    48 be 41 02 00 00 00 00 00 00
+    0f 05
+48 5e
+48 5a
+48 59
+c3
+

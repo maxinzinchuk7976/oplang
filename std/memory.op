@@ -1,0 +1,66 @@
+
+&fn_malloc ; rsi size
+48 57 ; push rdi
+48 56 ; push rsi
+48 52 ; push rdx
+48 51 ; push rcx
+49 52 ; push r10
+49 51 ; push r9
+49 50 ; push r8
+    48 8d 3d *var_malloc_next ; lea rdi, [malloc_next] ; lea rdi, [disp32]
+    48 8b 3f ; mov rdi, [rdi]
+
+    48 83 c6 0f ; add rsi, 0x0f
+    48 80 e6 f0 ; and lsi, 0xf0
+
+    48 b8 09 00 00 00 00 00 00 00 ; mov rax, 9
+    48 ba 07 00 00 00 00 00 00 00 ; mov rdx, 7
+    49 b8 ff ff ff ff ff ff ff ff ; mov r8, -1
+    49 b9 00 00 00 00 00 00 00 00 ; mov r9, 0
+    49 ba 22 00 02 00 00 00 00 00 ; mov r10, 0x020022
+
+    0f 05 ; syscall
+
+    48 01 35 *var_malloc_next ; add  [malloc_next], rax
+    48 8d 3d *var_malloc_next ; lea rdi, [malloc_next]
+    48 81 07 ff 0f 00 00 ; add [rdi], 0x0fff
+    81 27 00 f0 ff ff ; and [rdi], 0xfffff000
+
+
+49 58 ; pop r8
+49 59 ; pop r9
+49 5a ; pop r10
+48 59 ; pop rcx
+48 5a ; pop rdx
+48 5e ; pop rsi
+48 5f ; pop rdi
+c3
+
+&fn_munmap ; rdi address, rsi size
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    b8 0b 00 00 00
+    0f05
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5b ; pop rbx
+48 5a ; pop rdx 
+48 59 ; pop rcx 
+c3
+
+&fn_memcpy ; rsi sourse, rdi dest, rdx count
+48 51 ; push rcx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 8b ca ; mov rcx, rdx
+    f3 a4 ; rep movsb
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 59 ; pop rcx
+c3
+
+
+&var_malloc_next 00 00 50 00 00 00 00 00

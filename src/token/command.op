@@ -1,0 +1,72 @@
+
+&fn_token_com ; rcx index, rbx stream
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_loop
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_done
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_done
+        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
+        74 1*fn_token_com_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_done
+        eb 1*fn_token_com_loop
+    &fn_token_com_done
+    48 8d 04 0b ; lea rax, [rcx+rbx]
+    ff ca ; dec rdx
+    48 29 d0 ; sub rax, rdx
+    48 8d 3d *var_inc_str ; lea rdi, [include_str]
+    e8*fn_strcmp
+    75 1*fn_token_com_end
+        e8*fn_token_com_inc
+    &fn_token_com_end
+    ff c1 ; inc ecx
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+c3
+
+&fn_token_com_inc ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_inc_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_inc_skip
+    &fn_token_com_inc_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_inc_done
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_inc_done
+        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
+        74 1*fn_token_com_inc_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_inc_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_com_inc_loop
+    &fn_token_com_inc_done
+    83 fa 00 ; cmp rdx, 1
+    74 1*fn_token_com_inc_end
+    48 8b f2 ; mov rsi, rdx
+    e8*fn_malloc
+    48 8b f8 ; mov rdi, rax
+    48 8d 04 19 ; lea rax, [rbx+rcx]
+    48 29 d0 ; sub rax, rdx
+    48 8b f0 ; mov rsi, rax
+    e8*fn_memcpy
+    e8*fn_startfile
+    &fn_token_com_inc_end
+48 5f
+48 5e
+48 5a
+48 58
+c3

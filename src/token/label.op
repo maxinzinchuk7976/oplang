@@ -1,0 +1,42 @@
+
+&fn_token_lbl ; rcx index, rbx stream
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_lbl_loop
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_lbl_done
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_lbl_done
+        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
+        74 1*fn_token_lbl_done
+        80 3c 0b 00 ; cmp [rcx+rbx], '\0'
+        74 1*fn_token_lbl_done
+        eb 1*fn_token_lbl_loop
+    &fn_token_lbl_done
+    48 56 ; push rsi
+        48 8b 3d *var_link_list ; rdi, [token_list]
+        48 8b f2 ; mov rsi, rdx
+        48 83 c6 08 ; add rsi, 8
+        e8*fn_hlist_push
+        ff ca ; dec rdx
+        48 8b 35 *var_cip ; mov rsi, [var_cip]
+        48 89 30 ; mov [rax], rsi
+    48 5e ; pop rsi
+    48 83 c0 08 ; add rax, 8
+    48 8b f8 ; mov rdi, rax
+    48 8d 34 0b ; lea rsi, [rcx+rbx]
+    48 29 d6 ; sub rsi, rdx
+    e8*fn_memcpy
+    e8*fn_print
+    48 8d 3d *var_link_set_str ; mov rdi, [string]
+    e8*fn_print
+    48 8b 35 *var_cip ; mov rsi, [var_cip]
+    e8*fn_print_rsi
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+c3

@@ -1,0 +1,17 @@
+
+
+&fn_token_anot ; rcx index, rbx stream, rsi size
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    &fn_token_anot_loop
+        ff c1 ; inc ecx
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_anot_done
+        80 3c 0b 0a ; cmp [rcx+rbx], 0x0a
+        75 1*fn_token_anot_loop
+    &fn_token_anot_done
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+c3

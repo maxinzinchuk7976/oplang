@@ -1,0 +1,33 @@
+
+&fn_token_str ; rcx index, rbx stream
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 33 d2 ; xor rdx, rdx
+     &fn_token_str_loop
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_str_done
+        80 3c 0b 22 ; cmp [rcx+rbx], '"'
+        75 1*fn_token_str_loop
+    &fn_token_str_done
+    48 56 ; push rsi
+        48 8b 3d *var_token_list ; rdi, [token_list]
+        48 8b f2 ; mov rsi, rdx
+        e8*fn_hlist_push
+        ff ca ; dec rdx
+        48 01 15 *var_output_filesize
+    48 5e ; pop rsi
+    c6 00 02 ; mov [rax], 2
+    48 ff c0 ; inc rax
+    48 8b f8 ; mov rdi, rax
+    48 8d 34 0b ; lea rsi, [rcx+rbx]
+    48 29 d6 ; sub rsi, rdx
+    48 01 15 *var_cip
+    e8*fn_memcpy
+    ff c1 ; inc ecx
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+c3

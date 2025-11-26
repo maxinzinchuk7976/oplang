@@ -1,0 +1,145 @@
+
+&fn_assembly
+    48 8b 35 *var_output_filesize
+    e8*fn_malloc
+    48 33 c9 ; xor rcx, rcx
+    48 8b 0d *var_output_filesize
+    48 89 05 *var_output_buf
+    48 8b d8 ; mov rbx, rax
+
+    48 8b 3d *var_token_list
+    48 8b 4f 18 ; mov rcx, [rdx+0x18] ; rcx = list->size
+
+
+   &fn_assembly_loop
+        83 f9 00 ; cmp ecx, 0
+        0f 84 *fn_assembly_done
+        ff c9 ; dec ecx
+        48 8b 3d *var_token_list
+        e8*fn_hlist_get
+        48 51
+            48 33 c9 ; xor rcx, rcx
+            8b 08 ; mov rcx, [rax]
+            48 29 c8 ; sub rax, rcx
+        48 59
+        80 78 00 03 ; cmp [rax], 3
+        0f 85 *fn_assembly_str
+            48 51
+            48 52
+            48 56
+            48 57
+
+                e8*fn_hlist_get
+                48 33 d2 ; xor rdx, rdx
+                8b 10 ; mov rdx, [rax]
+                ff ca ; dec rdx
+                48 29 d0 ; sub rax, rdx
+                48 33 c9 ; xor rcx, rcx
+                8a 08 ; mov cl, [rax]
+                ff c0 ; inc rax
+                48 8b f8 ; mov rdi, rax
+                48 01 0d *var_cip_a ; add [cip_a], rcx
+
+                48 51
+                    48 57
+                        48 8b 3d *var_link_list
+                        48 8b 4f 18 ; mov rcx, [rdi+0x18]
+                    48 5f
+                    &fn_assembly_rf_loop
+                    83 f9 00 ; cmp ecx, 0
+                    0f 84 *fn_assembly_rf_end
+                    ff c9 ; dec rcx
+                    48 57
+                        48 33 d2 ; xor rdx, rdx
+                        48 8b 3d *var_link_list
+                        e8*fn_hlist_get
+                        8b 10 ; mov edx, [rax]
+                        48 83 ea 08 ; sub rdx, 8
+                        48 29 d0 ; sub rax, rdx
+                        48 8b 70 f8 ; mov rsi, [rax-8]
+                        48 ff ca ; dec rdx
+                    48 5f
+
+                    e8*fn_strcmp
+                    75 1*fn_assembly_rf_loop
+                        e8*fn_print
+                        48 8d 3d *var_link_found
+                        e8*fn_print
+
+                        48 2b 35 *var_cip_a ; sub rsi, [cip_a]
+                        48 59
+
+                        80 f9 01 ; cmp cl, 1
+                        75 1*fn_assembly_rf_prot
+                            48 8b 05 *var_cip_a ; lea rax, [cip_a]
+                            40 88 74 03 ff ; mov [rbx+rax]-1, lsi
+                            eb 1*fn_assembly_rf_def
+                        &fn_assembly_rf_prot
+                        80 f9 04 ; cmp cl, 4
+                        75 1*fn_assembly_rf_long
+                            48 8b 05 *var_cip_a ; lea rax, [cip_a]
+                            89 74 03 fc ; mov [rbx+rax]-4, esi
+                            eb 1*fn_assembly_rf_def
+                        &fn_assembly_rf_long
+                        80 f9 08 ; cmp cl, 8
+                        75 1*fn_assembly_rf_def
+                            48 8b 05 *var_cip_a ; lea rax, [cip_a]
+                            48 89 74 03 f8 ; mov [rbx+rax]-8, rsi
+                        &fn_assembly_rf_def
+                        48 5f
+                        48 5e
+                        48 5a
+                        48 59
+                        eb 1*fn_assembly_def
+                &fn_assembly_rf_end
+                48 59
+            48 5f
+            48 5e
+            48 5a
+            48 59
+            eb 1*fn_assembly_def
+        &fn_assembly_str
+        80 78 00 02 ; cmp [rax], 2
+        75 1*fn_assembly_hex
+            48 51
+            48 52
+            48 56
+            48 57
+                e8*fn_hlist_get
+                48 33 d2 ; xor rdx, rdx
+                8b 10 ; mov rdx, [rax]
+                ff ca ; dec rdx
+                48 29 d0 ; sub rax, rdx
+                48 8b f0 ; mov rsi, rax
+                48 8b 0d *var_cip_a ; mov rcx, [cip_a]
+                48 01 15 *var_cip_a ; add [cip_a], rdx
+                48 8d 3c 0b ; mov rdi, [rbx+rcx]
+                e8*fn_memcpy
+            48 5f
+            48 5e
+            48 5a
+            48 59
+            eb 1*fn_assembly_def
+        &fn_assembly_hex
+        80 78 00 01 ; cmp [rax], 1
+        75 1*fn_assembly_def
+            48 51
+                8b 40 01 ; mov rax, [rax+1]
+                48 8b 0d *var_cip_a ; mov rcx, [cip_a]
+                88 04 19 ; mov [rbx+rcx], al
+                48 ff 05 *var_cip_a ; inc [cip_a]
+            48 59
+        &fn_assembly_def
+
+    e9 *fn_assembly_loop
+    &fn_assembly_done
+
+    48 8b 3d *var_output_filename ; mov rdi, [output_filename]
+    e8*fn_crt_file
+
+    48 8b f8 ; mov rdi, rax
+    48 8b f3 ; mov rsi, rbx
+    48 8b 15 *var_output_filesize
+    b8 01 00 00 00
+    0f 05
+c3

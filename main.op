@@ -1,0 +1,161 @@
+%include     std/elfheader.op
+
+;entry 0x400078
+
+
+48 59 ; pop rcx
+83 f9 03 ; cmp rcx, 3
+74 1*argc_okay
+    48 8d 3d *var_not_enought_arguments
+    e8*fn_print
+    e8*fn_exit
+    c3
+&argc_okay
+48 8b c4 ; mov rax, rsp
+48 83 c0 08 ;
+48 8b 10 ; mov rdx, [rax]
+48 89 15 *var_mainfile ; mov [mainfile], rdx
+48 83 c0 08 ;
+48 8b 10 ; mov rdx, [rax]
+48 89 15 *var_output_filename ; mov [output_filename], rdx
+
+be 00 00 01 00 ; mov rsi, 0x010000
+e8 *fn_malloc ; call malloc
+48 03 c6 ; add rax, rsi
+48 8b e0 ; mov rsp, rax
+
+be 00 20 00 00 ; mov rsi, 0x2000
+e8 *fn_malloc
+48 89 05 *var_stdout_buf ; mov [stdout_buf], rax
+
+e8 *fn_hlist_init
+48 89 05 *var_token_list ; mov [token_list], rax
+e8 *fn_hlist_init
+48 89 05 *var_link_list ; mov [link_list], rax
+
+
+48 8b 3d *var_mainfile ; mov rdi, [mainfile]
+e8 *fn_startfile
+
+e8 *fn_assembly
+
+e8 *exit
+
+
+;function local vars map
+;    +0x00-0x04 fd
+;    +0x04-0x84 filestat
+;    +0x34-0x3c filesize
+;    +0x84-0x8c filebuffer
+&fn_startfile ; rdi path
+48 51 ; push rcx
+48 52 ; push rdx
+48 55 ; push rbp
+48 56 ; push rsi
+48 57 ; push rdi
+49 50 ; push r8
+    e8*fn_print
+
+    48 8b ec ; mov rbp, rsp
+    48 81 ec 00 01 00 00 ; sub rsp, 00 01 00 00
+
+    48 8b cf ; mov rcx, rdi
+    48 8b 3d *var_stdout_buf ; mov rdi, [stdout_buf]
+    40 c6 07 00
+    48 8d 35 *var_openfile ; lea rsi, [openfile]
+    e8*fn_put_text
+    48 8d 35 *var_endl ; lea rsi, [endl]
+    e8*fn_put_text
+    e8*fn_print
+    40 c6 07 00 ; mov [rdi], 0
+
+    48 8b f9 ; mov rdi, rcx
+    e8*fn_openfile
+    7f 1*fn_startfile_open
+        48 8d 3d *var_fld_to_open_file_msg ; lea rdi, [fld_to_open_file_msg]
+        e8*fn_print
+        48 8b e5 ; mov rsp, rbp
+        49 58 ; pop r8
+        48 5f ; pop rdi
+        48 5e ; pop rsi
+        48 5d ; pop rbp
+        48 5a ; pop rdx
+        48 59 ; pop rcx
+        c3
+    &fn_startfile_open
+    89 04 24 ; mov [rsp], rax
+    48 8b f4 ; mov rsi, rsp
+    48 83 c6 04 ; add rsi, 4
+    48 8b f9 ; mov rdi, rcx
+    e8*fn_getfstat
+    48 8b 3d *var_stdout_buf ; mov rdi, [stdout_buf]
+    40 c6 07 00
+    48 8d 35 *var_filesize_msg ; lea rsi, [filesize_msg]
+    e8*fn_put_text
+    48 8b 74 24 34 ; mov rsi, [rsp+0x34]
+    e8*fn_put_hex
+    48 8d 35 *var_endl ; lea rsi, [endl]
+    e8*fn_put_text
+    e8*fn_print
+
+    40 c6 07 00 ; mov [rdi], 0
+    48 8b 74 24 34 ; mov rsi, [rsp+0x34]
+    e8*fn_malloc
+    48 89 84 24 84 00 00 00 ; mov [rsp+0x84], rax
+    48 8d 35 *var_getting_src ; lea rsi, [getting_src]
+    e8*fn_put_text
+    e8*fn_print
+
+    8b 3c 24 ; mov edi, [rsp]
+    48 8b 94 24 34 00 00 00 ; mov rdx, [rsp+0x34]
+    48 8b b4 24 84 00 00 00 ; mov rsi, [rsp+0x84]
+    e8*fn_rd_file
+
+    8b 3c 24 ; mov edi, [rsp]
+    e8*fn_close_file
+
+    48 8b bc 24 84 00 00 00 ; mov rdi, [rsp+0x84]
+    48 8b 74 24 34 ; mov rsi, [rsp]
+
+    e8*fn_tokenize
+
+    48 8b e5 ; mov rsp, rbp
+49 58 ; pop r8
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5d ; pop rbp
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
+
+
+%include src/assembler.op
+%include src/tokenizer.op
+
+%include std/hlist.op
+%include std/text.op
+%include std/memory.op
+%include std/etc.op
+%include std/filesystem.op
+
+&var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
+
+&var_mainfile 00 00 00 00 00 00 00 00
+&var_output_filename 00 00 00 00 00 00 00 00
+&var_stdout_buf 00 00 00 00 00 00 00 00
+&var_cip 00 00 00 00 00 00 00 00
+&var_cip_a 00 00 00 00 00 00 00 00
+&var_output_filesize 00 00 00 00 00 00 00 00
+&var_token_list 00 00 00 00 00 00 00 00
+&var_link_list 00 00 00 00 00 00 00 00
+&var_output_buf 00 00 00 00 00 00 00 00
+&var_openfile "Opening the file " 00
+&var_filesize_msg "File size: 0x" 00
+&var_getting_src "Reading the file" 0a 00
+&var_fld_to_open_file_msg "Failed to open the file" 00
+&var_link_set_str " have been founded at 0x" 00
+&var_link_found " reference have been founded" 0a 00
+&var_inc_str "include" 00
+

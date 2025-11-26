@@ -1,0 +1,91 @@
+
+
+;function local vars map
+;    +0x00-0x08 buf
+;    +0x10-0x18 size
+;    +0x18-0x20 list
+&fn_tokenize ; rdi stream, rsi size
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 55 ; push rbp
+48 56 ; push rsi
+48 57 ; push rdi
+    48 8b ec ; mov rbp, rsp
+    48 81 ec 20 00 00 00 ; sub rsp, 0x20
+    48 89 3c 24 ; mov [rsp], rdi
+    48 89 74 24 08 ; mov [rsp], rsi
+
+    48 8b 1c 24 ; mov rbx, [rsp]
+    48 33 c9 ; xor rcx, rcx
+    &fn_tokenize_loop
+        3b ce ; cmp ecx, rsi
+        7d 1*fn_tokenize_end
+
+        8a 04 0b ; mov al, [rcx+rbx]
+        80 3c 0b 2a ; cmp [rcx+rbx], '*'
+        75 1*fn_tokenize_lbl
+            48 56
+                48 33 c0 ; xor rax, rax
+                c6 c0 40 ; mov rax, 0x40
+                e8*fn_token_rf
+            48 5e
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_lbl
+        8a 04 0b ; mov al, [rcx+rbx]
+        80 3c 0b 26 ; cmp [rcx+rbx], '&'
+        75 1*fn_tokenize_com
+            48 56
+                e8*fn_token_lbl
+            48 5e
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_com
+        8a 04 0b ; mov al, [rcx+rbx]
+        80 3c 0b 25 ; cmp [rcx+rbx], '%'
+        75 1*fn_tokenize_str
+            e8*fn_token_com
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_str
+        8a 04 0b ; mov al, [rcx+rbx]
+        80 3c 0b 22 ; cmp [rcx+rbx], '"'
+        75 1*fn_tokenize_anot
+            e8*fn_token_str
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_anot
+        8a 04 0b ; mov al, [rcx+rbx]
+        80 3c 0b 3b ; cmp [rcx+rbx], ';'
+        75 1*fn_tokenize_hex
+            e8*fn_token_anot
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_hex
+        8a 04 0b ; mov al, [rcx+rbx]
+        48 8d 15 *var_hex ; lea rdx, [hex]
+        e8*fn_chrcmp
+        75 1*fn_tokenize_d ; jb tokenize_d
+            e8*fn_token_hex
+            eb 1*fn_tokenize_loop ; jmp tokenize_loop
+        &fn_tokenize_d
+            ff c1 ; inc ecx
+            3b ce ; cmp ecx, rsi
+    7c 1*fn_tokenize_loop ; jl tokenize_loop
+    &fn_tokenize_end
+    48 8b e5 ; mov rsp, rbp
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5d ; pop rbp
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
+
+
+%include src/token/reference.op
+%include src/token/hex.op
+%include src/token/string.op
+%include src/token/label.op
+
+%include src/token/command.op
+
+%include src/token/annotation.op
