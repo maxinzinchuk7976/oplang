@@ -19,6 +19,6 @@
 ```
 
 ## Як скористатись.
-Перескомпілювати — `make`
-Скомпілювати, приклад — `./oplang hello_world.op hello_world`
+Використати Makefile — `make`
+Скомпілювати — `./oplang код.op вихід`
 У вас Windows? — ставте Linux!
