@@ -40,6 +40,7 @@ c3
         48 52 ; push rdx
         48 56 ; push rsi
         48 57 ; push rdi
+            48 8b 57 10 ; mov rdx, [rdi+0x10]
             48 8b 37 ; mov rsi, [rdi]
             48 8b f8 ; mov rdi, rax
             e8*fn_memcpy

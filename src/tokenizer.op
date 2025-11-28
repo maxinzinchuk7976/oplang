@@ -85,7 +85,5 @@ c3
 %include src/token/hex.op
 %include src/token/string.op
 %include src/token/label.op
-
 %include src/token/command.op
-
 %include src/token/annotation.op
