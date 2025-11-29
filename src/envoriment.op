@@ -1,0 +1,27 @@
+;Envoriment
+;0x00-0x08 - hlist_tokens 
+;0x08-0x10 - hlist_lables
+;0x10-0x18 - hlist_macroses
+;0x18-0x20 - parent
+&fn_envoriment_init
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 be 20 00 00 00 00 00 00 00 ; mov rsi, 0x20
+    e8 *fn_malloc
+    48 8b d0 ; mov rdx, rax
+    e8 *fn_hlist_init
+    48 89 02 ; mov [rdx], rax
+    e8 *fn_hlist_init
+    48 89 42 08 ; mov [rdx+0x08], rax
+    e8 *fn_hlist_init
+    48 89 42 10 ; mov [rdx+0x10], rax
+    48 33 c0 ; xor rax, rax
+    48 89 42 18 ; mov [rdx+0x18], rax
+    48 8b c2 ; mov rax, rdx
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
