@@ -14,7 +14,7 @@
     48 8b ec ; mov rbp, rsp
     48 81 ec 20 00 00 00 ; sub rsp, 0x20
     48 89 3c 24 ; mov [rsp], rdi
-    48 89 74 24 08 ; mov [rsp], rsi
+    48 89 74 24 08 ; mov [rsp+0x8], rsi
 
     48 8b 1c 24 ; mov rbx, [rsp]
     48 33 c9 ; xor rcx, rcx
@@ -77,6 +77,39 @@
 48 5a ; pop rdx
 48 59 ; pop rcx
 c3
+
+
+
+; In progress
+;function local vars map
+;    +0x00-0x08 buf
+;    +0x10-0x18 size
+;    +0x18-0x20 envoriment
+;    +0x20-0x28 cip
+&fn_envoriment_tokenize ; rdi stream, rsi size, rbx envoriment
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 55 ; push rbp
+48 56 ; push rsi
+48 57 ; push rdi
+    c8 28 00 00 ; entry, 0x28, 0
+    48 89 3c 24 ; mov [rsp], rdi
+    48 89 74 24 08 ; mov [rsp+0x08], rsi
+    48 89 5c 24 10 ; mov [rsp+0x10], rbx
+    48 33 c0 ; xor rax, rax
+    48 89 44 24 18 ; mov [rsp+0x18], rax
+
+    c9 ; leave
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5d ; pop rbp
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+%include src/envoriment.op
 
 
 

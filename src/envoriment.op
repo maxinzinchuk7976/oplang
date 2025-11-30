@@ -4,7 +4,6 @@
 ;0x10-0x18 - hlist_macroses
 ;0x18-0x20 - parent
 &fn_envoriment_init
-48 51 ; push rcx
 48 52 ; push rdx
 48 56 ; push rsi
 48 57 ; push rdi
@@ -23,5 +22,4 @@
 48 5f ; pop rdi
 48 5e ; pop rsi
 48 5a ; pop rdx
-48 59 ; pop rcx
 c3
