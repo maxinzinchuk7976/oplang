@@ -155,7 +155,7 @@ c3
 &var_filesize_msg "File size: 0x" 00
 &var_getting_src "Reading the file" 0a 00
 &var_fld_to_open_file_msg "Failed to open the file" 00
-&var_link_set_str " have been founded at 0x" 00
-&var_link_found " reference have been founded" 0a 00
+&var_link_set_str 09 " have been founded at 0x" 00
+&var_link_found 09 " reference have been founded" 0a 00
 &var_inc_str "include" 00
 
