@@ -142,4 +142,10 @@
     48 8b 15 *var_output_filesize
     b8 01 00 00 00
     0f 05
+    
+    48 8b 3d *var_output_filename ; mov rdi, [output_filename]
+    48 33 f6 ; xor rsi, rsi
+    be ed 01 00 00
+    b8 5a 00 00 00
+    0f05
 c3
