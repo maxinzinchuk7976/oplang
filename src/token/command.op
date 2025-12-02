@@ -9,11 +9,13 @@
         ff c2 ; inc edx
         3b ce ; cmp ecx, esi
         7d 1*fn_token_com_done
-        80 3c 0b 20 ; cmp [rcx+rbx], ' '
-        74 1*fn_token_com_done
-        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
-        74 1*fn_token_com_done
         80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
         74 1*fn_token_com_done
         eb 1*fn_token_com_loop
     &fn_token_com_done
@@ -44,11 +46,13 @@ c3
     &fn_token_com_inc_loop
         3b ce ; cmp ecx, esi
         7d 1*fn_token_com_inc_done
-        80 3c 0b 20 ; cmp [rcx+rbx], ' '
-        74 1*fn_token_com_inc_done
-        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
-        74 1*fn_token_com_inc_done
         80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_inc_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
         74 1*fn_token_com_inc_done
         ff c1 ; inc ecx
         ff c2 ; inc edx

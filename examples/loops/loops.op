@@ -4,7 +4,7 @@
 &loop
     488d3d *var_glory_to_RTF ; moving glory to RTF to rdi
     e8*fn_print
-e2 1*loop ; loop [loop]
+e2 1*loop; loop [loop]
 e8*fn_exit 
 
 

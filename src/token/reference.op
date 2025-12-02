@@ -6,19 +6,23 @@
 
     48 33 d2 ; xor rdx, rdx
     c0 e8 04 ; shr al, 4
+    48 50 ; push rax
     &fn_token_rf_loop
         ff c1 ; inc ecx
         ff c2 ; inc edx
         3b ce ; cmp ecx, esi
         7d 1*fn_token_rf_done
-        80 3c 0b 20 ; cmp [rcx+rbx], ' '
-        74 1*fn_token_rf_done
-        80 3c 0b 0a ; cmp [rcx+rbx], '\n'
-        74 1*fn_token_rf_done
         80 3c 0b 00 ; cmp [rcx+rbx], '\0'
+        74 1*fn_token_rf_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
         74 1*fn_token_rf_done
         eb 1*fn_token_rf_loop
     &fn_token_rf_done
+    48 58 ; pop rax
     8b f0 ; mov esi, eax
     48 8d 04 0b ; lea rax, [rcx+rbx]
     48 29 d0 ; sub rax, rdx
@@ -47,3 +51,8 @@
 48 5e ; pop rsi
 48 5a ; pop rdx
 c3
+
+
+            
+            
+        

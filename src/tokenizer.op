@@ -78,7 +78,7 @@
 48 59 ; pop rcx
 c3
 
-
+&var_delimiters 09 22 0a "; *&%" 00 
 
 ; In progress
 ;function local vars map
