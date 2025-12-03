@@ -18,8 +18,6 @@ f7e3 ; multiply eax by ebx
 
 8b05 *var_a ; moving a to eax
 8b0d *var_b ; moving b to ecx
-e8*fn_print_rax
-e8*fn_print_rcx
 
 488d3d *var_result_str ; moving result string to rdi
 e8*fn_print
@@ -55,11 +53,11 @@ e8*fn_exit
 &var_ab_equal_str "a == b" 0a 00
 
 ;
-;int a = 48;
+;int a = 96;
 ;int b = 64;
 ;
 ;main(){
-;   b += 0x300;
+;   b += 768;
 ;   b = (b/a)*10;
 ;   printf("Result:");
 ;   if(a==b) printf("a == b");

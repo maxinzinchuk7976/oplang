@@ -1,0 +1,51 @@
+%include std/elfheader.op
+
+c8 40 00 00 ; enter with 64 bytes local varible in stack. *t will be stored in rcx
+    488b05*var_a ; moving a to t(rax)
+    488d4dea ; lea rcx, [rbp-9] moving buf[18] to rcx ; stack grows downwards
+    c6410100 ; setting buf[19] to zero
+    4833db ; clear rbx
+    b30a ; set rbx to 10
+    488d35*var_digits_str; moving digits to string
+    
+    &while
+        4833d2 ; clear rdx
+        48f7f3 ; diviving rdx:rax by rbx 
+        408a3c32; getting char digits[rdx] to ldi
+        408839 ; mov [rcx],ldi
+        48ffc9 ; dec rcx ; buf--
+        4883f800 ; cmp rax, 0
+    75 1*while ; while(t!=0)
+    48ffc1
+    488bf9 ; moving rcx to rdi
+    e8*fn_print
+    40b70a ;ldi, 10
+    e8*fn_print_char
+c9 ; leave 
+e8*fn_exit 
+
+
+%include std/etc.op
+%include std/text.op
+
+&var_a 293875277008f0ff ; 18442249751873533993
+&var_digits_str "0123456789" 00
+
+
+;
+;unsigned long a = 18442249751873533993;
+;const char* digits = "0123456789";
+;
+;void main(){
+;   unsigned long t = a;
+;   char buf[20];
+;   buf[19] = 0
+;   buf += 18
+;   do{
+;       buf-- = digits[t%10];
+;       t/=10;
+;   } while(t);
+;   printf("%s\n", buf);
+;   return 0;
+;}
+;
