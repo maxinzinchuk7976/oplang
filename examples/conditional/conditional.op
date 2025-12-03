@@ -1,0 +1,70 @@
+%include std/elfheader.op
+
+4833c0 ; clearing rax 
+4833c9 ; clearing rcx
+
+8105 *var-4_b 00030000 ; adding 0x300 to var_b
+8b05 *var_b ; moving b to eax
+4833d2 ; clearing rdx
+4833db ; clearing rbx
+8b1d *var_a ; moving a to ebx
+f7f3 ; diviving edx:eax by ebx 
+
+4833db ; clearing rbx
+b30a ; moving 10 to ebx
+f7e3 ; multiply eax by ebx
+8905 *var_b ; moving eax to b
+
+
+8b05 *var_a ; moving a to eax
+8b0d *var_b ; moving b to ecx
+e8*fn_print_rax
+e8*fn_print_rcx
+
+488d3d *var_result_str ; moving result string to rdi
+e8*fn_print
+
+39c1 ; cmp ecx, eax
+75 1*elseif1 ; if(a==b){
+    488d3d *var_ab_equal_str ; moving equal string to rdi
+    e8*fn_print
+    eb 1*final
+&elseif1 ; } else
+39c1 ; cmp ecx, eax
+7c 1*elseif2 ; if(b>a) {
+    488d3d *var_b_bigger_str ; moving equal string to rdi
+    e8*fn_print
+    eb 1*final
+&elseif2 ; } else
+    488d3d *var_a_bigger_str ; moving equal string to rdi
+    e8*fn_print
+    eb 1*final
+&final ; }
+e8*fn_exit 
+
+
+%include std/etc.op
+%include std/text.op
+
+&var_a &var-4_b 60000000 ; 96
+&var_b 40000000 ; 64
+
+&var_result_str "Result: " 00
+&var_a_bigger_str "a > b" 0a 00
+&var_b_bigger_str "a < b" 0a 00
+&var_ab_equal_str "a == b" 0a 00
+
+;
+;int a = 48;
+;int b = 64;
+;
+;main(){
+;   b += 0x300;
+;   b = (b/a)*10;
+;   printf("Result:");
+;   if(a==b) printf("a == b");
+;   else if(a>b) printf("a > b");
+;   else printf("a < b");
+;   return 0;
+;} 
+;
