@@ -1,13 +1,12 @@
 %include std/elfheader.op
 
-c8 40 00 00 ; enter with 64 bytes local varible in stack. *t will be stored in rcx
+c8 1c 00 00 ; enter with 28 bytes local varible+rbp in stack. t stores in rax
     488b05*var_a ; moving a to t(rax)
-    488d4dea ; lea rcx, [rbp-9] moving buf[18] to rcx ; stack grows downwards
+    488d4df7 ; lea rcx, [rbp-9] moving buf[18] to rcx ; stack grows downwards
     c6410100 ; setting buf[19] to zero
     4833db ; clear rbx
     b30a ; set rbx to 10
     488d35*var_digits_str; moving digits to string
-    
     &while
         4833d2 ; clear rdx
         48f7f3 ; diviving rdx:rax by rbx 

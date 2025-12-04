@@ -1,0 +1,42 @@
+%include std/elfheader.op
+
+4833f6 ; xor rsi,rsi, clearing rsi
+66be0002 ; mov si, 512 ; setting size for allocation
+e8*fn_malloc 
+488905 *var_buffer ; saving address to buffer
+488bf8 ; mov rdi, rax, moving buffer to rdi
+488d35 *var_hello_str ; moving hello_str to rsi
+e8*fn_put_text
+488bf7 ; mov rsi, rdi ; buffer to rsi
+e8*fn_put_hex
+488d35 *var_decimical_str ; moving decimical_str to rsi
+e8*fn_put_text
+488bf7 ; mov rsi, rdi ; buffer to rsi
+e8*fn_put_dec
+488d35 *var_endl ; endl
+e8*fn_put_text
+e8*fn_print
+
+e8*fn_exit 
+
+
+%include std/etc.op
+%include std/text.op
+%include std/memory.op
+
+
+&var_buffer 0000000000000000
+&var_hello_str "Hello! I'am buffer" 0a "My address 0x" 00 
+&var_decimical_str 0a "In decemical is: " 00 
+
+
+;
+;char* buffer;
+;
+;void main(){
+;   buffer = malloc(512);
+;   sprintf(buffer,"Hello! I'am buffer\nMy address 0x%016x\nIn decimaical is: %d\n",buffer,(unsigned long)buffer);
+;   puts(buffer);
+;   return 0;
+;}
+;

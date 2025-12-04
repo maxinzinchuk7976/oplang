@@ -3,6 +3,13 @@
 4833c0 ; clearing rax 
 4833c9 ; clearing rcx
 
+8b05 *var_b ; moving b to eax
+488d3d *var_b_equal_str e8*fn_print
+488bf0 e8*fn_print_dec 
+488d3d *var_endl  e8*fn_print ; printing b = ???
+
+488d3d *var_perfoming_calculation_str e8*fn_print
+
 8105 *var-4_b 00030000 ; adding 0x300 to var_b
 8b05 *var_b ; moving b to eax
 4833d2 ; clearing rdx
@@ -18,6 +25,16 @@ f7e3 ; multiply eax by ebx
 
 8b05 *var_a ; moving a to eax
 8b0d *var_b ; moving b to ecx
+
+4850
+488d3d *var_a_equal_str e8*fn_print
+488bf0 e8*fn_print_dec
+488d3d *var_endl  e8*fn_print ; printing a = ???
+
+488d3d *var_b_equal_str e8*fn_print
+488bf1 e8*fn_print_dec 
+488d3d *var_endl  e8*fn_print ; printing b = ???
+4858
 
 488d3d *var_result_str ; moving result string to rdi
 e8*fn_print
@@ -51,18 +68,24 @@ e8*fn_exit
 &var_a_bigger_str "a > b" 0a 00
 &var_b_bigger_str "a < b" 0a 00
 &var_ab_equal_str "a == b" 0a 00
+&var_a_equal_str "a = " 00
+&var_b_equal_str "b = " 00
+&var_perfoming_calculation_str "Perfoming calculations" 0a 00
 
 ;
 ;int a = 96;
 ;int b = 64;
 ;
 ;main(){
-;   b += 768;
-;   b = (b/a)*10;
+;   printf("b = %d",b);
+;   b = ((b+768)/a)*10;
+;   printf("Perfoming calculations\n");
+;   printf("a = %d",a);
+;   printf("b = %d",b);
 ;   printf("Result:");
-;   if(a==b) printf("a == b");
-;   else if(a>b) printf("a > b");
-;   else printf("a < b");
+;   if(a==b) printf("a == b\n");
+;   else if(a>b) printf("a > b\n");
+;   else printf("a < b\n");
 ;   return 0;
 ;} 
 ;

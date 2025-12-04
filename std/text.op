@@ -37,6 +37,39 @@ c3
 48 58 ; pop rax
 c3
 
+
+&fn_print_dec ; rsi_input 
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 31 c0 ; xor rax, rax
+    48 33 db ; xor rbx, rbx
+    c8 1c 00 00 ; entry 28 
+        b3 0a ; mov bl, 10
+        48 8b c6 ; mov rax, rsi
+        48 8d 35 *var_digits ; lea rsi, [digits]
+        488d4df7 ; lea rcx, [rbp-9]
+        &fn_print_dec_loop
+            4833d2 ; xor rdx, rdx
+            48f7f3 ; div rbx 
+            408a3c32; mov ldi, [rsi+rdx]
+            408839 ; mov [rcx], ldi    
+            48ffc9 ; dec rcx 
+            4883f800 ; cmp rax, 0
+        75 1*fn_print_dec_loop ; jne fn_put_dec_loop
+        48ffc1 ; inc rcx
+        488bf9 ; mov rdi, rcx
+        e8*fn_print
+    c9
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
 &fn_strlen ; rdi address
     48 8b c7 ; mov rax, rdi
     &_strlen_loop
@@ -74,7 +107,7 @@ c3
 c3
 
 
-&fn_put_dec ; rdi stream, rsi_input ; TODO: MAKE IT WORK
+&fn_put_dec ; rdi stream, rsi_input 
 48 51 ; push rcx
 48 52 ; push rdx
 48 53 ; push rbx
@@ -83,21 +116,28 @@ c3
     e8*fn_strlen
     48 01 c7 ; add rdi, rax
     48 31 c0 ; xor rax, rax
-    48 33 c9 ; xor rcx, rcx
     48 33 db ; xor rbx, rbx
-    b3 0a ; mov bl, 10
-    48 8b c6 ; mov rax, rsi
-    48 8d 35 *var_digits ; lea rsi, [digits]
-    &fn_put_dec_loop
-        48 33 d2 ; xor rdx, rdx
-        48 f7 f3 ; div rbx
-        8a 0c 16 ; mov cl, [rsi+rdx]
-        88 0f ; mov [rdi], cl
-        ff c7 ; inc rdi
-        48 83 f8 00 ; cmp rax, 0
-    75 1*fn_put_hex_loop ; loop [put_hex_loop]
-    ff c7 ; inc rdi
-    c6 07 00 ; mov [rdi], 0
+    c8 1c 00 00 ; entry 28 
+        4857 ; push rdi
+        b3 0a ; mov bl, 10
+        48 8b c6 ; mov rax, rsi
+        48 8d 35 *var_digits ; lea rsi, [digits]
+        488d4df7 ; lea rcx, [rbp-9]
+        &fn_put_dec_loop
+            4833d2 ; xor rdx, rdx
+            48f7f3 ; div rbx 
+            408a3c32; mov ldi, [rsi+rdx]
+            408839 ; mov [rcx], ldi    
+            48ffc9 ; dec rcx 
+            4883f800 ; cmp rax, 0
+        75 1*fn_put_dec_loop ; jne fn_put_dec_loop
+        48ffc1 ; inc rcx
+        488bf1 ; mov rsi, rcx
+        488d4df9 ; lea rcx, [rbp-7]
+        4829f1 ; sub rcx, rsi 
+        485f ; pop rdi
+        f3a4 ; rep movsb
+    c9
 48 5f ; pop rdi
 48 5e ; pop rsi
 48 5b ; pop rbx
