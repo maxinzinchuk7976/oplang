@@ -1,0 +1,69 @@
+&fn_read_scd ; rsi buffer, rdx max_size
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 b8 00 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f05 ; syscall
+    ffc8 ; dec rax
+    c60406 00 ; mov [rsi+rax], 0
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
+&fn_scan_dec 
+4852
+4856
+4857
+    c8 0801 00 ; enter 0x108, 0
+        488db5 f8efffff ; lea rsi, [rbp-0x108]
+        4833d2 ; xor rdx, rdx
+        66ba0001 ; mov dx, 0x100
+        e8*fn_read_scd
+        488bc8 ; mov rcx, rax
+        4833ff ; xor rdi, rdi
+        488d15 *var_digits
+        &fn_scan_dec_loop
+            8a06 ; mov al, [rsi]
+            48ffc6 ; inc rsi
+            e8*fn_chrsrch
+            80 f8 ff ; cmp rax, 0xff
+            74 1*fn_scan_dec_def
+                4850
+                4852
+                    4833d2 ; xor rdx, rdx
+                    b00a ; mov al, 10
+                    48f7e7 ; mul rdi
+                    488bf8 ; mov rax, rdi
+                485a
+                4858
+                4801c7 ; add rdi, rax
+            &fn_scan_dec_def
+        e2 1*fn_scan_dec_loop
+    c9 ; leave
+    488bc7 ; mov rax, rdi
+485f
+485e
+485a
+c3
+
+&fn_scan_str
+4852
+4856
+4857
+    c8 0801 00 ; enter 0x108, 0
+        488db5 f8efffff ; lea rsi, [rbp-0x108]
+        4833d2 ; xor rdx, rdx
+        66ba0001 ; mov dx, 0x100
+        e8*fn_read_scd
+        488bfe ; mov rdi, rsi
+        e8*fn_strcpy
+    c9 ; leave
+485f
+485e
+485a
+c3

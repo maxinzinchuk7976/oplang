@@ -1,0 +1,83 @@
+
+
+&fn_put_hex ; rdi stream, rsi_input
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 8d 15 *var_hex ; lea rdx, [hex]
+    e8*fn_strlen
+    48 01 c7 ; add rdi, rax
+    48 31 c0 ; xor rax, rax
+    b9 10 00 00 00 ; mov ecx, 16
+    c6 04 0f 00 ; mov [rcx+rdi], 0
+    &fn_put_hex_loop
+        40 88 f0 ; mov al, lsi
+        24 0f ; and al, 0f
+        8a 04 02 ; mov rax, [rdx+rax]
+        88 44 0f ff ; mov [rdi+rcx-1], al
+        48 c1 ee 04 ; shr rsi, 4
+    e2 1*fn_put_hex_loop ; loop [put_hex_loop]
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
+&fn_put_dec ; rdi stream, rsi_input 
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 56 ; push rsi
+48 57 ; push rdi
+    e8*fn_strlen
+    48 01 c7 ; add rdi, rax
+    48 31 c0 ; xor rax, rax
+    48 33 db ; xor rbx, rbx
+    c8 1c 00 00 ; entry 28 
+        4857 ; push rdi
+        b3 0a ; mov bl, 10
+        48 8b c6 ; mov rax, rsi
+        48 8d 35 *var_digits ; lea rsi, [digits]
+        488d4df7 ; lea rcx, [rbp-9]
+        &fn_put_dec_loop
+            4833d2 ; xor rdx, rdx
+            48f7f3 ; div rbx 
+            408a3c32; mov ldi, [rsi+rdx]
+            408839 ; mov [rcx], ldi    
+            48ffc9 ; dec rcx 
+            4883f800 ; cmp rax, 0
+        75 1*fn_put_dec_loop ; jne fn_put_dec_loop
+        48ffc1 ; inc rcx
+        488bf1 ; mov rsi, rcx
+        488d4df9 ; lea rcx, [rbp-7]
+        4829f1 ; sub rcx, rsi 
+        485f ; pop rdi
+        f3a4 ; rep movsb
+    c9
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+&fn_put_text ; rdi stream, rsi input
+48 51 ; push rcx
+48 56 ; push rsi
+48 57 ; push rdi
+    e8*fn_strlen
+    48 01 c7 ; add rdi, rax
+    48 8b cf ; mov rcx, rdi
+    48 8b fe ; mov rdi, rsi
+    e8*fn_strlen
+    40 c6 04 01 00 ; mov [rax+rcx], 0
+    48 8b f9 ; mov rdi, rcx
+    48 8b c8 ; mov rcx, rax
+    f3 a4 ; rep movsb
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 59 ; pop rcx
+c3
+

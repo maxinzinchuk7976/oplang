@@ -1,0 +1,146 @@
+
+&fn_print ; rdi string
+48 50 ; push rax
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    e8 *fn_strlen
+    48 8b d0 ; mov rdx, rax
+    48 8b f7 ; mov rsi, rdi
+    48 b8 01 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f 05 ; syscall
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 58 ; pop rax
+c3
+
+&fn_print_char ; rdi byte
+48 50 ; push rax
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    4833d2 ; xor rdx, rdx
+    b201 ; mov dl, 1
+    48 8b f4 ; mov rsi, rsp
+    48 b8 01 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f 05 ; syscall
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 58 ; pop rax
+c3
+
+
+&fn_print_dec ; rsi input 
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 31 c0 ; xor rax, rax
+    48 33 db ; xor rbx, rbx
+    c8 1c 00 00 ; entry 28 
+        b3 0a ; mov bl, 10
+        48 8b c6 ; mov rax, rsi
+        48 8d 35 *var_digits ; lea rsi, [digits]
+        488d4df7 ; lea rcx, [rbp-9]
+        &fn_print_dec_loop
+            4833d2 ; xor rdx, rdx
+            48f7f3 ; div rbx 
+            408a3c32; mov ldi, [rsi+rdx]
+            408839 ; mov [rcx], ldi    
+            48ffc9 ; dec rcx 
+            4883f800 ; cmp rax, 0
+        75 1*fn_print_dec_loop ; jne fn_put_dec_loop
+        48ffc1 ; inc rcx
+        488bf9 ; mov rdi, rcx
+        e8*fn_print
+    c9
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
+&fn_print_rax
+    48 50
+    48 57
+    48 56
+    48 53
+    48 52
+    48 51
+        48 83 ec 20 ; sub rsp, 32 
+        48 8b fc ; mov rdi, rsp
+        40 c6 07 00
+        48 8b f0
+        e8 *fn_put_hex
+        48 8d 35 *var_endl
+        e8 *fn_put_text
+        e8 *fn_print
+        48 83 c4 20 ; add rsp, 32
+    48 59
+    48 5a
+    48 5b
+    48 5e
+    48 5f
+    48 58
+c3
+
+&fn_print_rcx
+48 50
+    48 8b c1 ; mov rax, rcx
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rdx
+48 50
+    48 8b c2 ; mov rax, rdx
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rbx
+48 50
+    48 8b c3 ; mov rax, rbx
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rsp
+48 50
+    48 8b c4 ; mov rax, rsp
+    48 2d 10 00 00 00 ; sub rax, 16
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rbp
+48 50
+    48 8b c5 ; mov rax, rbp
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rsi
+48 50
+    48 8b c6 ; mov rax, rsi
+    e8*fn_print_rax
+48 58
+c3
+
+&fn_print_rdi
+48 50
+    48 8b c7 ; mov rax, rdi
+    e8*fn_print_rax
+48 58
+c3
