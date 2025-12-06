@@ -3,8 +3,8 @@
 48 52 ; push rdx
 48 56 ; push rsi
 48 57 ; push rdi
-    48 b8 00 00 00 00 00 00 00 00 ; mov rax, 1
-    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    4833c0 ; xor rax, rax
+    4833ff ; xor rdi, rdi
     0f05 ; syscall
     ffc8 ; dec rax
     c60406 00 ; mov [rsi+rax], 0

@@ -1,8 +1,8 @@
 %include std/elfheader.op
 
 488b0d *var_count ; moving count of repeats to rcx
+488d3d *var_glory_to_RTF ; moving glory to RTF to rdi
 &loop
-    488d3d *var_glory_to_RTF ; moving glory to RTF to rdi
     e8*fn_print
 e2 1*loop; loop [loop]
 e8*fn_exit 

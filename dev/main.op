@@ -1,0 +1,40 @@
+%include     std/elfheader.op
+
+;entry 0x400078
+
+
+4859 ; pop rcx
+83f903 ; cmp rcx, 3
+74 1*argc_okay
+    48 8d 3d *var_not_enought_arguments
+    e8*fn_print
+    e8*fn_exit
+    c3
+&argc_okay
+48 8b c4 ; mov rax, rsp
+48 83 c0 08 ;
+48 8b 10 ; mov rdx, [rax]
+48 89 15 *var_mainfile ; mov [mainfile], rdx
+48 83 c0 08 ;
+48 8b 10 ; mov rdx, [rax]
+48 89 15 *var_output_filename ; mov [output_filename], rdx
+
+be 00 00 01 00 ; mov rsi, 0x010000
+e8 *fn_malloc ; call malloc
+48 03 c6 ; add rax, rsi
+48 8b e0 ; mov rsp, rax
+
+e8*fn_exit
+
+%include std/hlist.op
+%include std/text.op
+%include std/memory.op
+%include std/etc.op
+%include std/filesystem.op
+
+&var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
+
+&var_mainfile 00 00 00 00 00 00 00 00
+&var_output_filename 00 00 00 00 00 00 00 00
+
+
