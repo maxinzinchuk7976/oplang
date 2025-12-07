@@ -24,7 +24,40 @@ e8 *fn_malloc ; call malloc
 48 03 c6 ; add rax, rsi
 48 8b e0 ; mov rsp, rax
 
+e8*fn_envoriment_init
+488905 *var_root_envoriment
+
+488bf0 ; mov rsi, rax
+488b3d*var_mainfile ; mov rdi, [mainfile]
+e8*fn_start_file
+
+
 e8*fn_exit
+
+
+; rdi filename, rsi envoriment
+; 0x00-0x08 rbp
+; 0x08-0x0c fd
+; 0x0c-0x8c filestat
+; 0x3c-0x40 filesize
+; 0x8c-0x94 filebuffer
+&fn_start_file
+4852
+4857
+    c8 0001 00 ; enter 0x100
+        488bd7 ; mov rdx, rdi
+        488d3d*var_opening_file_name 
+        e8*fn_print
+        488bfa ; mov rdi, rdi
+        e8*fn_print
+        488d3d*var_endl
+        e8*fn_print
+    c9 ; leave
+485f
+485a
+c3
+
+%include src/envoriment.op
 
 %include std/hlist.op
 %include std/text.op
@@ -32,9 +65,11 @@ e8*fn_exit
 %include std/etc.op
 %include std/filesystem.op
 
+
 &var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
+&var_opening_file_name "File path: " 00
 
-&var_mainfile 00 00 00 00 00 00 00 00
-&var_output_filename 00 00 00 00 00 00 00 00
-
+&var_mainfile        0000000000000000
+&var_output_filename 0000000000000000
+&var_root_envoriment 0000000000000000
 
