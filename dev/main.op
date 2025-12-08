@@ -36,24 +36,51 @@ e8*fn_exit
 
 
 ; rdi filename, rsi envoriment
-; 0x00-0x08 rbp
 ; 0x08-0x0c fd
 ; 0x0c-0x8c filestat
 ; 0x3c-0x40 filesize
 ; 0x8c-0x94 filebuffer
+; 0x94-0x9c filename
+; 0xf8-0x100 rbp
 &fn_start_file
 4852
+4856
 4857
     c8 0001 00 ; enter 0x100
-        488bd7 ; mov rdx, rdi
+        4889bc2494000000 ; mov [rsp+0x94], rdi
         488d3d*var_opening_file_name 
         e8*fn_print
-        488bfa ; mov rdi, rdi
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
         e8*fn_print
         488d3d*var_endl
         e8*fn_print
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
+        e8*fn_openfile
+        7f1*fn_start_file_file_ok
+            488d3d*var_opening_file_failed_to_open
+            e8*fn_print
+            c9
+            485f
+            485e
+            485a
+            c3
+        &fn_start_file_file_ok
+        89442408 ; mov [rsp+0x08], eax
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
+        488d74240c ; lea rsi, [rsp+0x0c]
+        e8*fn_getfstat
+        488d3d*var_opening_file_size
+        e8*fn_print
+        488b74243c ; mov rsi, [rsp+0x3c]
+        e8*fn_print_dec
+        488d3d*var_bytes_str
+        e8*fn_print
+
+        8b7c2408 ; mov edi, [rsp+0x08]
+        e8*fn_close_file
     c9 ; leave
 485f
+485e
 485a
 c3
 
@@ -68,6 +95,10 @@ c3
 
 &var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
 &var_opening_file_name "File path: " 00
+&var_opening_file_size "File size: " 00
+&var_opening_file_failed_to_open "Failed to open the file." 0a 00
+&var_bytes_str " bytes" 0a 00
+
 
 &var_mainfile        0000000000000000
 &var_output_filename 0000000000000000
