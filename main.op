@@ -109,7 +109,7 @@ e8 *exit
     8b 3c 24 ; mov edi, [rsp]
     48 8b 94 24 34 00 00 00 ; mov rdx, [rsp+0x34]
     48 8b b4 24 84 00 00 00 ; mov rsi, [rsp+0x84]
-    e8*fn_rd_file
+    e8*fn_read_file
 
     8b 3c 24 ; mov edi, [rsp]
     e8*fn_close_file

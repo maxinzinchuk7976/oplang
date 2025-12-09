@@ -1,0 +1,9 @@
+; 0x00-0x08 envoriment
+; 0x08-0x10 size
+; 0x10-0x18 buffer
+; 0x18-0x20 rbp
+&fn_tokenize ; rdi envoriment, rsi buffer, rdx size
+    c8 2000 00 ; enter 0x20,0
+
+    c9
+c3

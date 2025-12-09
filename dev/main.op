@@ -41,12 +41,14 @@ e8*fn_exit
 ; 0x3c-0x40 filesize
 ; 0x8c-0x94 filebuffer
 ; 0x94-0x9c filename
+; 0x9c-0xa4 envoriment
 ; 0xf8-0x100 rbp
 &fn_start_file
 4852
 4856
 4857
     c8 0001 00 ; enter 0x100
+        4889b4249c000000 ; mov [rsp+0x9c], rsi
         4889bc2494000000 ; mov [rsp+0x94], rdi
         488d3d*var_opening_file_name 
         e8*fn_print
@@ -75,7 +77,19 @@ e8*fn_exit
         e8*fn_print_dec
         488d3d*var_bytes_str
         e8*fn_print
+        e8*fn_malloc
+        488984248c000000 ; mov [rsp+0x8c], rax
+        488bf0 ; mov rsi, rax
+        8b7c2408 ; mov rdi, [rsp+0x08]
+        488b54243c  ; mov rdx, [rsp+0x3c]
+        e8*fn_read_file
 
+        488bbc249c000000 ; mov rdi, [rsp+0x9c]
+        e8*fn_tokenize
+
+        488bbc248c000000 ; mov rdi, [rsp+0x8c]
+        488b74243c  ; mov rsi, [rsp+0x3c]
+        e8*fn_munmap
         8b7c2408 ; mov edi, [rsp+0x08]
         e8*fn_close_file
     c9 ; leave

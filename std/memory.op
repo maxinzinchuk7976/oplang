@@ -42,6 +42,8 @@ c3
 48 53 ; push rdx
 48 56 ; push rsi
 48 57 ; push rdi
+    48 83 c6 0f ; add rsi, 0x0f
+    48 80 e6 f0 ; and lsi, 0xf0
     b8 0b 00 00 00
     0f05
 48 5f ; pop rdi

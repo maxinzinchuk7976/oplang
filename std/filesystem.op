@@ -4,7 +4,7 @@
 c3
 
 
-&fn_rd_file ; rdi fd, rsi buffer, rdx size
+&fn_read_file ; rdi fd, rsi buffer, rdx size
     b8 00 00 00 00 ; mov eax, 0
     0f 05 ; syscall
 c3
