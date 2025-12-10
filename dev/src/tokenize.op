@@ -3,7 +3,38 @@
 ; 0x10-0x18 buffer
 ; 0x18-0x20 rbp
 &fn_tokenize ; rdi envoriment, rsi buffer, rdx size
+4851
+4857
     c8 2000 00 ; enter 0x20,0
+        48893c24 ; mov [rsp] rdi
+        4889742410 ; mov [rsp+0x10], rsi
+        4889542408 ; mov [rsp+0x08], rdx
+
+        4833c9 ; xor rcx, rcx
+        &fn_tokenize_loop
+            3b ca ; cmp ecx, rdx
+            7d 1*fn_tokenize_end
+            8a 04 0e ; mov al, [rcx+rsi]
+            488d3d*var_hex_l
+            488d15*var_hex_h
+            e8*fn_2chrsrch
+            488b742410 ; mov rsi, [rsp+0x10]
+            488b542408 ; mov rdx, [rsp+0x08]
+            751*fn_tokenize_default
+                e8*fn_token_hex
+                eb1*fn_tokenize_loop
+            &fn_tokenize_default
+            ffc1 ; inc rcx
+        eb 1*fn_tokenize_loop
+        &fn_tokenize_end
 
     c9
+485f
+4859
 c3
+
+%include src/token/hex.op
+
+&var_hex_l "1234567890abcdef" 00
+&var_hex_h "1234567890ABCDEF" 00
+

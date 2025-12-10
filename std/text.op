@@ -91,6 +91,34 @@ c3
 48 59 ; pop rcx
 c3
 
+
+&fn_2chrsrch ; al char, rdx string, rdi string2
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    4850
+        e8*fn_strlen
+        48 8b c8 ; mov rcx, rax
+    4858
+    &fn_chrsrch_loop
+        ff c9 ; dec rcx
+        38 04 0a ; cmp [rcx+rdx], al
+        74 1*fn_chrsrch_done ; je fn_chrsrch_done
+        38 04 0f ; cmp [rcx+rdi], al
+        74 1*fn_chrsrch_done ; je fn_chrsrch_done
+        83 f9 01 ; cmp ecx, 1
+        7d 1*fn_chrsrch_loop ; jge chrsrch_loop
+        b1 ff ; mov cl, -1
+    &fn_chrsrch_done
+    488bc1; mov rax, rcx
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+c3
+
+
 &fn_chrsrch ; al char, rdx string
 48 51 ; push rcx
 48 52 ; push rdx

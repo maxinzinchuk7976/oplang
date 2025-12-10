@@ -99,6 +99,7 @@ e8*fn_exit
 c3
 
 %include src/envoriment.op
+%include src/tokenize.op
 
 %include std/hlist.op
 %include std/text.op

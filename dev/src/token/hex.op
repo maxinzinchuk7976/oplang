@@ -1,0 +1,23 @@
+&fn_token_hex ; al first, rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    ffc1 ; inc rcx
+    3bca ; cmp ecx, rdx
+    7d 1*fn_token_hex_end
+    
+    4850
+        8a040e ; mov al, [rcx+rsi]
+        48564852
+            488d35*var_hex_h
+            488d15*var_hex_l
+            e8*fn_2chrsrch
+            8ad8 ; mov bl, al
+        485a485e
+    4858
+    751*fn_token_hex_end
+
+    c0e004 ; shl rax, 4
+    4801d8 ; add rax, rbx
+
+    &fn_token_hex_end
+485b
+c3
