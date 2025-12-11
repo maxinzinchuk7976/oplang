@@ -23,3 +23,11 @@
 48 5e ; pop rsi
 48 5a ; pop rdx
 c3
+
+&fn_envoriment_push_token ; rdi envoriment, rsi size
+4857
+
+    488b3f ; mov rdi, [rdi]
+    e8*fn_hlist_push
+485f
+c3

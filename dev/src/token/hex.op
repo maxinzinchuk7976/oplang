@@ -6,18 +6,37 @@
     
     4850
         8a040e ; mov al, [rcx+rsi]
-        48564852
-            488d35*var_hex_h
+        48574852
+            488d3d*var_hex_h
             488d15*var_hex_l
             e8*fn_2chrsrch
             8ad8 ; mov bl, al
-        485a485e
+        485a485f
     4858
     751*fn_token_hex_end
 
     c0e004 ; shl rax, 4
     4801d8 ; add rax, rbx
+    ffc1 ; inc rcx
+
+    e8*fn_envoriment_push_token_hex
 
     &fn_token_hex_end
 485b
+c3
+
+&fn_envoriment_push_token_hex ; rax value, rdi envoriment
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b602; mov si, 02
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60601 ; mov [rsi], 1
+    884601 ; mov [rsi+1],al
+    e8*fn_print_rax
+485f
+485e
 c3

@@ -101,16 +101,16 @@ c3
         e8*fn_strlen
         48 8b c8 ; mov rcx, rax
     4858
-    &fn_chrsrch_loop
+    &fn_2chrsrch_loop
         ff c9 ; dec rcx
         38 04 0a ; cmp [rcx+rdx], al
-        74 1*fn_chrsrch_done ; je fn_chrsrch_done
+        74 1*fn_2chrsrch_done ; je fn_chrsrch_done
         38 04 0f ; cmp [rcx+rdi], al
-        74 1*fn_chrsrch_done ; je fn_chrsrch_done
+        74 1*fn_2chrsrch_done ; je fn_chrsrch_done
         83 f9 01 ; cmp ecx, 1
-        7d 1*fn_chrsrch_loop ; jge chrsrch_loop
+        7d 1*fn_2chrsrch_loop ; jge chrsrch_loop
         b1 ff ; mov cl, -1
-    &fn_chrsrch_done
+    &fn_2chrsrch_done
     488bc1; mov rax, rcx
 48 5f ; pop rdi
 48 5e ; pop rsi

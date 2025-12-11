@@ -118,7 +118,7 @@ c3
     48 03 47 10 ; add rax, [rdi+0x10]
     48 83 e8 04 ; sub rax, 4
     48 8b 38 ; mov rdi, [rax]
-    48 29 c7 ; rax, rdi
+    48 29 c7 ; sub rax, rdi
 48 59
 48 5f
 c3

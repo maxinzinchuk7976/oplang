@@ -6,7 +6,7 @@
 4851
 4857
     c8 2000 00 ; enter 0x20,0
-        48893c24 ; mov [rsp] rdi
+        48893c24 ; mov [rsp], rdi
         4889742410 ; mov [rsp+0x10], rsi
         4889542408 ; mov [rsp+0x08], rdx
 
@@ -20,6 +20,7 @@
             e8*fn_2chrsrch
             488b742410 ; mov rsi, [rsp+0x10]
             488b542408 ; mov rdx, [rsp+0x08]
+            488b3c24 ; mov rdi, [rsp]
             751*fn_tokenize_default
                 e8*fn_token_hex
                 eb1*fn_tokenize_loop
