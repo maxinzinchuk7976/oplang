@@ -14,15 +14,20 @@
         &fn_tokenize_loop
             3b ca ; cmp ecx, rdx
             7d 1*fn_tokenize_end
-            8a 04 0e ; mov al, [rcx+rsi]
+            8a040e ; mov al, [rcx+rsi]
             488d3d*var_hex_l
             488d15*var_hex_h
             e8*fn_2chrsrch
             488b742410 ; mov rsi, [rsp+0x10]
             488b542408 ; mov rdx, [rsp+0x08]
             488b3c24 ; mov rdi, [rsp]
-            751*fn_tokenize_default
+            751*fn_tokenize_command
                 e8*fn_token_hex
+                eb1*fn_tokenize_loop
+            &fn_tokenize_command
+            803c0e25 ; cmp [rcx+rsi], 0x25
+            751*fn_tokenize_default
+                e8*fn_token_command
                 eb1*fn_tokenize_loop
             &fn_tokenize_default
             ffc1 ; inc rcx
@@ -34,8 +39,26 @@
 4859
 c3
 
+&fn_tokenize_string_read 
+4853
+4857
+    488bda ; mov rbx, rdx
+    4833ff ; xor rdi,rdi
+    3b ca ; cmp ecx, rdx
+            7d 1*fn_tokenize_end
+    8a040e ; mov al, [rcx+rsi]
+
+
+    fn_tokenize_string_end
+    
+485f
+485b
+c3
+
 %include src/token/hex.op
+%include src/token/command.op
 
 &var_hex_l "1234567890abcdef" 00
 &var_hex_h "1234567890ABCDEF" 00
-
+&var_delimiters "!#$%&;*} " 0a0900
+&var_fillers 200900

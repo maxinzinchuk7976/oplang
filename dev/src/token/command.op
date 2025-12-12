@@ -1,0 +1,5 @@
+&fn_token_command ; rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    ffc1 ; inc rcx
+485b
+c3
