@@ -1,5 +1,47 @@
 &fn_token_command ; rdi envoriment, rsi buffer, rdx size, rcx position
 4853
     ffc1 ; inc rcx
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_end
+    4857
+        488d3d*__command_include
+        e8*fn_pstrcmp
+        751*fn_token_command_scope
+            485f
+            e8*fn_token_command_include_handler
+            eb1*fn_token_command_end
+        &fn_token_command_scope
+        488d3d*__command_scope
+        e8*fn_pstrcmp
+        751*fn_token_command_default
+            485f
+            e8*fn_token_command_scope_handler
+            eb1*fn_token_command_end
+    &fn_token_command_default
+    485f
+    &fn_token_command_end
+    
 485b
 c3
+
+&fn_token_command_include_handler
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_include_handler_end
+        4856
+        4857
+            488bf7 ; mov rsi, rdi
+            488bf8 ; mov rdi, rax 
+            e8*fn_start_file
+        485f
+        485e
+    &fn_token_command_include_handler_end
+c3
+
+&fn_token_command_scope_handler
+
+c3
+
+&__command_include "include" 00
+&__command_scope "scope" 00

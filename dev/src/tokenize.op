@@ -39,26 +39,62 @@
 4859
 c3
 
-&fn_tokenize_string_read 
+
+&fn_tokenize_string_read  ; rsi buffer, rcx position, rdx size
 4853
+4856
 4857
     488bda ; mov rbx, rdx
-    4833ff ; xor rdi,rdi
-    3b ca ; cmp ecx, rdx
-            7d 1*fn_tokenize_end
-    8a040e ; mov al, [rcx+rsi]
+    4833ff ; xor rdi, rdi
+    &fn_tokenize_string_loop1
+        3b ca ; cmp ecx, rdx
+        7d 1*fn_tokenize_string_end
+        8a040e ; mov al, [rcx+rsi]
+        ffc1 ;inc rcx
+        4852 
+            488d15 *var_fillers
+            e8*fn_chrcmp
+        485a
+    741*fn_tokenize_string_loop1
+    ffcf ; dec rdi
+    &fn_tokenize_string_loop2
+        3b ca ; cmp ecx, rdx
+        7d 1*fn_tokenize_string_end
+        8a040e ; mov al, [rcx+rsi]
+        ffc1 ;inc rcx
+        ffc7 ;inc rdi
+        4852 
+            488d15 *var_delimiters
+            e8*fn_chrcmp
+        485a
+    751*fn_tokenize_string_loop2
+    ffc7 ; inc rdi
+    ffc9 ; dev rcx
+    4080ff00 ; cmp rdi, 00
+    751*fn_tokenize_string_len_isset
+        48b8 ffffffffffffffff
+        eb1*fn_tokenize_string_read_end
+    &fn_tokenize_string_len_isset
+    4803f1 ; add rsi, rcx
+    482bf7 ; sub rsi, rdi
 
+    e8*fn_nstrcpy
+    488bf8 ; mov rdi, rax
+    e8*fn_print 
+    488d3d*var_endl
+    e8*fn_print
 
-    fn_tokenize_string_end
-    
+    &fn_tokenize_string_read_end
+
 485f
+485e
 485b
 c3
 
 %include src/token/hex.op
 %include src/token/command.op
 
-&var_hex_l "1234567890abcdef" 00
-&var_hex_h "1234567890ABCDEF" 00
+&var_hex_l "0123456789abcdef" 00
+&var_hex_h "0123456789ABCDEF" 00
 &var_delimiters "!#$%&;*} " 0a0900
 &var_fillers 200900

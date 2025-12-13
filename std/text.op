@@ -19,6 +19,22 @@
 485a ; pop rdx
 c3
 
+&fn_nstrcpy ; rdi n, rsi string
+4852 ; push rdx
+4856 ; push rsi
+4857 ; push rdi
+    488bd7 ; mov rdx, rdi
+    488bfe ; mov rdi, rsi 
+    488bf2 ; mov rsi, rdx
+    ffc6 ; inc rsi
+    e8*fn_malloc
+    488bf7 ; mov rsi, rdi
+    488bf8 ; mov rdi, rax
+    e8*fn_memcpy
+485f ; pop rdi 
+485e ; pop rsi 
+485a ; pop rdx
+c3
 
 &fn_strlen ; rdi address
     48 8b c7 ; mov rax, rdi
@@ -90,6 +106,42 @@ c3
 48 5a ; pop rdx
 48 59 ; pop rcx
 c3
+
+
+&fn_pstrcmp ; rdi pattern, rax str
+48 50
+48 51 ; push rcx
+48 52 ; push rdx
+48 53 ; push rbx
+48 56 ; push rsi
+    48 8b f0 ; mov rsi, rax
+    e8*fn_strlen
+    488bd0 ; mov rdx, rax
+    488bc7 ; mov rax, rdi
+    488bfe ; mov rdi, rsi
+    488bf0 ; mov rsi, rax
+    e8*fn_strlen
+    39 c2 ; cmp edx, eax
+    75 1*fn_pstrcmp_done
+    48 8b c6 ; mov rax, rsi
+    48 33 c9 ; xor rcx, rcx
+    &fn_pstrcmp_loop
+        8a 1c 39 ; mov bl, [rdi+rcx]
+        80 fb 00 ; cmp bl, 0
+        74 1*fn_pstrcmp_done
+        8a 14 01 ; mov dl, [rax+rcx]
+        ff c1 ; inc ecx
+        38 da ; cmp bl, dl
+        74 1*fn_pstrcmp_loop
+    &fn_pstrcmp_done
+    
+48 5e ; pop rsi
+48 5b ; pop rbx
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 58
+c3
+
 
 
 &fn_2chrsrch ; al char, rdx string, rdi string2

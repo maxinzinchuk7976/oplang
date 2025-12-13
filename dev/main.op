@@ -44,6 +44,7 @@ e8*fn_exit
 ; 0x9c-0xa4 envoriment
 ; 0xf8-0x100 rbp
 &fn_start_file
+4851
 4852
 4856
 4857
@@ -96,6 +97,7 @@ e8*fn_exit
 485f
 485e
 485a
+4859
 c3
 
 %include src/envoriment.op
