@@ -26,8 +26,15 @@
                 eb1*fn_tokenize_loop
             &fn_tokenize_command
             803c0e25 ; cmp [rcx+rsi], 0x25
-            751*fn_tokenize_default
+            751*fn_tokenize_bracket
                 e8*fn_token_command
+                48893c24 ; mov [rsp], rdi
+                eb1*fn_tokenize_loop
+            &fn_tokenize_bracket
+            803c0e7d ; cmp [rcx+rsi], 0x7d
+            751*fn_tokenize_default
+                e8*fn_token_bracket
+                48893c24 ; mov [rsp], rdi
                 eb1*fn_tokenize_loop
             &fn_tokenize_default
             ffc1 ; inc rcx
@@ -56,10 +63,11 @@ c3
             e8*fn_chrcmp
         485a
     741*fn_tokenize_string_loop1
+    &fn_tokenize_string_done1
     ffcf ; dec rdi
     &fn_tokenize_string_loop2
         3b ca ; cmp ecx, rdx
-        7d 1*fn_tokenize_string_end
+        7d 1*fn_tokenize_string_done2
         8a040e ; mov al, [rcx+rsi]
         ffc1 ;inc rcx
         ffc7 ;inc rdi
@@ -68,6 +76,7 @@ c3
             e8*fn_chrcmp
         485a
     751*fn_tokenize_string_loop2
+    &fn_tokenize_string_done2
     ffc7 ; inc rdi
     ffc9 ; dev rcx
     4080ff00 ; cmp rdi, 00
@@ -79,10 +88,6 @@ c3
     482bf7 ; sub rsi, rdi
 
     e8*fn_nstrcpy
-    488bf8 ; mov rdi, rax
-    e8*fn_print 
-    488d3d*var_endl
-    e8*fn_print
 
     &fn_tokenize_string_read_end
 
@@ -93,6 +98,7 @@ c3
 
 %include src/token/hex.op
 %include src/token/command.op
+%include src/token/bracket.op
 
 &var_hex_l "0123456789abcdef" 00
 &var_hex_h "0123456789ABCDEF" 00

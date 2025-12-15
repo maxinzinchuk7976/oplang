@@ -1,0 +1,29 @@
+&fn_token_bracket ; rdi 
+    ffc1 ; inc rcx
+    48837f1800 ; cmp [rdi+0x18], 0
+    751*fn_token_bracket_envoriment_has_parent
+        488d3d*__bracket_token_no_parent_error
+        e8*fn_print
+        e8*fn_exit
+        c3
+    &fn_token_bracket_envoriment_has_parent
+    e8*fn_envoriment_push_token_close
+    488b7f18 ; mov rdi, [rdi+0x18]
+c3
+
+
+&fn_envoriment_push_token_close ; rdi envoriment
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b602; mov si, 01
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60603 ; mov [rsi], 0x03
+485f
+485e
+c3
+
+&__bracket_token_no_parent_error 0a "CRITICAL ERROR: UNEXPECTED CLOSE BRAKET!" 0a0a00

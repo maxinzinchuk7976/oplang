@@ -17,6 +17,7 @@
         751*fn_token_command_default
             485f
             e8*fn_token_command_scope_handler
+            e8*fn_envoriment_push_keyword_scope
             eb1*fn_token_command_end
     &fn_token_command_default
     485f
@@ -25,7 +26,7 @@
 485b
 c3
 
-&fn_token_command_include_handler
+&fn_token_command_include_handler ; rdi envoriment, rsi buffer, rdx size, rcx position, rax file
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
     741*fn_token_command_include_handler_end
@@ -40,7 +41,42 @@ c3
 c3
 
 &fn_token_command_scope_handler
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_scope_handler_end
+        e8*fn_envoriment_push_token_scope_open
+    &fn_token_command_scope_handler_end
+c3
 
+
+&fn_envoriment_push_token_scope_open ; rax name, rdi envoriment
+4850
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b602; mov si, 09
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60602 ; mov [rsi], 2
+    48894601 ; mov [rsi+1], rax
+485f
+485e
+4858
+c3
+
+&fn_envoriment_push_keyword_scope ; rax name, rdi envoriment
+4856
+    4833f6; xor rsi, rsi
+    40b611; mov si, 17
+    e8*fn_envoriment_push_keyword
+    488bf0 ; mov rsi, rax
+    c60602 ; mov [rsi], 9
+    e8*fn_envoriment_init_parent
+    48894609 ; mov [rsi+9], rax
+    488bf8 ; mov rdi, rax
+485e
 c3
 
 &__command_include "include" 00

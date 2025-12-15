@@ -24,10 +24,34 @@
 48 5a ; pop rdx
 c3
 
+&fn_envoriment_init_parent ; rdi parent
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    e8*fn_envoriment_init
+    48897818 ; mov [rax+0x18], rdi
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+c3
+
 &fn_envoriment_push_token ; rdi envoriment, rsi size
 4857
-
     488b3f ; mov rdi, [rdi]
     e8*fn_hlist_push
 485f
+c3
+
+&fn_envoriment_push_keyword ; rdi envoriment, rsi size, rax name
+4852
+4856
+4857
+    488b7f08 ; mov rdi, [rdi+0x08]
+    488d7608 ; lea rsi, [rsi+0x08]
+    488bd0 ; mov rdx, rax
+    e8*fn_hlist_push
+    48895001 ; mov [rax+0x1], rdx
+485f
+485e
+485a
 c3
