@@ -1,7 +1,6 @@
 %include std/elfheader.op
 
 %scope main
-
     488d3d *var_hello_world ; moving hello world to rdi
     e8*fn_print
     e8*fn_exit 

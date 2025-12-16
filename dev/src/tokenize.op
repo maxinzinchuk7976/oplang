@@ -25,16 +25,21 @@
                 e8*fn_token_hex
                 eb1*fn_tokenize_loop
             &fn_tokenize_command
-            803c0e25 ; cmp [rcx+rsi], 0x25
+            803c0e"%" ; cmp [rcx+rsi], 0x25
             751*fn_tokenize_bracket
                 e8*fn_token_command
                 48893c24 ; mov [rsp], rdi
                 eb1*fn_tokenize_loop
             &fn_tokenize_bracket
-            803c0e7d ; cmp [rcx+rsi], 0x7d
-            751*fn_tokenize_default
+            803c0e"}" ; cmp [rcx+rsi], 0x7d
+            751*fn_tokenize_annotation
                 e8*fn_token_bracket
                 48893c24 ; mov [rsp], rdi
+                eb1*fn_tokenize_loop
+            &fn_tokenize_annotation
+            803c0e";" ; cmp [rcx+rsi], ';'
+            751*fn_tokenize_default
+                e8*fn_token_annotation
                 eb1*fn_tokenize_loop
             &fn_tokenize_default
             ffc1 ; inc rcx
@@ -99,6 +104,7 @@ c3
 %include src/token/hex.op
 %include src/token/command.op
 %include src/token/bracket.op
+%include src/token/annotation.op
 
 &var_hex_l "0123456789abcdef" 00
 &var_hex_h "0123456789ABCDEF" 00
