@@ -51,6 +51,53 @@ c3
 485a
 c3
 
+
+&fn_scan_sdec 
+4852
+4856
+4857
+    c8 0901 00 ; enter 0x109, 0
+        c645f700 ; mov [rbp-9], 0
+        488db5 f7efffff ; lea rsi, [rbp-0x109]
+        4833d2 ; xor rdx, rdx
+        66ba0001 ; mov dx, 0x100
+        e8*fn_read_scd
+        488bc8 ; mov rcx, rax
+        4833ff ; xor rdi, rdi
+        488d15 *var_digits
+        &fn_scan_sdec_loop
+            8a06 ; mov al, [rsi]
+            48ffc6 ; inc rsi
+            3c"-" ; cmp al, '-'
+            751*fn_scan_sdec_number
+                c645f701 ; mov [rbp-9], 1
+                eb1*fn_scan_sdec_def
+            &fn_scan_sdec_number
+            e8*fn_chrsrch
+            80 f8 ff ; cmp rax, 0xff
+            74 1*fn_scan_sdec_def
+                4850
+                4852
+                    4833d2 ; xor rdx, rdx
+                    b00a ; mov al, 10
+                    48f7e7 ; mul rdi
+                    488bf8 ; mov rax, rdi
+                485a
+                4858
+                4801c7 ; add rdi, rax
+            &fn_scan_sdec_def
+        e2 1*fn_scan_sdec_loop
+        807df700 ; cmp [rbp-9], 0
+        741*fn_scan_sdec_sign
+            48f7df ; neg rdi
+        &fn_scan_sdec_sign
+    c9 ; leave
+    488bc7 ; mov rax, rdi
+485f
+485e
+485a
+c3
+
 &fn_scan_str
 4852
 4856

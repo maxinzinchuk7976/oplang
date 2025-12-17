@@ -8,7 +8,7 @@ e8*fn_scan_str     ; reading value. std/memory.op required
 
 488d3d *var_enterint_str
 e8*fn_print     ; obviosly printing
-e8*fn_scan_dec  ; reading value
+e8*fn_scan_sdec  ; reading value
 488905 *var_int ; storing result 
 
 488d3d *var_enteredstr_str
@@ -21,7 +21,7 @@ e8*fn_print_char
 488d3d *var_enteredint_str
 e8*fn_print
 488b35 *var_int
-e8*fn_print_dec
+e8*fn_print_sdec
 40b70a ;moving '\n' to rdi
 e8*fn_print_char
 
@@ -37,7 +37,7 @@ e8*fn_exit
 &var_int    0000000000000000
 
 &var_enterstr_str "Enter string: " 00
-&var_enterint_str "Enter unsigned integer number: " 00
+&var_enterint_str "Enter integer number: " 00
 &var_enteredstr_str "You have entered string: " 00
 &var_enteredint_str "You have entered number: " 00
 
@@ -45,12 +45,12 @@ e8*fn_exit
 
 ;
 ;char* string;
-;unsigned long vint;
+;long vint;
 ;void main(){
 ;   scanf("Enter string: %s", &string); // C scanf do not allocate new memory!
-;   scanf("Enter unsigned integer number: %lu", &vint);
+;   scanf("Enter integer number: %ld", &vint);
 ;   printf("You have entered string: %s", string);
-;   printf("You have entered number: %lu", vint);
+;   printf("You have entered number: %ld", vint);
 ;   return 0;
 ;}
 ;
