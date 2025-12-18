@@ -8,31 +8,25 @@ e8*fn_enter_float_value
 
 488d3d*var_float_array ; lea rdi, [var_float_array]
 
-
-660f6e07 ; movd xmm0, [rdi]
-f30f584704 ; addss xmm0, [rdi+4]
-660f7e4704 ; movd [rdi+4], xmm0 
-
-660f7ec0 ; movd rax, xmm0
-e8*fn_print_rax
-
-660f6e4704  ; movd xmm0, [rdi+4]
-f30f5907    ; mulss xmm0, [rdi]
-660f7e07    ; movd [rdi], xmm0 
-
-660f7ec0    ; movd rax, xmm0
-e8*fn_print_rax
-
-660f6e4704  ; movd xmm0, [rdi+4]
-f30f5e07    ; divss xmm0, [rdi]
-660f7e4704  ; movd [rdi+4], xmm0 
-
-660f7ec0    ; movd rax, xmm0
-e8*fn_print_rax
-
 660f6e07    ; movd xmm0, [rdi]
-f30f5c4704  ; subss xmm0, [rdi+4]
-660f7e07    ; movd [rdi], xmm0 
+660f6e4f04  ; movd xmm1, [rdi+4]
+
+f30f58c8  ; addss xmm1, xmm0
+
+660f7ec8 ; movd rax, xmm1
+e8*fn_print_rax
+
+f30f59c1    ; mulss xmm0, xmm1
+
+660f7ec0    ; movd rax, xmm0
+e8*fn_print_rax
+
+f30f5ec8    ; divss xmm1, xmm0
+
+660f7ec8    ; movd rax, xmm1
+e8*fn_print_rax
+
+f30f5cc1  ; subss xmm0, xmm1
 
 660f7ec0    ; movd rax, xmm0
 e8*fn_print_rax
