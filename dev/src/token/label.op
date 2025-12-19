@@ -4,7 +4,37 @@
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
     741*fn_token_label_end
-    
+        e8*fn_envoriment_push_token_label
+        e8*fn_envoriment_push_keyword_label
     &fn_token_label_end
 485b
+c3
+
+&fn_envoriment_push_token_label  ; rax name, rdi envoriment
+4850
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b604; mov si, 04
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60601 ; mov [rsi], 1
+    884601 ; mov [rsi+1],al
+485f
+485e
+4858
+c3
+
+&fn_envoriment_push_keyword_label  ; rax name, rdi envoriment
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b601; mov si, 9
+    e8*fn_envoriment_push_keyword
+    488bf0 ; mov rsi, rax
+    c60603 ; mov [rsi], 3
+485f
+485e
 c3

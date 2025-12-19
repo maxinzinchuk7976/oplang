@@ -38,8 +38,13 @@
                 eb1*fn_tokenize_loop
             &fn_tokenize_annotation
             803c0e";" ; cmp [rcx+rsi], ';'
-            751*fn_tokenize_default
+            751*fn_tokenize_label
                 e8*fn_token_annotation
+                eb1*fn_tokenize_loop
+            &fn_tokenize_label
+            803c0e"&" ; cmp [rcx+rsi], '&'
+            751*fn_tokenize_default
+                e8*fn_token_label
                 eb1*fn_tokenize_loop
             &fn_tokenize_default
             ffc1 ; inc rcx
@@ -105,8 +110,9 @@ c3
 %include src/token/command.op
 %include src/token/bracket.op
 %include src/token/annotation.op
+%include src/token/label.op
 
 &var_hex_l "0123456789abcdef" 00
 &var_hex_h "0123456789ABCDEF" 00
-&var_delimiters "!.)%&;*} " 0a0900
+&var_delimiters "!)%&;*} " 0a0900
 &var_fillers 200900
