@@ -52,6 +52,69 @@ c3
 c3
 
 
+&fn_scan_ss 
+4852
+4856
+4857
+    c8 0901 00 ; enter 0x109, 0
+        660f6e05*__ZERO_32 ; movd xmm0, 0
+        c645f700 ; mov [rbp-9], 0
+        488db5 f7efffff ; lea rsi, [rbp-0x109]
+        4833d2 ; xor rdx, rdx
+        66ba0001 ; mov dx, 0x100
+        e8*fn_read_scd
+        488bc8 ; mov rcx, rax
+        4833ff ; xor rdi, rdi
+        488d15 *var_digits
+        &fn_scan_ss_loop
+            8a06 ; mov al, [rsi]
+            48ffc6 ; inc rsi
+            3c"." ; cmp al, '.'
+            751*fn_scan_ss_sign1
+                eb1*fn_scan_ss_done
+            &fn_scan_ss_sign1
+            3c"-" ; cmp al, '-'
+            751*fn_scan_ss_number
+                c645f701 ; mov [rbp-9], 1
+                eb1*fn_scan_ss_def
+            &fn_scan_ss_number
+            e8*fn_chrsrch
+            80 f8 ff ; cmp rax, 0xff
+            74 1*fn_scan_ss_def
+                f30f2ac8 ; cvtsi2ss xmm1, rax
+                f30f5905*__SS10_IEEE754 ; mulss xmm0, 10
+                f30f58c1 ; addss xmm0, xmm1
+            &fn_scan_ss_def
+        e2 1*fn_scan_ss_loop
+        &fn_scan_ss_done
+        48ffce ; dec rsi
+        660f6e15*__ZERO_32 ; movd xmm2, 0
+        e31*fn_scan_ss_done2
+        &fn_scan_ss_loop2
+            8a040e ; mov al, [rsi+rcx]
+            e8*fn_chrsrch
+            80 f8 ff ; cmp rax, 0xff
+            74 1*fn_scan_ss_def2
+                f30f2ac8 ; cvtsi2ss xmm1, rax
+                f30f58d1 ; addss xmm2, xmm1
+                f30f5e15*__SS10_IEEE754 ; divss xmm2, 10
+            &fn_scan_ss_def2
+        e2 1*fn_scan_ss_loop2
+        &fn_scan_ss_done2
+        f30f58c2 ; addss xmm0, xmm2
+        807df700 ; cmp [rbp-9], 0
+        741*fn_scan_ss_sign
+            660f6e15*__SS_SIGN_MASK ; movd xmm2, 0
+            0f57c2 ; xorps xmm0, xmm2
+        &fn_scan_ss_sign
+    c9 ; leave
+    660f7ec0 ; movd rax, xmm0
+485f
+485e
+485a
+c3
+
+
 &fn_scan_sdec 
 4852
 4856
@@ -114,3 +177,7 @@ c3
 485e
 485a
 c3
+
+&__SS10_IEEE754 00002041
+&__ZERO_32      00000000
+&__SS_SIGN_MASK 00000080
