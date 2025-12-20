@@ -15,13 +15,13 @@ c3
 4856
 4857
     4833f6; xor rsi, rsi
-    40b604; mov si, 04
+    40b609; mov si, 9
     4850
         e8*fn_envoriment_push_token
         488bf0 ; mov rsi, rax
     4858
-    c60601 ; mov [rsi], 1
-    884601 ; mov [rsi+1],al
+    c60603 ; mov [rsi], 3
+    488b4601 ; mov [rsi+1],rax
 485f
 485e
 4858

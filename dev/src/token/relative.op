@@ -1,0 +1,29 @@
+&fn_token_relative ; rdi envoriment, rsi buffer, rdx size, rcx position, rax size
+4853
+    488bd8 ; mov rbx, rax
+    ffc1 ; inc rcx
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_label_end
+        e8*fn_envoriment_push_token_relative
+    &fn_token_label_end
+485b
+c3
+
+&fn_envoriment_push_token_relative  ; rax name, rdi envoriment, rbx size
+4850
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b60a; mov si, 10
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60604 ; mov [rsi], 4
+    885e01 ; mov [rsi], rbx
+    488b4602 ; mov [rsi+2],rax
+485f
+485e
+4858
+c3
