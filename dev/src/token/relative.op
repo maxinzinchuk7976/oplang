@@ -1,5 +1,6 @@
 &fn_token_relative ; rdi envoriment, rsi buffer, rdx size, rcx position, rax size
 4853
+4856
     488bd8 ; mov rbx, rax
     ffc1 ; inc rcx
     e8*fn_tokenize_string_read
@@ -7,6 +8,7 @@
     741*fn_token_label_end
         e8*fn_envoriment_push_token_relative
     &fn_token_label_end
+485e
 485b
 c3
 

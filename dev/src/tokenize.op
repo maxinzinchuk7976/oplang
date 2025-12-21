@@ -13,7 +13,7 @@
         4833c9 ; xor rcx, rcx
         &fn_tokenize_loop
             3b ca ; cmp ecx, rdx
-            7d 1*fn_tokenize_end
+            0f8d*fn_tokenize_end
             8a040e ; mov al, [rcx+rsi]
             488d3d*var_hex_l
             488d15*var_hex_h
@@ -48,12 +48,17 @@
                 eb1*fn_tokenize_loop
             &fn_tokenize_relative
             803c0e"*" ; cmp [rcx+rsi], '*'
-            751*fn_tokenize_default
+            751*fn_tokenize_string
                 e8*fn_token_relative
                 eb1*fn_tokenize_loop
+            &fn_tokenize_string
+            803c0e22  ; cmp [rcx+rsi], '"'
+            751*fn_tokenize_default
+                e8*fn_token_string
+                e9*fn_tokenize_loop
             &fn_tokenize_default
             ffc1 ; inc rcx
-        eb 1*fn_tokenize_loop
+        e9*fn_tokenize_loop
         &fn_tokenize_end
 
     c9
@@ -68,21 +73,21 @@ c3
 4857
     488bda ; mov rbx, rdx
     4833ff ; xor rdi, rdi
-    &fn_tokenize_string_loop1
+    &fn_tokenize_string_read_loop1
         3b ca ; cmp ecx, rdx
-        7d 1*fn_tokenize_string_end
+        7d 1*fn_tokenize_string_read_end
         8a040e ; mov al, [rcx+rsi]
         ffc1 ;inc rcx
         4852 
             488d15 *var_fillers
             e8*fn_chrcmp
         485a
-    741*fn_tokenize_string_loop1
-    &fn_tokenize_string_done1
+    741*fn_tokenize_string_read_loop1
+    &fn_tokenize_string_read_done1
     ffcf ; dec rdi
-    &fn_tokenize_string_loop2
+    &fn_tokenize_string_read_loop2
         3b ca ; cmp ecx, rdx
-        7d 1*fn_tokenize_string_done2
+        7d 1*fn_tokenize_string_read_done2
         8a040e ; mov al, [rcx+rsi]
         ffc1 ;inc rcx
         ffc7 ;inc rdi
@@ -90,15 +95,15 @@ c3
             488d15 *var_delimiters
             e8*fn_chrcmp
         485a
-    751*fn_tokenize_string_loop2
-    &fn_tokenize_string_done2
+    751*fn_tokenize_string_read_loop2
+    &fn_tokenize_string_read_read_done2
     ffc7 ; inc rdi
     ffc9 ; dev rcx
     4080ff00 ; cmp rdi, 00
-    751*fn_tokenize_string_len_isset
+    751*fn_tokenize_string_read_len_isset
         48b8 ffffffffffffffff
         eb1*fn_tokenize_string_read_end
-    &fn_tokenize_string_len_isset
+    &fn_tokenize_string_read_len_isset
     4803f1 ; add rsi, rcx
     482bf7 ; sub rsi, rdi
 
@@ -117,6 +122,7 @@ c3
 %include src/token/annotation.op
 %include src/token/label.op
 %include src/token/relative.op
+%include src/token/string.op
 
 &var_hex_l "0123456789abcdef" 00
 &var_hex_h "0123456789ABCDEF" 00
