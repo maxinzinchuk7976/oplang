@@ -1,0 +1,26 @@
+%include winstd/PEheader.op
+
+; EXAMPLE DOESN'T WORK!
+    65488b042560000000 ; mov rax, gs:[0x60]
+    488b4020 ; mov rax, [rax+32]
+    488b4828 ; mov rcx, [rax+28]
+    4833d2 ; xor rdx, rdx
+    4d33c0 ; xor r8, r8
+    4d33c9 ; xor r9, r9
+    4883ec88 ; sub rsp, 88
+    488d05*status ; lea rax, [status]
+    4889442420 ; mov [rsp+32], rax
+    488d05*str ; lea rax, [str]
+    4889442428 ; mov [rsp+40], rax
+    48c74424300c000000 ; mov [rsp+48], 12
+    48c744243800000000 ; mov [rsp+56], 12
+    48c744244000000000 ; mov [rsp+64], 12
+    4c8bd1 ; mov r10, rcx
+    b808000000 ; mov eax, 8
+    0f05 ; syscall
+    4883c488 ; add rsp, 88
+c300 ; ret
+
+
+&status 00000000000000000000000000000000
+&string "Hello world"0a00
