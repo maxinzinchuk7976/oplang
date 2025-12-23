@@ -136,10 +136,11 @@
 
     48 8b 3d *var_output_filename ; mov rdi, [output_filename]
     e8*fn_crt_file
-
+    48 8b 15 *var_output_filesize
+    4881c2ff010000 ; add rdx, 0x1ff
+    4881e200feffff ; and rdx, 0x1ff
     48 8b f8 ; mov rdi, rax
     48 8b f3 ; mov rsi, rbx
-    48 8b 15 *var_output_filesize
     b8 01 00 00 00
     0f 05
     
