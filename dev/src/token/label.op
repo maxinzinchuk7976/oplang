@@ -1,0 +1,10 @@
+&fn_token_label ; rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    ffc1 ; inc rcx
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_label_end
+    
+    &fn_token_label_end
+485b
+c3

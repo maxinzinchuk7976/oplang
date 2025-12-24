@@ -1,0 +1,74 @@
+%include std/elfheader.op
+
+488d3d*var_float_array
+e8*fn_enter_float_value
+488d4704 ; lea rdi, [rdi+4]
+e8*fn_enter_float_value
+
+
+488d3d*var_float_array ; lea rdi, [var_float_array]
+
+
+660f6e07 ; movd xmm0, [rdi]
+f30f584704 ; addss xmm0, [rdi+4]
+660f7e4704 ; movd [rdi+4], xmm0 
+
+660f7ec0 ; movd rax, xmm0
+e8*fn_print_rax
+
+660f6e4704  ; movd xmm0, [rdi+4]
+f30f5907    ; mulss xmm0, [rdi]
+660f7e07    ; movd [rdi], xmm0 
+
+660f7ec0    ; movd rax, xmm0
+e8*fn_print_rax
+
+660f6e4704  ; movd xmm0, [rdi+4]
+f30f5e07    ; divss xmm0, [rdi]
+660f7e4704  ; movd [rdi+4], xmm0 
+
+660f7ec0    ; movd rax, xmm0
+e8*fn_print_rax
+
+660f6e07    ; movd xmm0, [rdi]
+f30f5c4704  ; subss xmm0, [rdi+4]
+660f7e07    ; movd [rdi], xmm0 
+
+660f7ec0    ; movd rax, xmm0
+e8*fn_print_rax
+
+
+
+e8*fn_exit
+
+%include std/etc.op
+%include std/text.op
+%include std/memory.op
+
+&fn_enter_float_value ; rdi address
+4857
+    488d3d*var_enter_integer
+    e8*fn_print
+    e8*fn_scan_sdec
+    f30f2ac0 ; cvtsi2ss xmm0, rax
+485f
+660f7e07 ; movd [rdi], xmm0
+c3
+
+&var_float_array 0000000000000000
+&var_enter_integer "Enter an integer number:" 00
+
+;
+;float f1, f2
+;void main(){
+;   int a;
+;   scanf("%d", &a);
+;   f1 = a;
+;   scanf("%d", &a);
+;   f2 = a;
+;   f2+=f1;
+;   f1*=f2;
+;   f2/=f1;
+;   f1-=f2;
+;}
+;
