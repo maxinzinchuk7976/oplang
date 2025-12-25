@@ -1,1 +1,54 @@
+&fn_token_com_def ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_def_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_def_skip
+    &fn_token_com_def_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_def_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_def_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_com_def_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_com_def_loop
+    &fn_token_com_def_done
+    83fa00 ; cmp rdx, 1
+    741*fn_token_com_def_end
+    4856 ; push rsi
+        488b3d*var_define_list ; rdi, [define_list]
+        488d7201 ; mov rsi, [rdx+1]
+        e8*fn_hlist_push
+    485e ; pop rsi
+    4856
+    4857
+        488d340b; lea rsi, [rbx+rcx]
+        4829d6  ; sub rsi, rdx
+        488bf8  ; mov rdi, rax
+        e8*fn_memcpy
+        c6043a00 ; mov [rdi+rdx], 0
+        e8*fn_print
+        488d3d*var_has_defined_str
+        e8*fn_print
+    485e
+    485f
+    &fn_token_com_def_end
+48 5f
+48 5e
+48 5a
+48 58
+c3
+
+
 &var_define_list 0000000000000000
+&var_has_defined_str " has been defined" 0a00 

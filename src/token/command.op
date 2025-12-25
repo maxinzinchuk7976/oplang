@@ -30,8 +30,13 @@
     &fn_token_com_aling_check
     48 8d 3d *var_aling_str ; lea rdi, [include_str]
     e8*fn_strcmp
-    75 1*fn_token_com_end
+    75 1*fn_token_com_def_check
         e8*fn_token_com_aling
+    &fn_token_com_def_check
+    48 8d 3d *var_def_str ; lea rdi, [include_str]
+    e8*fn_strcmp
+    75 1*fn_token_com_end
+        e8*fn_token_com_def
     &fn_token_com_end
     ff c1 ; inc ecx
 48 5f ; pop rdi
@@ -113,12 +118,15 @@ c3
     741*fn_token_com_aling_zero
         ffca ; dec rdx
     &fn_token_com_aling_zero
-    488915*var_assembly_aling
+    488915*var_assembly_align
 485f
 485e
 485a
 4858
 c3
 
-&var_aling_str "aling" 00
-&var_inc_str "include" 00
+&var_aling_str  "align" 00
+&var_inc_str    "include" 00
+&var_def_str    "def" 00
+&var_ifdef_str  "ifdef" 00
+&var_ifndef_str "ifndef" 00

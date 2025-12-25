@@ -139,7 +139,7 @@
     48 8b 15 *var_output_filesize
     48 8b f8 ; mov rdi, rax
 
-    488b05*var_assembly_aling 
+    488b05*var_assembly_align
     4801c2 ; add rdx, rax
     48f7d0 ; not rax
     4821c2 ; and rdx, rax
@@ -155,4 +155,4 @@
     0f05
 c3
 
-&var_assembly_aling 0000000000000000
+&var_assembly_align 0000000000000000
