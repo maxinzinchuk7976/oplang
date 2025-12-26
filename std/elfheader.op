@@ -1,5 +1,5 @@
 &__elfheader_start
-
+%aling 0
 7f454c46 ; magic
 02 01 01 03
 00 00 00 00 00 00 00 00

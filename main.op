@@ -1,5 +1,4 @@
 %include     std/elfheader.op
-
 ;entry 0x400078
 
 
@@ -54,7 +53,6 @@ e8 *exit
 48 56 ; push rsi
 48 57 ; push rdi
 49 50 ; push r8
-    e8*fn_print
 
     48 8b ec ; mov rbp, rsp
     48 81 ec 00 01 00 00 ; sub rsp, 00 01 00 00
@@ -157,5 +155,3 @@ c3
 &var_fld_to_open_file_msg "Failed to open the file" 00
 &var_link_set_str 09 " have been founded at 0x" 00
 &var_link_found 09 " reference have been founded" 0a 00
-&var_inc_str "include" 00
-

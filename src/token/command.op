@@ -24,14 +24,21 @@
     48 29 d0 ; sub rax, rdx
     48 8d 3d *var_inc_str ; lea rdi, [include_str]
     e8*fn_strcmp
-    75 1*fn_token_com_end
+    751*fn_token_com_aling_check
         e8*fn_token_com_inc
+        eb1*fn_token_com_end
+    &fn_token_com_aling_check
+    48 8d 3d *var_aling_str ; lea rdi, [include_str]
+    e8*fn_strcmp
+    75 1*fn_token_com_end
+        e8*fn_token_com_aling
     &fn_token_com_end
     ff c1 ; inc ecx
 48 5f ; pop rdi
 48 5e ; pop rsi
 48 5a ; pop rdx
 c3
+
 
 &fn_token_com_inc ; rcx index, rbx stream
 48 50
@@ -74,3 +81,44 @@ c3
 48 5a
 48 58
 c3
+
+
+&fn_token_com_aling ; rcx index, rbx stream
+4850
+4852
+4856
+4857
+    &fn_token_com_aling_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_aling_skip
+    4833d2 ; xor rdx, rdx
+    &fn_token_com_aling_loop
+        3bce ; cmp ecx, esi
+        7d1*fn_token_com_aling_done
+        803c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_aling_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_hex
+            e8*fn_chrsrch
+        48 5a 
+        75 1*fn_token_com_aling_done
+            48c1e204 ; shl rdx, 4
+            4801c2 ; add rdx, rax
+            ffc1 ; inc ecx
+        eb 1*fn_token_com_aling_loop
+    &fn_token_com_aling_done
+    4883fa00 ; cmp rdx, 0
+    741*fn_token_com_aling_zero
+        ffca ; dec rdx
+    &fn_token_com_aling_zero
+    488915*var_assembly_aling
+485f
+485e
+485a
+4858
+c3
+
+&var_aling_str "aling" 00
+&var_inc_str "include" 00

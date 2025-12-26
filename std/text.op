@@ -82,6 +82,7 @@ c3
 
 
 &fn_strcmp ; rdi pattern, rax str, rdx size
+48 50 
 48 51 ; push rcx
 48 52 ; push rdx
 48 53 ; push rbx
@@ -105,6 +106,7 @@ c3
 48 5b ; pop rbx
 48 5a ; pop rdx
 48 59 ; pop rcx
+48 58
 c3
 
 
