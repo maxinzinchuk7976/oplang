@@ -1,6 +1,7 @@
 %include     std/elfheader.op
 ;entry 0x400078
 
+%ifdef LINUX
 
 48 59 ; pop rcx
 83 f9 03 ; cmp rcx, 3

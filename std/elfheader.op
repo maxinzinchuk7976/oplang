@@ -1,6 +1,6 @@
 &__elfheader_start
 %align 0
-%define LINUX
+%def LINUX
 7f454c46 ; magic
 02 01 01 03
 00 00 00 00 00 00 00 00

@@ -49,6 +49,94 @@
 48 58
 c3
 
+&fn_token_com_ifdef ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_ifdef_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_ifdef_skip
+    &fn_token_com_ifdef_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_ifdef_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_ifdef_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_com_ifdef_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_com_ifdef_loop
+    &fn_token_com_ifdef_done
+    83fa00 ; cmp rdx, 1
+    741*fn_token_com_ifdef_end
+        488d040b ; lea rax, [rbx+rcx]
+        4829d0 ; sub rax, rdx
+        e8*fn_is_defined
+        741*fn_token_com_ifdef_end
+            
+    &fn_token_com_ifdef_end
+48 5f
+48 5e
+48 5a
+48 58
+c3
+
+&fn_token_ifloop ; rax str, rdx size
+4852
+4856
+4857
+    4856
+        488bf0 ; mov rsi, rax
+        488bfa ; mov rdi, rdx
+        e8*fn_nstrcpy
+        488bd0 ; mov rdx, rax
+    485e
+    &fn_token_ifloop_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_ifloop_done
+        8a 04 0b ; mov al, [rcx+rbx]
+        ff c1 ; inc ecx
+        eb 1*fn_token_ifloop_loop
+    &fn_token_ifloop_done
+485f
+485e
+485a
+c3
+
+
+&fn_is_defined ; rax str, rdx size 
+4851
+4856
+4857
+    488b3d*var_define_list
+    488b4f18 ; mov rcx, [rdi+0x18] ; rcx = list->size
+    &fn_is_defined_loop
+        ffc9 ; dec rcx
+        80f900 ; cmp rcx, 0
+        7c1*fn_is_defined_end
+            4857
+                4850
+                    e8*fn_hlist_get
+                    488bf8 ; mov rdi, rax
+                    8b00 ; mov eax, [rax]
+                    4829c7 ; sub rdi, eax
+                4858
+                e8*fn_strcmp
+            485f
+            741*fn_is_defined_end
+    eb1*fn_is_defined_loop
+    &fn_is_defined_end
+485f
+485e
+4859
+c3
 
 &var_define_list 0000000000000000
-&var_has_defined_str " has been defined" 0a00 
+&var_has_defined_str " has been defined" 0a00
