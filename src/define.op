@@ -49,6 +49,80 @@
 48 58
 c3
 
+
+&fn_token_com_endif ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_endif_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_endif_skip
+    &fn_token_com_endif_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_endif_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_endif_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_com_endif_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_com_endif_loop
+    &fn_token_com_endif_done
+    
+    &fn_token_com_endif_end
+48 5f
+48 5e
+48 5a
+48 58
+c3
+
+&fn_token_com_ifndef ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_com_ifndef_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_com_ifndef_skip
+    &fn_token_com_ifndef_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_com_ifndef_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_com_ifndef_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_com_ifndef_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_com_ifndef_loop
+    &fn_token_com_ifndef_done
+    83fa00 ; cmp rdx, 1
+    741*fn_token_com_ifndef_end
+        488d040b ; lea rax, [rbx+rcx]
+        4829d0 ; sub rax, rdx
+        e8*fn_is_defined
+        751*fn_token_com_ifndef_end
+            e8*fn_token_ifloop
+    &fn_token_com_ifndef_end
+48 5f
+48 5e
+48 5a
+48 58
+c3
+
+
 &fn_token_com_ifdef ; rcx index, rbx stream
 48 50
 48 52
@@ -80,7 +154,7 @@ c3
         4829d0 ; sub rax, rdx
         e8*fn_is_defined
         741*fn_token_com_ifdef_end
-            
+            e8*fn_token_ifloop
     &fn_token_com_ifdef_end
 48 5f
 48 5e
@@ -102,12 +176,92 @@ c3
         3b ce ; cmp ecx, esi
         7d 1*fn_token_ifloop_done
         8a 04 0b ; mov al, [rcx+rbx]
+        3c"%" ; cmp al, "%"
+        751*fn_token_ifloop_loop_default
+            e8*fn_token_ifloop_command
+            741*fn_token_ifloop_done
+        &fn_token_ifloop_loop_default
         ff c1 ; inc ecx
         eb 1*fn_token_ifloop_loop
     &fn_token_ifloop_done
 485f
 485e
 485a
+c3
+
+&fn_token_ifloop_command
+4852
+4857
+    488bfa ; mov rdi, rax
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_ifloop_command_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_ifloop_command_skip
+    &fn_token_ifloop_command_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_ifloop_command_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_ifloop_command_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_ifloop_command_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_ifloop_command_loop
+    &fn_token_ifloop_command_done
+    4857
+        488d040b ; lea rax, [rcx+rbx]
+        4829d0 ; sub rax, rdx
+        488d3d*var_endif_str
+        e8*fn_strcmp
+    485f
+        751*fn_token_ifloop_command_default
+            e8*fn_token_ifloop_command_endif
+        &fn_token_ifloop_command_default
+485f
+485a
+c3
+
+
+&fn_token_ifloop_command_endif ; rcx index, rbx stream
+48 50
+48 52
+48 56
+48 57
+    48 33 d2 ; xor rdx, rdx
+    &fn_token_ifloop_command_endif_skip
+        ff c1 ; inc ecx
+        80 3c 0b 20 ; cmp [rcx+rbx], ' '
+        74 1*fn_token_ifloop_command_endif_skip
+    &fn_token_ifloop_command_endif_loop
+        3b ce ; cmp ecx, esi
+        7d 1*fn_token_ifloop_command_endif_done
+        80 3c 0b 00 ; cmp [rcx+rbx], 0
+        74 1*fn_token_ifloop_command_endif_done
+        48 52
+            8a 04 0b ; mov al, [rcx+rbx]
+            48 8d 15 *var_delimiters
+            e8*fn_chrcmp
+        48 5a 
+        74 1*fn_token_ifloop_command_endif_done
+        ff c1 ; inc ecx
+        ff c2 ; inc edx
+        eb 1*fn_token_ifloop_command_endif_loop
+    &fn_token_ifloop_command_endif_done
+    83fa01 ; cmp rdx, 1
+    7с1*fn_token_ifloop_command_endif_end
+        488d040b ; lea rax, [rbx+rcx]
+        4829d0 ; sub rax, rdx
+        e8*fn_strcmp
+    &fn_token_ifloop_command_endif_end
+48 5f
+48 5e
+48 5a
+48 58
 c3
 
 

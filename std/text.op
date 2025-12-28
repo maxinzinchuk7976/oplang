@@ -2,6 +2,14 @@
 %include std/text/print.op
 %include std/text/put.op
 
+%ifdef LINUX
+    %include std/linux/cli_io.op
+%endif LINUX
+
+%ifdef WINDOWS
+    %include std/windows/cli_io.op
+%endif WINDOWS
+
 &fn_strcpy ; rdi input
 4852 ; push rdx
 4856 ; push rsi
@@ -49,12 +57,12 @@ c3
 
 &fn_strlen_rsi ; rdi address
     48 8b c6 ; mov rax, rsi
-    &_strlen_loop
+    &_strlen_rsi_loop
     80 38 00 ; cmp BYTE [rax], 0
-    74 1*_strlen_done ; je strlen_done
+    74 1*_strlen_rsi_done ; je strlen_done
         48 ff c0 ; inc rax
-        eb 1*_strlen_loop
-    &_strlen_done
+        eb 1*_strlen_rsi_loop
+    &_strlen_rsi_done
     48 29 f0 ; sub rax, rsi
 c3
 

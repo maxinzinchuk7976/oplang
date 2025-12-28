@@ -40,8 +40,18 @@
     &fn_token_com_ifdef_check
     48 8d 3d *var_ifdef_str ; lea rdi, [include_str]
     e8*fn_strcmp
-    75 1*fn_token_com_end
+    75 1*fn_token_com_ifndef_check
         e8*fn_token_com_ifdef
+    &fn_token_com_ifndef_check
+    48 8d 3d *var_ifndef_str ; lea rdi, [include_str]
+    e8*fn_strcmp
+    75 1*fn_token_com_endif_check
+        e8*fn_token_com_ifndef
+    &fn_token_com_endif_check
+    48 8d 3d *var_endif_str ; lea rdi, [include_str]
+    e8*fn_strcmp
+    75 1*fn_token_com_end
+        e8*fn_token_com_endif
     &fn_token_com_end
     ff c1 ; inc ecx
 48 5f ; pop rdi

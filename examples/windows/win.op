@@ -1,23 +1,9 @@
-%include winstd/PEheader.op
-    65488b042560000000 ; mov rax, gs:[0x60]
-    488b4020 ; mov rax, [rax+32]
-    488b4828 ; mov rcx, [rax+40]
-    4833d2 ; xor rdx, rdx
-    4d33c0 ; xor r8, r8
-    4d33c9 ; xor r9, r9
-    4883ec68 ; sub rsp, 104
-    488d442458 ; lea rax, [rsp+88]
-    4889442428 ; mov [rsp+40], rax
-    488d05*var_string ; lea rax, [str]
-    4889442430 ; mov [rsp+48], rax
-    48c74424380c000000 ; mov [rsp+56], 12
-    48c744244000000000 ; mov [rsp+64], 0
-    48c744244800000000 ; mov [rsp+72], 0
-    4c8bd1 ; mov r10, rcx
-    b808000000 ; mov eax, 8
-    0f05 ; syscall
-    4883c468 ; add rsp, 104
-    4833c0 ; xor rax,rax
+%include std/PEheader.op
+%include std/text.op
+    
+488d3d*var_string
+e8*fn_print
+4833c0 ; xor rax,rax
 c3 ; ret
 
 

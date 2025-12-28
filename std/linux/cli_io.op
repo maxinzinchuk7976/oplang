@@ -1,0 +1,42 @@
+%ifndef CLI_IO_H
+
+%def CLI_IO_H
+
+&fn_print ; rdi string
+48 50 ; push rax
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    e8 *fn_strlen
+    48 8b d0 ; mov rdx, rax
+    48 8b f7 ; mov rsi, rdi
+    48 b8 01 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f 05 ; syscall
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 58 ; pop rax
+c3
+
+&fn_nprint ; rax string, rdx size
+48 50 ; push rax
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 57 ; push rdi
+    48 8b f0 ; mov rsi, rax
+    48 b8 01 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f 05 ; syscall
+48 5f ; pop rdi
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 58 ; pop rax
+c3
+
+
+%endif CLI_IO_H
