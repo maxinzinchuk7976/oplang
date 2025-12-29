@@ -1,11 +1,12 @@
 %include std/PEheader.op
-%include std/text.op
-    
+
 488d3d*var_string
 e8*fn_print
 4833c0 ; xor rax,rax
 c3 ; ret
 
+%include std/text.op
+    
 
 &var_string "Hello world"0a00
 

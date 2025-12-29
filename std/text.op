@@ -3,11 +3,11 @@
 %include std/text/put.op
 
 %ifdef LINUX
-    %include std/linux/cli_io.op
+    %include std/linux/stdio.op
 %endif LINUX
 
 %ifdef WINDOWS
-    %include std/windows/cli_io.op
+    %include std/windows/stdio.op
 %endif WINDOWS
 
 &fn_strcpy ; rdi input
@@ -18,7 +18,7 @@
     488bd0 ; mov rdx, rax
     488bf0 ; mov rsi, rax
     ffc6 ; inc rsi
-    e8*fn_malloc
+    e8*fn_mmalloc
     488bf7 ; mov rsi, rdi
     488bf8 ; mov rdi, rax
     e8*fn_memcpy
@@ -35,7 +35,7 @@ c3
     488bfe ; mov rdi, rsi 
     488bf2 ; mov rsi, rdx
     ffc6 ; inc rsi
-    e8*fn_malloc
+    e8*fn_mmalloc
     488bf7 ; mov rsi, rdi
     488bf8 ; mov rdi, rax
     e8*fn_memcpy

@@ -1,6 +1,6 @@
-%ifndef CLI_IO_H
+%ifndef STDIO_H
 
-%def CLI_IO_H
+%def STDIO_H
 
 &fn_print ; rdi string
 48 50 ; push rax
@@ -39,4 +39,4 @@ c3
 c3
 
 
-%endif CLI_IO_H
+%endif STDIO_H

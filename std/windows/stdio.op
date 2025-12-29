@@ -1,5 +1,5 @@
-%ifdef CLI_IO_H
-%def CLI_IO_H
+%ifdef STDIO_H
+%def STDIO_H
 
 &fn_print ; rdi string
 4850
@@ -33,4 +33,4 @@
 4859
 4858
 
-%endif CLI_IO_H
+%endif STDIO_H

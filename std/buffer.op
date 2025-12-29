@@ -1,0 +1,12 @@
+%ifndef STD_BUFFER_H
+%def STD_BUFFER_H
+
+%include std/memory.op
+
+&fn_buffer_init 
+    
+c3
+
+%endif STD_BUFFER_H
+
+

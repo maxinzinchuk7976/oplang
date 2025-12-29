@@ -1,3 +1,40 @@
+%ifndef STD_MEMORY_H
+%def STD_MEMORY_H
+
+&fn_mmalloc ; rsi size 
+4857
+    e8*fn_mmalloc_check
+    488b3d*var_mmalloc_address
+    48033d*var_mmalloc_chunk_usage
+    480135*var_mmalloc_chunk_usage
+    488bc7 ; mov rax, rdi
+485f
+c3
+
+&fn_mmalloc_check ; rsi size
+4857
+    488b3d*var_mmalloc_chunk_size
+    482b3d*var_mmalloc_chunk_usage
+    482bfe ; sub rdi, rsi
+    4883ff00 ; cmp rdi, 0
+    7d1*fn_mmalloc_check_overflow
+        48d125*var_mmalloc_chunk_size
+        4833c0 ; xor rax, rax
+        488905*var_mmalloc_address
+        488905*var_mmalloc_chunk_usage
+    &fn_mmalloc_check_overflow
+    488d3d*var_mmalloc_address
+    48833f00 ; cmp [rdi], 0
+    751*fn_mmalloc_check_address_isset
+        4856
+            488b35*var_mmalloc_chunk_size
+            e8*fn_malloc
+            488907 ; mov [rdi], rax
+        485e
+    &fn_mmalloc_check_address_isset
+485f
+c3
+
 
 &fn_malloc ; rsi size
 48 57 ; push rdi
@@ -12,6 +49,7 @@
 
     48 83 c6 0f ; add rsi, 0x0f
     48 80 e6 f0 ; and lsi, 0xf0
+    
 
     48 b8 09 00 00 00 00 00 00 00 ; mov rax, 9
     48 ba 07 00 00 00 00 00 00 00 ; mov rdx, 7
@@ -64,5 +102,11 @@ c3
 48 59 ; pop rcx
 c3
 
+&var_mmalloc_address 0000000000000000
+&var_mmalloc_chunk_usage 0000000000000000
+&var_mmalloc_chunk_size 0010000000000000
 
-&var_malloc_next 00 00 50 00 00 00 00 00
+
+&var_malloc_next 0000500000000000
+
+%endif STD_MEMORY_H
