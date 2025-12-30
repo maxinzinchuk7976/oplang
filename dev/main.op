@@ -25,12 +25,19 @@ e8 *fn_malloc ; call malloc
 48 8b e0 ; mov rsp, rax
 
 e8*fn_envoriment_init
-488905 *var_root_envoriment
+488905*var_root_envoriment
+
+e8*fn_buffer_init
+488905*var_root_buffer
 
 488bf0 ; mov rsi, rax
 488b3d*var_mainfile ; mov rdi, [mainfile]
 e8*fn_start_file
 
+488b3d*var_output_filename
+488b35*var_root_envoriment
+488b15*var_root_buffer
+e8*fn_assembly
 
 e8*fn_exit
 
@@ -102,12 +109,14 @@ c3
 
 %include src/envoriment.op
 %include src/tokenize.op
+%include src/assembler.op
 
 %include std/hlist.op
 %include std/text.op
 %include std/memory.op
 %include std/etc.op
 %include std/filesystem.op
+%include std/buffer.op
 
 
 &var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
@@ -120,4 +129,5 @@ c3
 &var_mainfile        0000000000000000
 &var_output_filename 0000000000000000
 &var_root_envoriment 0000000000000000
+&var_root_buffer     0000000000000000
 

@@ -55,7 +55,7 @@ c3
     48 29 f8 ; sub rax, rdi
 c3
 
-&fn_strlen_rsi ; rdi address
+&fn_strlen_rsi ; rsi address
     48 8b c6 ; mov rax, rsi
     &_strlen_rsi_loop
     80 38 00 ; cmp BYTE [rax], 0

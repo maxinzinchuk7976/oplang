@@ -3,8 +3,110 @@
 
 %include std/memory.op
 
-&fn_buffer_init 
-    
+;buffer
+;0x00-0x08 pointer
+;0x08-0x10 size
+;0x10-0x18 used
+&fn_buffer_init
+4856
+    4833f6 ; xor rsi, rsi
+    40b618 ; mov lsi, 0x18
+    e8*fn_mmalloc
+    4833f6 ; xor rsi, rsi
+    48897010 ; mov [rax+0x10], rsi
+    66be0010 ; mov SI, 0x1000
+    48897008 ; mov [rax+0x08], rsi
+    4850
+        e8*fn_malloc
+        488bf0 ; mov rsi, rax
+    4858
+    488930 ; mov [rax], rsi
+485e
+c3
+
+&fn_buffer_check ; rdi buffer, rdx size
+4850
+4852
+4856
+    48035710 ; add rdx, [rdi+0x10]
+    48395708 ; cmp [rdi+0x08], rdx
+    7d1*fn_buffer_check_overflow
+        48d16708 ; shl [rdi+0x08], 1
+        488b7708 ; mov rsi, [rdi+0x08]
+        e8*fn_malloc
+        4857
+            488bd6 ; mov rdx, rsi
+            48d1ea ; shr rdx, 1
+            488b37 ; mov rsi, [rdi]
+            488bf8 ; mov rdi, rsi
+            e8*fn_memcpy  
+            488bfe ; mov rdi, rsi
+            488bf2 ; mov rsi, rdx
+            4850 e8*fn_munmap 4858
+        485f
+        488907 ; mov [rdi], rax
+    &fn_buffer_check_overflow
+485e
+485a
+4858
+c3
+
+&fn_buffer_write_memcpy ; rdi buffer, rsi address, rdx size
+4857
+    e8*fn_buffer_check
+    4856
+        488b37 ; mov rsi, [rdi]
+        48037710 ; add rsi, [rdi+0x10]
+        48015710 ; add [rdi+0x10], rdx
+        488bfe ; mov rdi, rsi
+    485e
+    e8*fn_memcpy
+485f
+c3
+
+&fn_buffer_write_rax ; rdi buffer, rax rax
+4857  
+    4856
+        4833f6 ; xor rsi,rsi
+        40b608 ; mov lsi, 8
+        e8*fn_buffer_check
+        488b37 ; mov rsi, [rdi]
+        48037710 ; add rsi, [rdi+0x10]
+        4883471008 ; add [rdi+0x10], 8
+        488bfe ; mov rdi, rsi
+    485e 
+    488907 ; mov [rdi], rax
+485f
+c3
+
+&fn_buffer_write_eax ; rdi buffer, rax rax
+4857  
+    4856
+        4833f6 ; xor rsi,rsi
+        40b608 ; mov lsi, 4
+        e8*fn_buffer_check
+        488b37 ; mov rsi, [rdi]
+        48037710 ; add rsi, [rdi+0x10]
+        4883471004 ; add [rdi+0x10], 4
+        488bfe ; mov rdi, rsi
+    485e 
+    8907 ; mov [rdi], eax
+485f
+c3
+
+&fn_buffer_write_al ; rdi buffer, rax rax
+4857  
+    4856
+        4833f6 ; xor rsi,rsi
+        40b608 ; mov lsi, 1
+        e8*fn_buffer_check
+        488b37 ; mov rsi, [rdi]
+        48037710 ; add rsi, [rdi+0x10]
+        4883471001 ; add [rdi+0x10], 1
+        488bfe ; mov rdi, rsi
+    485e 
+    8807 ; mov [rdi], al
+485f
 c3
 
 %endif STD_BUFFER_H

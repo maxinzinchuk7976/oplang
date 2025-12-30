@@ -1,3 +1,13 @@
-&fn_assembly_envoriment ; rdi buffer
-
+; rdi filename, rsi envoriment
+; 0x00-0x08 rbp
+; 0x08-0x10 filename
+; 0x10-0x18 envoriment
+; 0x18-0x20 buffer
+; 0x20-0x28 backpatch_list
+; 0x28-0x30 position
+; 0x30-0x38 scope
+&fn_assembly_envoriment ; rdi filename, rsi envoriment, rdx buffer, rcx backpatch_list
+    c8 3800 00 ; enter 0x38, 0
+    
+    c9
 c3
