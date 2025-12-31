@@ -39,3 +39,9 @@ c3
 485f
 485e
 c3
+
+
+&fn_assembly_handle_hex ; rax token, rdi buffer
+    8a4001 ; mov [rax+1], al 
+    e8*fn_buffer_write_al
+c3

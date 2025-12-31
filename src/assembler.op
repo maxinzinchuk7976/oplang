@@ -135,7 +135,7 @@
     &fn_assembly_done
 
     48 8b 3d *var_output_filename ; mov rdi, [output_filename]
-    e8*fn_crt_file
+    e8*fn_create_file
     48 8b 15 *var_output_filesize
     48 8b f8 ; mov rdi, rax
 

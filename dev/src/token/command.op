@@ -72,12 +72,17 @@ c3
     40b611; mov si, 17
     e8*fn_envoriment_push_keyword
     488bf0 ; mov rsi, rax
-    c60602 ; mov [rsi], 9
+    c60602 ; mov [rsi], 2
     e8*fn_envoriment_init_parent
     48894609 ; mov [rsi+9], rax
     488bf8 ; mov rdi, rax
 485e
 c3
 
-&__command_include "include" 00
-&__command_scope "scope" 00
+&__command_include  "include" 00
+&__command_scope    "scope" 00
+&__command_align    "align" 00
+&__command_def      "def" 00
+&__command_ifdef    "ifdef" 00
+&__command_ifndef   "ifndef" 00
+&__command_endif    "endif" 00

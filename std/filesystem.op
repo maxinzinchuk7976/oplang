@@ -30,7 +30,7 @@ c3
 4859 ; pop rcx
 c3
 
-&fn_crt_file ; rdi filename
+&fn_create_file ; rdi filename
 48 51
 48 52
 48 56
