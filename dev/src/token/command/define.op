@@ -1,0 +1,14 @@
+&fn_token_command_define_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_define_handler_end
+        4856
+        4857
+            488bf0 ; mov rsi, rax
+            
+        485f
+        485e
+    &fn_token_command_define_handler_end
+c3
+
+&__token_command_define_list 0000000000000000

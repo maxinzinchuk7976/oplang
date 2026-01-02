@@ -1,4 +1,4 @@
-&fn_print_char ; rdi byte
+&fn_print_char ; ldi byte
 48 50 ; push rax
 48 51 ; push rcx
 48 52 ; push rdx
@@ -16,6 +16,27 @@
 48 59 ; pop rcx
 48 58 ; pop rax
 c3
+
+&fn_print_char_al ; al byte
+48 57 ; push rdi
+48 51 ; push rcx
+48 52 ; push rdx
+48 56 ; push rsi
+48 50 ; push rax
+    4833d2 ; xor rdx, rdx
+    b201 ; mov dl, 1
+    48 8b f4 ; mov rsi, rsp
+    48 b8 01 00 00 00 00 00 00 00 ; mov rax, 1
+    48 bf 01 00 00 00 00 00 00 00 ; mov rdi, 1
+    0f 05 ; syscall
+48 58 ; pop rax
+48 5e ; pop rsi
+48 5a ; pop rdx
+48 59 ; pop rcx
+48 5f ; pop rdi
+c3
+
+
 
 
 &fn_print_dec ; rsi input 

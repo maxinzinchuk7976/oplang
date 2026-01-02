@@ -1,0 +1,44 @@
+
+;int64 pointer 0x00-0x08
+;int64 total   0x08-0x10 
+&fn_slist_init
+4851 ; push rcx
+4852 ; push rdx
+4856 ; push rsi
+4857 ; push rdi
+    4833f6 ; xor rsi, rsi
+    40b610 ; mov lsi, 0x10
+    e8*fn_mmalloc
+    488bd0 ; mov rdx, rax
+    be00100000 ; mov esi, 0x1000
+    e8*fn_malloc
+    488902 ; mov [rdx], rax
+    48897208 ; mov [rdx+0x08], rsi
+    4833f6 ; xor rsi, rsi
+    488930 ; mov [rax], rsi
+    488bc2 ; mov rax, rdx
+485f ; pop rdi
+485e ; pop rsi
+485a ; pop rdx
+4859 ; pop rcx
+c3
+; list of 8 byte pointers
+
+&fn_slist_push_rax ; rdi list, rax pointer
+4851
+4857
+    488b3f ; mov rdi, [rdi]
+    48ff07 ; inc [rdi]
+    488b0f ; mov rcx, [rdi]
+    488904cf ; mov [rdi+rcx*8], rax
+485f
+4859
+c3
+
+&fn_slist_end ; rdi list
+4857
+    488b07 ; mov eax, [rdi]
+    488b38 ; mov rdi, [eax]
+    488d04f8 ; lea eax [eax+rdi*8]
+485f
+c3

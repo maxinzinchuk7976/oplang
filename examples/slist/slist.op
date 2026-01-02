@@ -1,0 +1,31 @@
+%include std/elfheader.op
+
+e8*fn_slist_init
+488905*var_slist
+
+&loop
+    488d3d*var_enter_str e8*fn_print ; printing enter string
+    e8*fn_scan_str ; recieving input
+    803800 741*end ; checking it
+    488b3d*var_slist e8*fn_slist_push_rax ; pushing string to list
+    eb1*loop
+&end
+
+488d3d*var_entered_str e8*fn_print ; printing entered string
+488b3d*var_slist 488b3f 488b0f ; getting c-style array and count
+b00ae8*fn_print_char_al ; print new line
+&while
+    4857 488b3ccf e8*fn_print 485f ; printing the contents
+    b00ae8*fn_print_char_al ; print new line
+e21*while ; is it last?
+
+e8*fn_exit 
+
+%include std/etc.op
+%include std/text.op
+%include std/memory.op
+%include std/slist.op
+
+&var_slist 0000000000000000
+&var_enter_str "Enter a string: " 00
+&var_entered_str "Entered strings: " 00

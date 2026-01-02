@@ -24,13 +24,15 @@ e8 *fn_malloc ; call malloc
 48 03 c6 ; add rax, rsi
 48 8b e0 ; mov rsp, rax
 
+e8*fn_hlist_init
+488905*__token_command_define_list
+
 e8*fn_envoriment_init
 488905*var_root_envoriment
 
 488bf0 ; mov rsi, rax
 488b3d*var_mainfile ; mov rdi, [mainfile]
 e8*fn_start_file
-
 
 e8*fn_buffer_init
 488905*var_root_buffer
