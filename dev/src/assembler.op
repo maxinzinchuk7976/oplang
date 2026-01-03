@@ -41,6 +41,18 @@
             &fn_assembly_envoriment_default
         eb1*fn_assembly_envoriment_loop
         &done_fn_assembly_envoriment_loop
+        488b7de0 ; mov rdi, [rbp-0x20]
+        488b7710 ; mov rsi, [rdi+0x10]
+
+        488b05*var_align
+        483d00000000 ; cmp rax, 0
+        741*fn_assembly_envoriment_no_align
+            ffc8 ; dec rax
+            4801c6 ; add rsi, rax
+            48f7d0 ; not rax
+            4821c6 ; and rsi, rax
+            e8*fn_buffer_resize
+        &fn_assembly_envoriment_no_align
 
         488b7df0 ; mov [rbp-0x10], rdi
         e8*fn_create_file

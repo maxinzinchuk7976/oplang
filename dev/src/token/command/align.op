@@ -1,0 +1,16 @@
+&fn_token_command_align_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_define_handler_end
+        4857
+            488bf8 ; mov rdi, rax
+            e8*fn_nscan_hex
+            488905*var_align
+            488d3d*var_set_newalign_str
+            e8*fn_print
+            e8*fn_print_rax
+        485f
+    &fn_token_command_define_handler_end
+c3
+
+&var_set_newalign_str "Aling has been set to 0x" 00

@@ -1,0 +1,26 @@
+&fn_nscan_hex ; rdi string
+4851
+4852
+4856
+4857    
+    488bf7 ; mov rsi, rdi
+    488d15*var_hex_l
+    488d3d*var_hex_h
+    4833c9 ; xor rcx, rcx
+    &fn_nscan_hex_loop
+        8a06 ; mov al, [rsi]
+        3c00741*fn_nscan_hex_done
+        48ffc6 ; inc rsi
+        e8*fn_chrsrch
+            80f8ff ; cmp rax, 0xff
+            741*fn_nscan_hex_loop
+                48c1e104 ; shl rcx, 4
+                00c1 ; add cl, al
+        eb1*fn_nscan_hex_loop
+    &fn_nscan_hex_done
+    488bc1 ; mov rax, rcx
+485f
+485e
+485a
+4859
+c3

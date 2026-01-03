@@ -10,7 +10,7 @@
         751*fn_token_command_scope
             485f
             e8*fn_token_command_include_handler
-            eb1*fn_token_command_end
+            e9*fn_token_command_end
         &fn_token_command_scope
         488d3d*__command_scope
         e8*fn_pstrcmp
@@ -18,14 +18,14 @@
             485f
             e8*fn_token_command_scope_handler
             e8*fn_envoriment_push_keyword_scope
-            eb1*fn_token_command_end
+            e9*fn_token_command_end
         &fn_token_command_define
         488d3d*__command_def
         e8*fn_pstrcmp
         751*fn_token_command_ifdef
             485f
             e8*fn_token_command_define_handler
-            eb1*fn_token_command_end
+            e9*fn_token_command_end
         &fn_token_command_ifdef
         488d3d*__command_ifdef
         e8*fn_pstrcmp
@@ -43,9 +43,16 @@
         &fn_token_command_endif
         488d3d*__command_endif
         e8*fn_pstrcmp
-        751*fn_token_command_default
+        751*fn_token_command_align
             485f
             e8*fn_token_command_endif_handler
+            eb1*fn_token_command_end
+        &fn_token_command_align
+        488d3d*__command_align
+        e8*fn_pstrcmp
+        751*fn_token_command_default
+            485f
+            e8*fn_token_command_align_handler
             eb1*fn_token_command_end
     &fn_token_command_default
     485f
@@ -57,6 +64,7 @@ c3
 %include src/token/command/include.op
 %include src/token/command/scope.op
 %include src/token/command/define.op
+%include src/token/command/align.op
 
 &__command_include  "include" 00
 &__command_scope    "scope" 00

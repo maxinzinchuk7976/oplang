@@ -24,6 +24,21 @@
 485e
 c3
 
+&fn_buffer_resize ; rdi buffer, rsi size
+4850
+4852
+4856
+    483b7710 ; cmp rsi, [rdi+0x10]
+    7e1*fn_buffer_resize_done
+        4856 482b7710 e8*fn_buffer_check 485e
+    &fn_buffer_resize_done
+    48897710 ; mov [rdi+0x10], rsi
+485e
+485a
+4858
+c3
+
+
 &fn_buffer_check ; rdi buffer, rdx size
 4850
 4852
