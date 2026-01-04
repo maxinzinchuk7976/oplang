@@ -21,7 +21,7 @@ c3
         488bf0 ; mov rsi, rax
     4858
     c60603 ; mov [rsi], 3
-    488b4601 ; mov [rsi+1],rax
+    48894601 ; mov [rsi+1],rax
 485f
 485e
 4858
@@ -31,10 +31,31 @@ c3
 4856
 4857
     4833f6; xor rsi, rsi
-    40b601; mov si, 9
+    40b609; mov si, 16
     e8*fn_envoriment_push_keyword
-    488bf0 ; mov rsi, rax
-    c60603 ; mov [rsi], 3
+    c60002 ; mov [rax], 2
+    c74009ffffffff
+    c7400dffffffff
 485f
 485e
 c3
+
+
+&fn_assembly_handle_label ; rax token, rsi buffer, rdi envoriment
+    488b4001 ; mov rax, [rax+1]
+    e8*fn_envoriment_search_keyword
+    741*fn_assembly_handle_label_found 488d3d*__assembly_handle_label_NOT_FOUND e8*fn_print c3
+    &fn_assembly_handle_label_found
+    803802 ; cmp [rax],2
+    741*fn_assembly_handle_label_correct_type 488d3d*__assembly_handle_label_HAS_WRONG_TYPE e8*fn_print c3
+    &fn_assembly_handle_label_correct_type
+    488b7610 ; mov rsi, [rsi+0x10]
+    48897009 ; mov [rax+9], rsi
+    488b7801 e8*fn_print
+    488d3d*var_has_label_found_str e8*fn_print
+    e8*fn_print_rsi
+c3
+
+&__assembly_handle_label_NOT_FOUND "label IS NOT FOUND!" 0a00
+&__assembly_handle_label_HAS_WRONG_TYPE "label type IS NOT LABEL!" 0a00
+&var_has_label_found_str 09 " label has been found at 0x" 00

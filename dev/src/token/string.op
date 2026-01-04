@@ -25,7 +25,7 @@ c3
         488d7302 ; lea rsi, [rbx+2]
         e8*fn_envoriment_push_token
         488bf8 ; mov rdi, rax
-        c60706 ; mov [rdi], 6
+        c60702 ; mov [rdi], 2
         48ffc7 ; inc rdi
         c6041f00 ; mov [rdi+rbx], 00
     485e
@@ -37,4 +37,11 @@ c3
 485e
 485a
 4858
+c3
+
+
+&fn_assembly_handle_string ; rax token, rdi buffer, rcx size
+    488d7001 ; lea rsi, [rax+1]
+    488d51fe ; lea rdx, [rcx-2]
+    e8*fn_buffer_write_memcpy
 c3
