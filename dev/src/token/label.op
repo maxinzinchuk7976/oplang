@@ -58,4 +58,4 @@ c3
 
 &__assembly_handle_label_NOT_FOUND "label IS NOT FOUND!" 0a00
 &__assembly_handle_label_HAS_WRONG_TYPE "label type IS NOT LABEL!" 0a00
-&var_has_label_found_str 09 " label has been found at 0x" 00
+&var_has_label_found_str " label has been found at 0x" 00

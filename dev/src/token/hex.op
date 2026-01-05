@@ -6,6 +6,9 @@
     
     4850
         8a040e ; mov al, [rcx+rsi]
+        3c"*" 751*fn_token_hex_relative
+            4858 e8*fn_token_relative 485b c3
+        &fn_token_hex_relative
         48574852
             488d3d*var_hex_h
             488d15*var_hex_l

@@ -81,45 +81,45 @@ c3
 
 &fn_buffer_write_rax ; rdi buffer, rax rax
 4857  
-    4856
-        4833f6 ; xor rsi,rsi
-        40b608 ; mov lsi, 8
+    4852
+        4833d2 ; xor rdx,rdx
+        b208 ; mov dl, 8
         e8*fn_buffer_check
-        488b37 ; mov rsi, [rdi]
-        48037710 ; add rsi, [rdi+0x10]
+        488b17 ; mov rdx, [rdi]
+        48035710 ; add rdx, [rdi+0x10]
         4883471008 ; add [rdi+0x10], 8
-        488bfe ; mov rdi, rsi
-    485e 
+        488bfa ; mov rdi, rdx
+    485a
     488907 ; mov [rdi], rax
 485f
 c3
 
 &fn_buffer_write_eax ; rdi buffer, rax rax
 4857  
-    4856
-        4833f6 ; xor rsi,rsi
-        40b608 ; mov lsi, 4
+    4852
+        4833d2 ; xor rdx,rdx
+        b204 ; mov dl, 4
         e8*fn_buffer_check
-        488b37 ; mov rsi, [rdi]
-        48037710 ; add rsi, [rdi+0x10]
+        488b17 ; mov rdx, [rdi]
+        48035710 ; add rdx, [rdi+0x10]
         4883471004 ; add [rdi+0x10], 4
-        488bfe ; mov rdi, rsi
-    485e 
+        488bfa ; mov rdi, rdx
+    485a
     8907 ; mov [rdi], eax
 485f
 c3
 
 &fn_buffer_write_al ; rdi buffer, rax rax
 4857  
-    4856
-        4833f6 ; xor rsi,rsi
-        40b608 ; mov lsi, 1
+    4852
+        4833d2 ; xor rdx,rdx
+        b201 ; mov dl, 1
         e8*fn_buffer_check
-        488b37 ; mov rsi, [rdi]
-        48037710 ; add rsi, [rdi+0x10]
+        488b17 ; mov rdx, [rdi]
+        48035710 ; add rdx, [rdi+0x10]
         4883471001 ; add [rdi+0x10], 1
-        488bfe ; mov rdi, rsi
-    485e 
+        488bfa ; mov rdi, rdx
+    485a 
     8807 ; mov [rdi], al
 485f
 c3

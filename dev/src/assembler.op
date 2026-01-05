@@ -17,6 +17,7 @@
         48897df0 ; mov [rbp-0x10], rdi
         488975e8 ; mov [rbp-0x18], rsi
         488955e0 ; mov [rbp-0x20], rdx
+        48894dd8 ; mov [rbp-0x28], rcx
         488b36   ; mov rsi, [rsi]
         488975c0 ; mov [rbp-0x40], rsi
         488b4e18 ; mov rcx, [rsi+0x18]
@@ -45,10 +46,18 @@
                 eb1*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_label
             803803 ; cmp [rax], 3
-            751*fn_assembly_envoriment_default
+            751*fn_assembly_envoriment_relative
                 488b7de8 ; mov rdi, [rbp-0x18]
                 488b75e0 ; mov rsi, [rbp-0x20]
                 e8*fn_assembly_handle_label
+                eb1*fn_assembly_envoriment_loop
+            &fn_assembly_envoriment_relative
+            803804 ; cmp [rax], 4
+            751*fn_assembly_envoriment_default
+                488b7de0 ; mov rsi, [rbp-0x18]
+                488b75e8 ; mov rdi, [rbp-0x20]
+                488b55d8 ; mov rdx, [rbp-0x28]
+                e8*fn_assembly_handle_relative
                 eb1*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_default
         eb1*fn_assembly_envoriment_loop
@@ -56,24 +65,7 @@
         488b7de0 ; mov rdi, [rbp-0x20]
         488b7710 ; mov rsi, [rdi+0x10]
 
-        488b05*var_align
-        483d00000000 ; cmp rax, 0
-        741*fn_assembly_envoriment_no_align
-            ffc8 ; dec rax
-            4801c6 ; add rsi, rax
-            48f7d0 ; not rax
-            4821c6 ; and rsi, rax
-            e8*fn_buffer_resize
-        &fn_assembly_envoriment_no_align
-
-        488b7df0 ; mov [rbp-0x10], rdi
-        e8*fn_create_file
-        488bf8 ; mov rdi, rax
-        488b75e0 ; mov rsi, [rbp-0x20]
-        488b5610 ; mov rdx, [rsi+0x10]
-        488b36 ; mov rsi, [rsi]
-        b801000000
-        0f05
+        
     c9
 485f
 485e

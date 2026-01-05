@@ -1,13 +1,13 @@
-&fn_token_relative ; rdi envoriment, rsi buffer, rdx size, rcx position, rax size
+&fn_token_relative ; rdi envoriment, rsi buffer, rcx position, rax size
 4853
 4856
     488bd8 ; mov rbx, rax
     ffc1 ; inc rcx
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
-    741*fn_token_label_end
+    741*fn_token_relative_end
         e8*fn_envoriment_push_token_relative
-    &fn_token_label_end
+    &fn_token_relative_end
 485e
 485b
 c3
@@ -23,9 +23,33 @@ c3
         488bf0 ; mov rsi, rax
     4858
     c60604 ; mov [rsi], 4
-    885e01 ; mov [rsi], rbx
-    488b4602 ; mov [rsi+2],rax
+    885e01 ; mov [rsi+1], rbx
+    48894602 ; mov [rsi+2],rax
 485f
 485e
 4858
+c3
+
+&fn_assembly_handle_relative ; rax token, rdi buffer, rsi envoriment, rdx backpatchlist
+4852
+    488bc8 ; mov rcx, rax
+    8a4001 ; mov al, [rax+1]
+    3c01 751*fn_assembly_handle_label_4byte
+        e8*fn_buffer_write_al eb1*fn_assembly_handle_label_size_done
+    &fn_assembly_handle_label_4byte 3c04 751*fn_assembly_handle_label_8byte
+        e8*fn_buffer_write_eax eb1*fn_assembly_handle_label_size_done
+    &fn_assembly_handle_label_8byte 3c08 751*fn_assembly_handle_label_size_done
+        e8*fn_buffer_write_rax eb1*fn_assembly_handle_label_size_done
+    &fn_assembly_handle_label_size_done
+    48564857 488bfa 4833f6 40b622 e8*fn_hlist_push 485f485e
+    c60001 ; mov [rax], 1
+    8a5101 ; mov dl, [rcx+1]
+    885001 ; mov [rax+1], dl
+    488b5102 ; mov rdx, [rcx+2]
+    48895002 ; mov [rax+2], rdx
+    4889700a ; mov [rax+10], rsi
+    48897812 ; mov [rax+18], rax
+    488b5710 ; mov rdx, [rdi+0x10]
+    4889501a ; mov [rax+26], rdx
+485a
 c3

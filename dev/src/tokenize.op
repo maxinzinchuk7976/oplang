@@ -45,12 +45,13 @@
             803c0e"&" ; cmp [rcx+rsi], '&'
             751*fn_tokenize_relative
                 e8*fn_token_label
-                eb1*fn_tokenize_loop
+                e9*fn_tokenize_loop
             &fn_tokenize_relative
             803c0e"*" ; cmp [rcx+rsi], '*'
             751*fn_tokenize_string
+                b004
                 e8*fn_token_relative
-                eb1*fn_tokenize_loop
+                e9*fn_tokenize_loop
             &fn_tokenize_string
             803c0e22  ; cmp [rcx+rsi], '"'
             751*fn_tokenize_default
