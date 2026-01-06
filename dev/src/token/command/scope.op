@@ -13,7 +13,7 @@ c3
 4856
 4857
     4833f6; xor rsi, rsi
-    40b602; mov si, 09
+    40b609; mov si, 09
     4850
         e8*fn_envoriment_push_token
         488bf0 ; mov rsi, rax
@@ -28,7 +28,7 @@ c3
 &fn_envoriment_push_keyword_scope ; rax name, rdi envoriment
 4856
     4833f6; xor rsi, rsi
-    40b611; mov si, 17
+    40b619; mov si, 25
     e8*fn_envoriment_push_keyword
     488bf0 ; mov rsi, rax
     c60601 ; mov [rsi], 1
@@ -36,4 +36,15 @@ c3
     48894609 ; mov [rsi+9], rax
     488bf8 ; mov rdi, rax
 485e
+c3
+
+&fn_assembly_handle_scope  ; rsi envoriment, rdx buffer, rcx backpatch_list, rax token
+    488bfe ; mov rdi, rsi
+    488b4001 ; mov rax, [rax+1]
+    e8*fn_envoriment_search_keyword
+    488b7009 ; mov rsi, [rax+9]
+    488b7a10 ; mov rdi, [rdx+16]
+    48897811 ; mov [rax+17], rdi
+
+    e8*fn_assembly_envoriment
 c3

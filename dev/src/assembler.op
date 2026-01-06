@@ -1,20 +1,19 @@
 ; rdi filename, rsi envoriment
 ; 0x00-0x08 rbp
-; 0x08-0x10 filename
+; 0x08-0x10 reserved
 ; 0x10-0x18 envoriment
 ; 0x18-0x20 buffer
 ; 0x20-0x28 backpatch_list
 ; 0x28-0x30 reserved
 ; 0x30-0x38 position
 ; 0x38-0x40 list
-&fn_assembly_envoriment ; rdi filename, rsi envoriment, rdx buffer, rcx backpatch_list
+&fn_assembly_envoriment ; rsi envoriment, rdx buffer, rcx backpatch_list
 4851
 4852
 4853
 4856
 4857
     c8 4000 00 ; enter 0x38, 0
-        48897df0 ; mov [rbp-0x10], rdi
         488975e8 ; mov [rbp-0x18], rsi
         488955e0 ; mov [rbp-0x20], rdx
         48894dd8 ; mov [rbp-0x28], rcx
@@ -25,7 +24,7 @@
 
         &fn_assembly_envoriment_loop
             48837dc800 ; cmp [rbp-0x38], 0
-            7e1*done_fn_assembly_envoriment_loop
+            0f8e*fn_assembly_envoriment_loop_done
             ff4dc8   ; dec [rbp-0x38]
             488b4dc8 ; mov rcx, [rbp-0x38]
             488b7dc0 ; mov rdi, [rbp-0x40]
@@ -37,33 +36,39 @@
             751*fn_assembly_envoriment_string
                 488b7de0 ; mov rdi, [rbp-0x20]
                 e8*fn_assembly_handle_hex
-                eb1*fn_assembly_envoriment_loop
+                e9*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_string
             803802 ; cmp [rax], 2
             751*fn_assembly_envoriment_label
                 488b7de0 ; mov rdi, [rbp-0x20]
                 e8*fn_assembly_handle_string
-                eb1*fn_assembly_envoriment_loop
+                e9*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_label
             803803 ; cmp [rax], 3
             751*fn_assembly_envoriment_relative
                 488b7de8 ; mov rdi, [rbp-0x18]
                 488b75e0 ; mov rsi, [rbp-0x20]
                 e8*fn_assembly_handle_label
-                eb1*fn_assembly_envoriment_loop
+                e9*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_relative
             803804 ; cmp [rax], 4
-            751*fn_assembly_envoriment_default
+            751*fn_assembly_envoriment_scope
                 488b7de0 ; mov rsi, [rbp-0x18]
                 488b75e8 ; mov rdi, [rbp-0x20]
                 488b55d8 ; mov rdx, [rbp-0x28]
                 e8*fn_assembly_handle_relative
-                eb1*fn_assembly_envoriment_loop
+                e9*fn_assembly_envoriment_loop
+            &fn_assembly_envoriment_scope
+            803805 ; cmp [rax], 5
+            751*fn_assembly_envoriment_default
+                488b55e0 ; mov rdx, [rbp-0x20]
+                488b75e8 ; mov rsi, [rbp-0x18]
+                488b4dd8 ; mov rcx, [rbp-0x28]
+                e8*fn_assembly_handle_scope
+                e9*fn_assembly_envoriment_loop
             &fn_assembly_envoriment_default
-        eb1*fn_assembly_envoriment_loop
-        &done_fn_assembly_envoriment_loop
-        488b7de0 ; mov rdi, [rbp-0x20]
-        488b7710 ; mov rsi, [rdi+0x10]
+        e9*fn_assembly_envoriment_loop
+        &fn_assembly_envoriment_loop_done
 
         
     c9

@@ -66,11 +66,14 @@ c3
         e8*fn_envoriment_tree_search_keyword 
         488bd0 ; rdx, rax
     4858
-    803a02 ; cmp [rdx],2 
-    751*fn_backpatch_handle_relative_end
-        
     488bfe ; mov rdi, rsi
-    488b4a09 ; mov rcx, [rdx+9]
+    803a01 751*fn_backpatch_handle_relative_label
+        488b4a11 ; mov rcx, [rdx+17]
+        eb1*fn_backpatch_handle_relative_label_paste
+    &fn_backpatch_handle_relative_label
+    803a02 751*fn_backpatch_handle_relative_end
+        488b4a09 ; mov rcx, [rdx+9]
+    &fn_backpatch_handle_relative_label_paste
     482b481a ; sub rcx, [rax+0x1a]
     488b701a ; mov rsi, [rax+0x1a]
     488b3f ; mov rdi, [rdi]
