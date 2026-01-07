@@ -66,6 +66,9 @@ c3
         e8*fn_envoriment_tree_search_keyword 
         488bd0 ; rdx, rax
     4858
+    741*fn_backpatch_handle_relative_found
+        e8*fn_backpatch_handle_relative_not_found
+    &fn_backpatch_handle_relative_found
     488bfe ; mov rdi, rsi
     803a01 751*fn_backpatch_handle_relative_label
         488b4a11 ; mov rcx, [rdx+17]
@@ -96,3 +99,13 @@ c3
 4859
 4858
 c3
+
+&fn_backpatch_handle_relative_not_found
+4857
+    488b7802 e8*fn_print
+    488d3d*__assembly_handle_relative_NOT_FOUND e8*fn_print
+485f
+c3
+
+
+&__assembly_handle_relative_NOT_FOUND " keyword IS NOT FOUND!" 0a00

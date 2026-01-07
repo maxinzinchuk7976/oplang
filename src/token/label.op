@@ -1,44 +1,61 @@
-
-&fn_token_lbl ; rcx index, rbx stream
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 33 d2 ; xor rdx, rdx
-    &fn_token_lbl_loop
-        ff c1 ; inc ecx
-        ff c2 ; inc edx
-        3b ce ; cmp ecx, esi
-        7d 1*fn_token_lbl_done
-        80 3c 0b 00 ; cmp [rcx+rbx], '\0'
-        74 1*fn_token_lbl_done
-        48 52
-            8a 04 0b ; mov al, [rcx+rbx]
-            48 8d 15 *var_delimiters
-            e8*fn_chrcmp
-        48 5a 
-        74 1*fn_token_lbl_done
-        eb 1*fn_token_lbl_loop
-    &fn_token_lbl_done
-    48 56 ; push rsi
-        48 8b 3d *var_link_list ; rdi, [token_list]
-        48 8b f2 ; mov rsi, rdx
-        48 83 c6 08 ; add rsi, 8
-        e8*fn_hlist_push
-        ff ca ; dec rdx
-        48 8b 35 *var_cip ; mov rsi, [var_cip]
-        48 89 30 ; mov [rax], rsi
-    48 5e ; pop rsi
-    48 83 c0 08 ; add rax, 8
-    48 8b f8 ; mov rdi, rax
-    48 8d 34 0b ; lea rsi, [rcx+rbx]
-    48 29 d6 ; sub rsi, rdx
-    e8*fn_memcpy
-    e8*fn_print
-    48 8d 3d *var_link_set_str ; mov rdi, [string]
-    e8*fn_print
-    48 8b 35 *var_cip ; mov rsi, [var_cip]
-    e8*fn_print_rsi
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
+&fn_token_label ; rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    ffc1 ; inc rcx
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_label_end
+        e8*fn_envoriment_push_token_label
+        e8*fn_envoriment_push_keyword_label
+    &fn_token_label_end
+485b
 c3
+
+&fn_envoriment_push_token_label  ; rax name, rdi envoriment
+4850
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b609; mov si, 9
+    4850
+        e8*fn_envoriment_push_token
+        488bf0 ; mov rsi, rax
+    4858
+    c60603 ; mov [rsi], 3
+    48894601 ; mov [rsi+1],rax
+485f
+485e
+4858
+c3
+
+&fn_envoriment_push_keyword_label  ; rax name, rdi envoriment
+4856
+4857
+    4833f6; xor rsi, rsi
+    40b609; mov si, 17
+    e8*fn_envoriment_push_keyword
+    c60002 ; mov [rax], 2
+    c74009ffffffff
+    c7400dffffffff
+485f
+485e
+c3
+
+
+&fn_assembly_handle_label ; rax token, rsi buffer, rdi envoriment
+    488b4001 ; mov rax, [rax+1]
+    e8*fn_envoriment_search_keyword
+    741*fn_assembly_handle_label_found 488d3d*__assembly_handle_label_NOT_FOUND e8*fn_print c3
+    &fn_assembly_handle_label_found
+    803802 ; cmp [rax],2
+    741*fn_assembly_handle_label_correct_type 488d3d*__assembly_handle_label_HAS_WRONG_TYPE e8*fn_print c3
+    &fn_assembly_handle_label_correct_type
+    488b7610 ; mov rsi, [rsi+0x10]
+    48897009 ; mov [rax+9], rsi
+    488b7801 e8*fn_print
+    488d3d*var_has_label_found_str e8*fn_print
+    e8*fn_print_rsi
+c3
+
+&__assembly_handle_label_NOT_FOUND "label IS NOT FOUND!" 0a00
+&__assembly_handle_label_HAS_WRONG_TYPE "label type IS NOT LABEL!" 0a00
+&var_has_label_found_str " label has been found at 0x" 00

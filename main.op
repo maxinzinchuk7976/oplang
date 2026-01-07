@@ -1,8 +1,10 @@
 %include     std/elfheader.op
+
 ;entry 0x400078
 
-48 59 ; pop rcx
-83 f9 03 ; cmp rcx, 3
+
+4859 ; pop rcx
+83f903 ; cmp rcx, 3
 74 1*argc_okay
     48 8d 3d *var_not_enought_arguments
     e8*fn_print
@@ -22,139 +24,147 @@ e8 *fn_malloc ; call malloc
 48 03 c6 ; add rax, rsi
 48 8b e0 ; mov rsp, rax
 
-be 00 20 00 00 ; mov rsi, 0x2000
-e8 *fn_malloc
-48 89 05 *var_stdout_buf ; mov [stdout_buf], rax
+e8*fn_slist_init
+488905*__token_command_define_list
 
-e8 *fn_hlist_init
-48 89 05 *var_token_list ; mov [token_list], rax
-e8 *fn_hlist_init
-48 89 05 *var_link_list ; mov [link_list], rax
-e8 *fn_hlist_init
-48 89 05 *var_define_list ; mov [link_list], rax
+e8*fn_envoriment_init
+488905*var_root_envoriment
+
+488bf0 ; mov rsi, rax
+488b3d*var_mainfile ; mov rdi, [mainfile]
+e8*fn_start_file
+
+e8*fn_hlist_init
+488905*var_backpacth_list
+488bc8 ; mov rcx, rax
+
+e8*fn_buffer_init
+488905*var_root_buffer
+
+488b3d*var_output_filename
+488b35*var_root_envoriment
+488b15*var_root_buffer
+e8*fn_assembly_envoriment
+
+488b3d*var_backpacth_list
+488b35*var_root_buffer
+e8*fn_backpatch_buffer
+
+488b3d*var_root_buffer
+488b7710 ; mov rsi, [rdi+0x10]
+488b05*var_align
+483d00000000 ; cmp rax, 0
+741*file_no_align
+    ffc8 ; dec rax
+    4801c6 ; add rsi, rax
+    48f7d0 ; not rax
+    4821c6 ; and rsi, rax
+    e8*fn_buffer_resize
+&file_no_align
+488b3d*var_output_filename
+e8*fn_create_file
+488bf8 ; mov rdi, rax
+488b35*var_root_buffer
+488b5610 ; mov rdx, [rsi+0x10]
+488b36 ; mov rsi, [rsi]
+b801000000
+0f05
+
+e8*fn_exit
 
 
-48 8b 3d *var_mainfile ; mov rdi, [mainfile]
-e8 *fn_startfile
-
-e8 *fn_assembly
-
-e8 *exit
-
-
-;function local vars map
-;    +0x00-0x04 fd
-;    +0x04-0x84 filestat
-;    +0x34-0x3c filesize
-;    +0x84-0x8c filebuffer
-&fn_startfile ; rdi path
-48 51 ; push rcx
-48 52 ; push rdx
-48 55 ; push rbp
-48 56 ; push rsi
-48 57 ; push rdi
-49 50 ; push r8
-
-    48 8b ec ; mov rbp, rsp
-    48 81 ec 00 01 00 00 ; sub rsp, 00 01 00 00
-
-    48 8b cf ; mov rcx, rdi
-    48 8b 3d *var_stdout_buf ; mov rdi, [stdout_buf]
-    40 c6 07 00
-    48 8d 35 *var_openfile ; lea rsi, [openfile]
-    e8*fn_put_text
-    48 8d 35 *var_endl ; lea rsi, [endl]
-    e8*fn_put_text
-    e8*fn_print
-    40 c6 07 00 ; mov [rdi], 0
-
-    48 8b f9 ; mov rdi, rcx
-    e8*fn_openfile
-    7f 1*fn_startfile_open
-        48 8d 3d *var_fld_to_open_file_msg ; lea rdi, [fld_to_open_file_msg]
+; rdi filename, rsi envoriment
+; 0x08-0x0c fd
+; 0x0cvar_output_filename-0x8c filestat
+; 0x3c-0x40 filesize
+; 0x8c-0x94 filebuffer
+; 0x94-0x9c filename
+; 0x9c-0xa4 envoriment
+; 0xf8-0x100 rbp
+&fn_start_file
+4851
+4852
+4856
+4857
+    c8 0001 00 ; enter 0x100
+        4889b4249c000000 ; mov [rsp+0x9c], rsi
+        4889bc2494000000 ; mov [rsp+0x94], rdi
+        488d3d*var_opening_file_name 
         e8*fn_print
-        48 8b e5 ; mov rsp, rbp
-        49 58 ; pop r8
-        48 5f ; pop rdi
-        48 5e ; pop rsi
-        48 5d ; pop rbp
-        48 5a ; pop rdx
-        48 59 ; pop rcx
-        c3
-    &fn_startfile_open
-    89 04 24 ; mov [rsp], rax
-    48 8b f4 ; mov rsi, rsp
-    48 83 c6 04 ; add rsi, 4
-    48 8b f9 ; mov rdi, rcx
-    e8*fn_getfstat
-    48 8b 3d *var_stdout_buf ; mov rdi, [stdout_buf]
-    40 c6 07 00
-    48 8d 35 *var_filesize_msg ; lea rsi, [filesize_msg]
-    e8*fn_put_text
-    48 8b 74 24 34 ; mov rsi, [rsp+0x34]
-    e8*fn_put_hex
-    48 8d 35 *var_endl ; lea rsi, [endl]
-    e8*fn_put_text
-    e8*fn_print
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
+        e8*fn_print
+        488d3d*var_endl
+        e8*fn_print
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
+        e8*fn_openfile
+        7f1*fn_start_file_file_ok
+            488d3d*var_opening_file_failed_to_open
+            e8*fn_print
+            c9
+            485f
+            485e
+            485a
+            c3
+        &fn_start_file_file_ok
+        89442408 ; mov [rsp+0x08], eax
+        488bbc2494000000 ; mov rdi, [rsp+0x94]
+        488d74240c ; lea rsi, [rsp+0x0c]
+        e8*fn_getfstat
+        488d3d*var_opening_file_size
+        e8*fn_print
+        488b74243c ; mov rsi, [rsp+0x3c]
+        e8*fn_print_dec
+        488d3d*var_bytes_str
+        e8*fn_print
+        e8*fn_malloc
+        488984248c000000 ; mov [rsp+0x8c], rax
+        488bf0 ; mov rsi, rax
+        8b7c2408 ; mov rdi, [rsp+0x08]
+        488b54243c  ; mov rdx, [rsp+0x3c]
+        e8*fn_read_file
 
-    40 c6 07 00 ; mov [rdi], 0
-    48 8b 74 24 34 ; mov rsi, [rsp+0x34]
-    e8*fn_malloc
-    48 89 84 24 84 00 00 00 ; mov [rsp+0x84], rax
-    48 8d 35 *var_getting_src ; lea rsi, [getting_src]
-    e8*fn_put_text
-    e8*fn_print
+        488bbc249c000000 ; mov rdi, [rsp+0x9c]
+        e8*fn_tokenize
 
-    8b 3c 24 ; mov edi, [rsp]
-    48 8b 94 24 34 00 00 00 ; mov rdx, [rsp+0x34]
-    48 8b b4 24 84 00 00 00 ; mov rsi, [rsp+0x84]
-    e8*fn_read_file
-
-    8b 3c 24 ; mov edi, [rsp]
-    e8*fn_close_file
-
-    48 8b bc 24 84 00 00 00 ; mov rdi, [rsp+0x84]
-    48 8b 74 24 34 ; mov rsi, [rsp]
-
-    e8*fn_tokenize
-
-    48 8b e5 ; mov rsp, rbp
-49 58 ; pop r8
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5d ; pop rbp
-48 5a ; pop rdx
-48 59 ; pop rcx
+        488bbc248c000000 ; mov rdi, [rsp+0x8c]
+        488b74243c  ; mov rsi, [rsp+0x3c]
+        e8*fn_munmap
+        8b7c2408 ; mov edi, [rsp+0x08]
+        e8*fn_close_file
+    c9 ; leave
+485f
+485e
+485a
+4859
 c3
 
-
-
-
+%include src/envoriment.op
+%include src/tokenize.op
 %include src/assembler.op
-%include src/tokenizer.op
-%include src/define.op
+%include src/backpatch.op
 
 
 %include std/hlist.op
+%include std/slist.op
 %include std/text.op
 %include std/memory.op
 %include std/etc.op
 %include std/filesystem.op
+%include std/buffer.op
+
 
 &var_not_enought_arguments "oplang <source file> <output file>" 0a 0a 00
+&var_opening_file_name "File path: " 00
+&var_opening_file_size "File size: " 00
+&var_opening_file_failed_to_open "Failed to open the file." 0a 00
+&var_bytes_str " bytes" 0a 00
 
-&var_mainfile 00 00 00 00 00 00 00 00
-&var_output_filename 00 00 00 00 00 00 00 00
-&var_stdout_buf 00 00 00 00 00 00 00 00
-&var_cip 00 00 00 00 00 00 00 00
-&var_cip_a 00 00 00 00 00 00 00 00
-&var_output_filesize 00 00 00 00 00 00 00 00
-&var_token_list 00 00 00 00 00 00 00 00
-&var_link_list 00 00 00 00 00 00 00 00
-&var_output_buf 00 00 00 00 00 00 00 00
-&var_openfile "Opening the file " 00
-&var_filesize_msg "File size: 0x" 00
-&var_getting_src "Reading the file" 0a 00
-&var_fld_to_open_file_msg "Failed to open the file" 00
-&var_link_set_str 09 " have been founded at 0x" 00
-&var_link_found 09 " reference have been founded" 0a 00
+
+&var_mainfile        0000000000000000
+&var_output_filename 0000000000000000
+&var_root_envoriment 0000000000000000
+&var_root_buffer     0000000000000000
+&var_backpacth_list  0000000000000000
+&var_align           0000000000000000
+
+

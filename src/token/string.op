@@ -1,33 +1,47 @@
+&fn_token_string ; rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    4833db ; xor rbx, rbx
+    &fn_token_string_loop
+        ffc1 ; inc rcx
+        3bca ; cmp ecx, rdx
+        7d1*fn_token_string_done
+        8a040e ; mov al, [rcx+rsi]
+        3c22 ; cmp al, '"'
+        741*fn_token_string_done
+        ffc3 ; inc rbx
+        eb1*fn_token_string_loop
+    &fn_token_string_done
+    e8*fn_envoriment_push_token_string
+    ffc1 ; inc rcx
+485b
+c3
 
-&fn_token_str ; rcx index, rbx stream
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 33 d2 ; xor rdx, rdx
-     &fn_token_str_loop
-        ff c1 ; inc ecx
-        ff c2 ; inc edx
-        3b ce ; cmp ecx, esi
-        7d 1*fn_token_str_done
-        80 3c 0b 22 ; cmp [rcx+rbx], '"'
-        75 1*fn_token_str_loop
-    &fn_token_str_done
-    48 56 ; push rsi
-        48 8b 3d *var_token_list ; rdi, [token_list]
-        48 8b f2 ; mov rsi, rdx
-        e8*fn_hlist_push
-        ff ca ; dec rdx
-        48 01 15 *var_output_filesize
-    48 5e ; pop rsi
-    c6 00 02 ; mov [rax], 2
-    48 ff c0 ; inc rax
-    48 8b f8 ; mov rdi, rax
-    48 8d 34 0b ; lea rsi, [rcx+rbx]
-    48 29 d6 ; sub rsi, rdx
-    48 01 15 *var_cip
+&fn_envoriment_push_token_string  ; rdi envoriment, rsi buffer, rcx position, rbx size
+4850
+4852
+4856
+4857
+    4856
+        488d7302 ; lea rsi, [rbx+2]
+        e8*fn_envoriment_push_token
+        488bf8 ; mov rdi, rax
+        c60702 ; mov [rdi], 2
+        48ffc7 ; inc rdi
+        c6041f00 ; mov [rdi+rbx], 00
+    485e
+    488d740e00 ; lea rsi, [rsi+rcx-1]
+    4829de ; sub rsi, rbx
+    488bd3 ; mov rdx, rbx
     e8*fn_memcpy
-    ff c1 ; inc ecx
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
+485f
+485e
+485a
+4858
+c3
+
+
+&fn_assembly_handle_string ; rax token, rdi buffer, rcx size
+    488d7001 ; lea rsi, [rax+1]
+    488d51fe ; lea rdx, [rcx-2]
+    e8*fn_buffer_write_memcpy
 c3

@@ -207,5 +207,7 @@ c3
 c3
 
 &var_hex "0123456789abcdef" 00
+&var_hex_l "0123456789abcdef" 00
+&var_hex_h "0123456789ABCDEF" 00
 &var_digits "0123456789" 00
 &var_endl 0a 00

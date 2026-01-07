@@ -125,7 +125,5 @@ c3
 %include src/token/relative.op
 %include src/token/string.op
 
-&var_hex_l "0123456789abcdef" 00
-&var_hex_h "0123456789ABCDEF" 00
 &var_delimiters ">)%&;*} " 0a0900
 &var_fillers 200900

@@ -1,148 +1,75 @@
-
-&fn_token_com ; rcx index, rbx stream
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 33 d2 ; xor rdx, rdx
-    &fn_token_com_loop
-        ff c1 ; inc ecx
-        ff c2 ; inc edx
-        3b ce ; cmp ecx, esi
-        7d 1*fn_token_com_done
-        80 3c 0b 00 ; cmp [rcx+rbx], 0
-        74 1*fn_token_com_done
-        48 52
-            8a 04 0b ; mov al, [rcx+rbx]
-            48 8d 15 *var_delimiters
-            e8*fn_chrcmp
-        48 5a 
-        74 1*fn_token_com_done
-        eb 1*fn_token_com_loop
-    &fn_token_com_done
-    48 8d 04 0b ; lea rax, [rcx+rbx]
-    ff ca ; dec rdx
-    48 29 d0 ; sub rax, rdx
-    48 8d 3d *var_inc_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    751*fn_token_com_aling_check
-        e8*fn_token_com_inc
-        eb1*fn_token_com_end
-    &fn_token_com_aling_check
-    48 8d 3d *var_aling_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    75 1*fn_token_com_def_check
-        e8*fn_token_com_aling
-    &fn_token_com_def_check
-    48 8d 3d *var_def_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    75 1*fn_token_com_ifdef_check
-        e8*fn_token_com_def
-    &fn_token_com_ifdef_check
-    48 8d 3d *var_ifdef_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    75 1*fn_token_com_ifndef_check
-        e8*fn_token_com_ifdef
-    &fn_token_com_ifndef_check
-    48 8d 3d *var_ifndef_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    75 1*fn_token_com_endif_check
-        e8*fn_token_com_ifndef
-    &fn_token_com_endif_check
-    48 8d 3d *var_endif_str ; lea rdi, [include_str]
-    e8*fn_strcmp
-    75 1*fn_token_com_end
-        e8*fn_token_com_endif
-    &fn_token_com_end
-    ff c1 ; inc ecx
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
+&fn_token_command ; rdi envoriment, rsi buffer, rdx size, rcx position
+4853
+    ffc1 ; inc rcx
+    e8*fn_tokenize_string_read
+    81f8 ffffffff ; cmp eax, 0xffffffff
+    741*fn_token_command_end
+    4857
+        488d3d*__command_include
+        e8*fn_pstrcmp
+        751*fn_token_command_scope
+            485f
+            e8*fn_token_command_include_handler
+            e9*fn_token_command_end
+        &fn_token_command_scope
+        488d3d*__command_scope
+        e8*fn_pstrcmp
+        751*fn_token_command_define
+            485f
+            e8*fn_token_command_scope_handler
+            e8*fn_envoriment_push_keyword_scope
+            e9*fn_token_command_end
+        &fn_token_command_define
+        488d3d*__command_def
+        e8*fn_pstrcmp
+        751*fn_token_command_ifdef
+            485f
+            e8*fn_token_command_define_handler
+            e9*fn_token_command_end
+        &fn_token_command_ifdef
+        488d3d*__command_ifdef
+        e8*fn_pstrcmp
+        751*fn_token_command_ifndef
+            485f
+            e8*fn_token_command_ifdef_handler
+            eb1*fn_token_command_end
+        &fn_token_command_ifndef
+        488d3d*__command_ifndef
+        e8*fn_pstrcmp
+        751*fn_token_command_endif
+            485f
+            e8*fn_token_command_ifndef_handler
+            eb1*fn_token_command_end
+        &fn_token_command_endif
+        488d3d*__command_endif
+        e8*fn_pstrcmp
+        751*fn_token_command_align
+            485f
+            e8*fn_token_command_endif_handler
+            eb1*fn_token_command_end
+        &fn_token_command_align
+        488d3d*__command_align
+        e8*fn_pstrcmp
+        751*fn_token_command_default
+            485f
+            e8*fn_token_command_align_handler
+            eb1*fn_token_command_end
+    &fn_token_command_default
+    485f
+    &fn_token_command_end
+    
+485b
 c3
 
+%include src/token/command/include.op
+%include src/token/command/scope.op
+%include src/token/command/define.op
+%include src/token/command/align.op
 
-&fn_token_com_inc ; rcx index, rbx stream
-48 50
-48 52
-48 56
-48 57
-    48 33 d2 ; xor rdx, rdx
-    &fn_token_com_inc_skip
-        ff c1 ; inc ecx
-        80 3c 0b 20 ; cmp [rcx+rbx], ' '
-        74 1*fn_token_com_inc_skip
-    &fn_token_com_inc_loop
-        3b ce ; cmp ecx, esi
-        7d 1*fn_token_com_inc_done
-        80 3c 0b 00 ; cmp [rcx+rbx], 0
-        74 1*fn_token_com_inc_done
-        48 52
-            8a 04 0b ; mov al, [rcx+rbx]
-            48 8d 15 *var_delimiters
-            e8*fn_chrcmp
-        48 5a 
-        74 1*fn_token_com_inc_done
-        ff c1 ; inc ecx
-        ff c2 ; inc edx
-        eb 1*fn_token_com_inc_loop
-    &fn_token_com_inc_done
-    83 fa 00 ; cmp rdx, 1
-    74 1*fn_token_com_inc_end
-    48 8b f2 ; mov rsi, rdx
-    e8*fn_malloc
-    48 8b f8 ; mov rdi, rax
-    48 8d 04 19 ; lea rax, [rbx+rcx]
-    48 29 d0 ; sub rax, rdx
-    48 8b f0 ; mov rsi, rax
-    e8*fn_memcpy
-    e8*fn_startfile
-    &fn_token_com_inc_end
-48 5f
-48 5e
-48 5a
-48 58
-c3
-
-
-&fn_token_com_aling ; rcx index, rbx stream
-4850
-4852
-4856
-4857
-    &fn_token_com_aling_skip
-        ff c1 ; inc ecx
-        80 3c 0b 20 ; cmp [rcx+rbx], ' '
-        74 1*fn_token_com_aling_skip
-    4833d2 ; xor rdx, rdx
-    &fn_token_com_aling_loop
-        3bce ; cmp ecx, esi
-        7d1*fn_token_com_aling_done
-        803c 0b 00 ; cmp [rcx+rbx], 0
-        74 1*fn_token_com_aling_done
-        48 52
-            8a 04 0b ; mov al, [rcx+rbx]
-            48 8d 15 *var_hex
-            e8*fn_chrsrch
-        48 5a 
-        75 1*fn_token_com_aling_done
-            48c1e204 ; shl rdx, 4
-            4801c2 ; add rdx, rax
-            ffc1 ; inc ecx
-        eb 1*fn_token_com_aling_loop
-    &fn_token_com_aling_done
-    4883fa00 ; cmp rdx, 0
-    741*fn_token_com_aling_zero
-        ffca ; dec rdx
-    &fn_token_com_aling_zero
-    488915*var_assembly_align
-485f
-485e
-485a
-4858
-c3
-
-&var_aling_str  "align" 00
-&var_inc_str    "include" 00
-&var_def_str    "def" 00
-&var_ifdef_str  "ifdef" 00
-&var_ifndef_str "ifndef" 00
-&var_endif_str  "endif" 00
+&__command_include  "include" 00
+&__command_scope    "scope" 00
+&__command_align    "align" 00
+&__command_def      "def" 00
+&__command_ifdef    "ifdef" 00
+&__command_ifndef   "ifndef" 00
+&__command_endif    "endif" 00
