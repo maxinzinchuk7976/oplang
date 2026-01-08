@@ -1,32 +1,33 @@
-&fn_token_hex ; al first, rdi envoriment, rsi buffer, rdx size, rcx position
-4853
-    ffc1 ; inc rcx
-    3bca ; cmp ecx, rdx
-    7d 1*fn_token_hex_end
-    
-    4850
-        8a040e ; mov al, [rcx+rsi]
-        3c"*" 751*fn_token_hex_relative
-            4858 e8*fn_token_relative 485b c3
-        &fn_token_hex_relative
-        48574852
-            488d3d*var_hex_h
-            488d15*var_hex_l
-            e8*fn_2chrsrch
-            8ad8 ; mov bl, al
-        485a485f
-    4858
-    751*fn_token_hex_end
+%scope fn_token_hex ; al first, rdi envoriment, rsi buffer, rdx size, rcx position
+    4853
+        ffc1 ; inc rcx
+        3bca ; cmp ecx, rdx
+        7d 1*end
+        
+        4850
+            8a040e ; mov al, [rcx+rsi]
+            3c"*" 751*relative
+                4858 e8*fn_token_relative 485b c3
+            &relative
+            48574852
+                488d3d*var_hex_h
+                488d15*var_hex_l
+                e8*fn_2chrsrch
+                8ad8 ; mov bl, al
+            485a485f
+        4858
+        751*end
 
-    c0e004 ; shl rax, 4
-    4801d8 ; add rax, rbx
-    ffc1 ; inc rcx
+        c0e004 ; shl rax, 4
+        4801d8 ; add rax, rbx
+        ffc1 ; inc rcx
 
-    e8*fn_envoriment_push_token_hex
+        e8*fn_envoriment_push_token_hex
 
-    &fn_token_hex_end
-485b
-c3
+        &end
+    485b
+    c3
+}
 
 &fn_envoriment_push_token_hex ; rax value, rdi envoriment
 4856

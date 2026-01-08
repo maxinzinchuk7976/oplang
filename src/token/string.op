@@ -1,20 +1,21 @@
-&fn_token_string ; rdi envoriment, rsi buffer, rdx size, rcx position
-4853
-    4833db ; xor rbx, rbx
-    &fn_token_string_loop
+%scope fn_token_string ; rdi envoriment, rsi buffer, rdx size, rcx position
+    4853
+        4833db ; xor rbx, rbx
+        &loop
+            ffc1 ; inc rcx
+            3bca ; cmp ecx, rdx
+            7d1*done
+            8a040e ; mov al, [rcx+rsi]
+            3c22 ; cmp al, '"'
+            741*done
+            ffc3 ; inc rbx
+            eb1*loop
+        &done
+        e8*fn_envoriment_push_token_string
         ffc1 ; inc rcx
-        3bca ; cmp ecx, rdx
-        7d1*fn_token_string_done
-        8a040e ; mov al, [rcx+rsi]
-        3c22 ; cmp al, '"'
-        741*fn_token_string_done
-        ffc3 ; inc rbx
-        eb1*fn_token_string_loop
-    &fn_token_string_done
-    e8*fn_envoriment_push_token_string
-    ffc1 ; inc rcx
-485b
-c3
+    485b
+    c3
+}
 
 &fn_envoriment_push_token_string  ; rdi envoriment, rsi buffer, rcx position, rbx size
 4850

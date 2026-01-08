@@ -1,19 +1,20 @@
-&fn_backpatch_buffer ; rdi backpatch list, rsi buffer
+%scope fn_backpatch_buffer ; rdi backpatch list, rsi buffer
     488b4f18  ; mov rcx, [rdi+0x18]
-    &fn_backpatch_buffer_loop
+    &loop
     4883f900 ; cmp rcx, 0
-    741*fn_backpatch_buffer_done
+    741*done
         48ffc9 ; dec rcx
         e8*fn_hlist_get
         4833d2
         8b10 ; mov edx, eax
         4829d0 ; sub rax, rdx
         803801 ; cmp [rax], 1
-        751*fn_backpatch_default
+        751*default
             e8*fn_backpatch_handle_relative 
-            eb1*fn_backpatch_buffer_loop
-        &fn_backpatch_default
+            eb1*loop
+        &default
         488b00 e8*fn_print_rax
-        eb1*fn_backpatch_buffer_loop
-    &fn_backpatch_buffer_done
-c3
+        eb1*loop
+    &done
+    c3
+}

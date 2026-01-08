@@ -1,10 +1,10 @@
 
-&fn_token_command_scope_handler
+%scope fn_token_command_scope_handler
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
-    741*fn_token_command_scope_handler_end
+    741*end
         e8*fn_envoriment_push_token_scope_open
-    &fn_token_command_scope_handler_end
+    &end
 c3
 
 

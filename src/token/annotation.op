@@ -1,9 +1,9 @@
-&fn_token_annotation
-    &fn_token_annotation_loop
-        3b ca ; cmp ecx, rdx
-        7d 1*fn_token_annotation_end
+%scope fn_token_annotation
+    &loop
+        3bca ; cmp ecx, rdx
+        7d1*end
         ffc1; inc rcx
         803c0e0a ; cmp [rsi+rcx], 0a
-        751*fn_token_annotation_loop
-    &fn_token_annotation_end
+        751*loop
+    &end
 c3

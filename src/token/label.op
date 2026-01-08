@@ -1,14 +1,15 @@
-&fn_token_label ; rdi envoriment, rsi buffer, rdx size, rcx position
-4853
-    ffc1 ; inc rcx
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*fn_token_label_end
-        e8*fn_envoriment_push_token_label
-        e8*fn_envoriment_push_keyword_label
-    &fn_token_label_end
-485b
-c3
+%scope fn_token_label ; rdi envoriment, rsi buffer, rdx size, rcx position
+    4853
+        ffc1 ; inc rcx
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            e8*fn_envoriment_push_token_label
+            e8*fn_envoriment_push_keyword_label
+        &end
+    485b
+    c3
+}
 
 &fn_envoriment_push_token_label  ; rax name, rdi envoriment
 4850
@@ -41,21 +42,26 @@ c3
 c3
 
 
-&fn_assembly_handle_label ; rax token, rsi buffer, rdi envoriment
-    488b4001 ; mov rax, [rax+1]
-    e8*fn_envoriment_search_keyword
-    741*fn_assembly_handle_label_found 488d3d*__assembly_handle_label_NOT_FOUND e8*fn_print c3
-    &fn_assembly_handle_label_found
-    803802 ; cmp [rax],2
-    741*fn_assembly_handle_label_correct_type 488d3d*__assembly_handle_label_HAS_WRONG_TYPE e8*fn_print c3
-    &fn_assembly_handle_label_correct_type
-    488b7610 ; mov rsi, [rsi+0x10]
-    48897009 ; mov [rax+9], rsi
-    488b7801 e8*fn_print
-    488d3d*var_has_label_found_str e8*fn_print
-    e8*fn_print_rsi
-c3
+%scope fn_assembly_handle_label ; rax token, rsi buffer, rdi envoriment
+        488b4001 ; mov rax, [rax+1]
+        e8*fn_envoriment_search_keyword
+        741*found 488d3d*NOT_FOUND e8*fn_print c3
+        &found
+        803802 ; cmp [rax],2
+        741*type 488d3d*HAS_WRONG_TYPE e8*fn_print c3
+        &type
+        488b7610 ; mov rsi, [rsi+0x10]
+        48897009 ; mov [rax+9], rsi
+        %ifdef COMPILER_DEBUG_LABEL
+            488b7801 e8*fn_print
+            488d3d*found_str e8*fn_print
+            e8*fn_print_rsi
+        %endif COMPILER_DEBUG_LABEL
+    c3
+    &NOT_FOUND "label IS NOT FOUND!" 0a00
+    &HAS_WRONG_TYPE "label type IS NOT LABEL!" 0a00
+    %ifdef COMPILER_DEBUG_LABEL
+    &found_str " label has been found at 0x" 00
+    %endif COMPILER_DEBUG_LABEL
+}
 
-&__assembly_handle_label_NOT_FOUND "label IS NOT FOUND!" 0a00
-&__assembly_handle_label_HAS_WRONG_TYPE "label type IS NOT LABEL!" 0a00
-&var_has_label_found_str " label has been found at 0x" 00

@@ -35,51 +35,52 @@ c3
 48 5a ; pop rdx
 c3
 
-&fn_envoriment_tree_search_keyword ; rdi envoriment, rax name
-4852
-4856
-4857
-    488bd0
-    &fn_envoriment_tree_search_keyword_loop
-    4883ff01 ; cmp rdi, 1
-    721*fn_envoriment_tree_search_keyword_done
-    488bc2
-    4852 e8*fn_envoriment_search_keyword 485a
-    741*fn_envoriment_tree_search_keyword_done
-        488b7f18 ; mov rdi, [rdi+0x18]
-        eb1*fn_envoriment_tree_search_keyword_loop
-    &fn_envoriment_tree_search_keyword_done
-485f
-485e
-485a
-c3
+%scope fn_envoriment_tree_search_keyword ; rdi envoriment, rax name
+    4852
+    4856
+    4857
+        488bd0
+        &loop
+            4883ff01 ; cmp rdi, 1
+            721*done
+            488bc2
+            4852 e8*fn_envoriment_search_keyword 485a
+            741*done
+                488b7f18 ; mov rdi, [rdi+0x18]
+                eb1*loop
+        &done
+    485f
+    485e
+    485a
+    c3
+}
 
-&fn_envoriment_search_keyword ; rdi envoriment, rax name
-4851
-4856
-4857
-    488bf0 ; mov rsi, rax
-    488b7f08 ; mov rdi, [rdi+8]
-    488b4f18 ; mov rcx, [rdi+18]
-    &fn_envoriment_search_keyword_loop
-        4883f901 ; cmp rcx, 1
-        7c1*fn_envoriment_tree_search_keyword_done
-        ffc9 ; dec rcx
-        e8*fn_hlist_get
-        2b00
-        48504857
-            488b7801 ; mov rdi, [rax+1]
-            488bc6 ; mov rax, rsi
-            e8*fn_pstrcmp
-        485f4858
-        741*fn_envoriment_search_keyword_done
-    eb1*fn_envoriment_search_keyword_loop
-    &fn_envoriment_search_keyword_done
-    
-485f
-485e
-4859
-c3
+%scope fn_envoriment_search_keyword ; rdi envoriment, rax name
+    4851
+    4856
+    4857
+        488bf0 ; mov rsi, rax
+        488b7f08 ; mov rdi, [rdi+8]
+        488b4f18 ; mov rcx, [rdi+18]
+        &loop
+            4883f901 ; cmp rcx, 1
+            7c1*done
+            ffc9 ; dec rcx
+            e8*fn_hlist_get
+            2b00
+            48504857
+                488b7801 ; mov rdi, [rax+1]
+                488bc6 ; mov rax, rsi
+                e8*fn_pstrcmp
+            485f4858
+            741*done
+        eb1*loop
+        &done
+    485f
+    485e
+    4859
+    c3
+}
 
 &fn_envoriment_push_token ; rdi envoriment, rsi size
 4857

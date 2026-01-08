@@ -1,16 +1,17 @@
-&fn_token_relative ; rdi envoriment, rsi buffer, rcx position, rax size
-4853
-4856
-    488bd8 ; mov rbx, rax
-    ffc1 ; inc rcx
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*fn_token_relative_end
-        e8*fn_envoriment_push_token_relative
-    &fn_token_relative_end
-485e
-485b
-c3
+%scope fn_token_relative ; rdi envoriment, rsi buffer, rcx position, rax size
+    4853
+    4856
+        488bd8 ; mov rbx, rax
+        ffc1 ; inc rcx
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            e8*fn_envoriment_push_token_relative
+        &end
+    485e
+    485b
+    c3
+}
 
 &fn_envoriment_push_token_relative  ; rax name, rdi envoriment, rbx size
 4850
@@ -30,82 +31,82 @@ c3
 4858
 c3
 
-&fn_assembly_handle_relative ; rax token, rdi buffer, rsi envoriment, rdx backpatchlist
-4852
-    488bc8 ; mov rcx, rax
-    8a4001 ; mov al, [rax+1]
-    3c01 751*fn_assembly_handle_label_4byte
-        e8*fn_buffer_write_al eb1*fn_assembly_handle_label_size_done
-    &fn_assembly_handle_label_4byte 3c04 751*fn_assembly_handle_label_8byte
-        e8*fn_buffer_write_eax eb1*fn_assembly_handle_label_size_done
-    &fn_assembly_handle_label_8byte 3c08 751*fn_assembly_handle_label_size_done
-        e8*fn_buffer_write_rax eb1*fn_assembly_handle_label_size_done
-    &fn_assembly_handle_label_size_done
-    48564857 488bfa 4833f6 40b622 e8*fn_hlist_push 485f485e
-    c60001 ; mov [rax], 1
-    8a5101 ; mov dl, [rcx+1]
-    885001 ; mov [rax+1], dl
-    488b5102 ; mov rdx, [rcx+2]
-    48895002 ; mov [rax+2], rdx
-    4889700a ; mov [rax+10], rsi
-    48897812 ; mov [rax+18], rdi
-    488b5710 ; mov rdx, [rdi+0x10]
-    4889501a ; mov [rax+26], rdx
-485a
-c3
+%scope fn_assembly_handle_relative ; rax token, rdi buffer, rsi envoriment, rdx backpatchlist
+    4852
+        488bc8 ; mov rcx, rax
+        8a4001 ; mov al, [rax+1]
+        3c01 751*4byte
+            e8*fn_buffer_write_al eb1*done
+        &4byte 3c04 751*8byte
+            e8*fn_buffer_write_eax eb1*done
+        &8byte 3c08 751*done
+            e8*fn_buffer_write_rax eb1*done
+        &done
+        48564857 488bfa 4833f6 40b622 e8*fn_hlist_push 485f485e
+        c60001 ; mov [rax], 1
+        8a5101 ; mov dl, [rcx+1]
+        885001 ; mov [rax+1], dl
+        488b5102 ; mov rdx, [rcx+2]
+        48895002 ; mov [rax+2], rdx
+        4889700a ; mov [rax+10], rsi
+        48897812 ; mov [rax+18], rdi
+        488b5710 ; mov rdx, [rdi+0x10]
+        4889501a ; mov [rax+26], rdx
+    485a
+    c3
+}
 
-&fn_backpatch_handle_relative  ; rax token, rsi buffer
-4850
-4851
-4852
-4856
-4857
-    488b780a ; mov rdi, [rax+10]
-    4850 
-        488b4002 
-        e8*fn_envoriment_tree_search_keyword 
-        488bd0 ; rdx, rax
+%scope fn_backpatch_handle_relative  ; rax token, rsi buffer
+    4850
+    4851
+    4852
+    4856
+    4857
+        488b780a ; mov rdi, [rax+10]
+        4850 
+            488b4002 
+            e8*fn_envoriment_tree_search_keyword 
+            488bd0 ; rdx, rax
+        4858
+        741*found
+            e8*fn_backpatch_handle_relative_not_found
+        &found
+        488bfe ; mov rdi, rsi
+        803a01 751*label
+            488b4a11 ; mov rcx, [rdx+17]
+            eb1*paste
+        &label
+        803a02 751*end
+            488b4a09 ; mov rcx, [rdx+9]
+        &paste
+        482b481a ; sub rcx, [rax+0x1a]
+        488b701a ; mov rsi, [rax+0x1a]
+        488b3f ; mov rdi, [rdi]
+        80780101 751*4byte
+            884c37ff ; mov [rdi+rsi], cl
+            eb1*end
+        &4byte
+        80780104 751*8byte
+            894c37fc ; mov [rdi+rsi], ecx
+            eb1*end
+        &8byte
+        80780108 751*end
+            48894c37f8 ; mov [rdi+rsi], ecx
+            eb1*end
+        &end
+    485f
+    485e
+    485a
+    4859
     4858
-    741*fn_backpatch_handle_relative_found
-        e8*fn_backpatch_handle_relative_not_found
-    &fn_backpatch_handle_relative_found
-    488bfe ; mov rdi, rsi
-    803a01 751*fn_backpatch_handle_relative_label
-        488b4a11 ; mov rcx, [rdx+17]
-        eb1*fn_backpatch_handle_relative_label_paste
-    &fn_backpatch_handle_relative_label
-    803a02 751*fn_backpatch_handle_relative_end
-        488b4a09 ; mov rcx, [rdx+9]
-    &fn_backpatch_handle_relative_label_paste
-    482b481a ; sub rcx, [rax+0x1a]
-    488b701a ; mov rsi, [rax+0x1a]
-    488b3f ; mov rdi, [rdi]
-    80780101 751*fn_backpatch_handle_relative_4byte
-        884c37ff ; mov [rdi+rsi], cl
-        eb1*fn_backpatch_handle_relative_end
-    &fn_backpatch_handle_relative_4byte
-    80780104 751*fn_backpatch_handle_relative_8byte
-        894c37fc ; mov [rdi+rsi], ecx
-        eb1*fn_backpatch_handle_relative_end
-    &fn_backpatch_handle_relative_8byte
-    80780108 751*fn_backpatch_handle_relative_end
-        48894c37f8 ; mov [rdi+rsi], ecx
-        eb1*fn_backpatch_handle_relative_end
-   
-    &fn_backpatch_handle_relative_end
-485f
-485e
-485a
-4859
-4858
-c3
+    c3
+}
 
-&fn_backpatch_handle_relative_not_found
-4857
-    488b7802 e8*fn_print
-    488d3d*__assembly_handle_relative_NOT_FOUND e8*fn_print
-485f
-c3
-
-
-&__assembly_handle_relative_NOT_FOUND " keyword IS NOT FOUND!" 0a00
+%scope fn_backpatch_handle_relative_not_found
+    4857
+        488b7802 e8*fn_print
+        488d3d*NOT_FOUND e8*fn_print
+    485f
+    c3
+    &NOT_FOUND " keyword IS NOT FOUND!" 0a00
+}

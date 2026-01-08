@@ -1,8 +1,8 @@
 
-&fn_token_command_include_handler ; rdi envoriment, rsi buffer, rdx size, rcx position, rax file
+%scope fn_token_command_include_handler ; rdi envoriment, rsi buffer, rdx size, rcx position, rax file
     e8*fn_tokenize_string_read
     81f8 ffffffff ; cmp eax, 0xffffffff
-    741*fn_token_command_include_handler_end
+    741*end
         4856
         4857
             488bf7 ; mov rsi, rdi
@@ -10,5 +10,6 @@
             e8*fn_start_file
         485f
         485e
-    &fn_token_command_include_handler_end
-c3
+    &end
+    c3
+}
