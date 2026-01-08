@@ -1,0 +1,95 @@
+%include std/elfheader.op
+
+%scope entry
+    
+    4833f6
+    66be1000 e8*fn_malloc
+    488905*buffer
+
+    4833ff 4833f6 4833d2 ; clearing rdi, rsi, rdx 
+    40b702 40b602 ; setting family to 2(INET), 2(DGRAM)
+    e8*fn_socket
+    488905*fd
+    &bind_retry
+    488d3d*enter_portin_str e8*fn_print 
+    e8*fn_scan_dec 86c4 668905*port_in
+
+    488b3d*fd
+    488d35*ipaddr_in
+    b210 e8*fn_bind
+    83f800 7c1*bind_retry
+
+    488d3d*enter_portout_str e8*fn_print 
+    e8*fn_scan_dec 86c4 668905*port_out
+        
+    &loop
+        488d3d*enter_enter_msg_str e8*fn_print
+        e8*fn_scan_tstr
+        488905*last_str
+        488b3d*fd
+        488bf0 ; mov rsi, rax
+        e8*fn_strlen_rsi
+        488bd0 ; mov rdx, rax
+        ffc2 ; inc rdx
+        4d33d2 ; xor r10, r10
+        4d33c9 ; xor r9, r9
+        41b110 ; mov r9, 0x10
+        4c8d05*ipaddr_out
+        e8*fn_sendto
+
+        e8*recieve
+    eb1*loop
+
+    e8*fn_exit
+
+    &enter_portin_str "Enter input port: " 00
+    &enter_portout_str "Enter output port: " 00
+    &enter_enter_msg_str 0a"$ " 00
+    &enter_recieve_msg_str "> " 00
+    &last_str   0000000000000000
+    &buffer     0000000000000000
+    &fd         0000000000000000
+
+    &ipaddr_in
+    0200 &port_in 0000
+    &address_in 00000000 ; any address
+
+    &ipaddr_out
+    0200 &port_out 0000
+    &address_in 7f000001 ; localhost
+
+    &ipaddr_recv
+    0200 &port_recv 0000
+    &address_recv 00000000 ; localhost
+
+
+    &address_len 1000000000000000
+
+
+    &recieve
+        488b3d*fd
+        488b35*buffer
+        4833d2 66baffff
+        4d33d2 ; xor r10, r10
+        4c8d0d*address_len
+        4c8d05*ipaddr_recv
+        e8*fn_recvfrom
+        83f800 7e1*recieve_skip
+            488d3d*enter_recieve_msg_str
+            e8*fn_print
+            488b3d*buffer
+            e8*fn_print
+        &recieve_skip
+    c3
+}   
+
+%include std/etc.op
+%include std/text.op
+%include std/memory.op
+%include std/network.op
+
+
+
+
+
+;

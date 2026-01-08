@@ -178,6 +178,46 @@ c3
 485a
 c3
 
+%scope fn_scan_tstr
+    4852
+    4856
+    4857
+        488b3d*memory
+        4883ff00 ; cmp rdi, 0
+        751*memory_allocated
+            4833f6 66be1000 e8*fn_malloc ; xor rsi,rsi; mov si, 0x1000
+            488905*memory
+            488b3d*memory
+        &memory_allocated
+        c8 0801 00 ; enter 0x108, 0
+            488db5 f8efffff ; lea rsi, [rbp-0x108]
+            4833d2 ; xor rdx, rdx
+            66ba0001 ; mov dx, 0x100
+            e8*fn_read_scd
+            e8*fn_strlen_rsi
+            488bd0 ; mov rdx, rax
+            66b80fff
+            4821f8 ; and rax, rdi
+            4801d0 ; add rax, rdx
+            6681f80fff 721*no_reset ; cmp rax, 0xfff
+                66b80fff 48f7d8 ; mov ax, 0xfff; neg rax
+                482105*memory ; and [memory], rax
+                488b3d*memory
+            &no_reset
+            e8*fn_memcpy
+            488b05*memory
+            48c6041700 ; mov [rdi+rdx], 0
+            48ff05*memory
+            480115*memory
+
+        c9 ; leave
+    485f
+    485e
+    485a
+    c3
+    &memory 0000000000000000
+}
+
 &__SS10_IEEE754 00002041
 &__ZERO_32      00000000
 &__SS_SIGN_MASK 00000080

@@ -1,0 +1,19 @@
+&fn_socket ; rdi family rsi type, rdx protocol
+    b829000000
+    0f05
+c3
+
+&fn_sendto ; rdi buf, rsi buf, rdx len, r10 flags, r8 ipaddr, r9 ipaddr 
+    b82c000000
+    0f05
+c3
+
+&fn_bind ; rdi fd, rsi data, rdx size
+    b8 31000000; mov rax, 0x3c
+    0f05 ; syscall
+c3
+
+&fn_recvfrom ; rdi fd, rsi data, rdx size
+    b8 2d000000; mov rax, 0x3c
+    0f05 ; syscall
+c3
