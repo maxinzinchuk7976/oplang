@@ -1,3 +1,5 @@
+%ifndef STD_SLIST_H
+%def STD_SLIST_H
 
 ;int64 pointer 0x00-0x08
 ;int64 total   0x08-0x10 
@@ -42,3 +44,5 @@ c3
     488d04f8 ; lea eax [eax+rdi*8]
 485f
 c3
+
+%endif STD_SLIST_H

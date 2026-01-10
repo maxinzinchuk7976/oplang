@@ -1,3 +1,6 @@
+%ifndef STD_FILESYSTEM_H
+%def STD_FILESYSTEM_H
+
 &fn_close_file ; rdi fd
     b8 03 00 00 00 ; mov eax, 3
     0f 05 ; syscall
@@ -43,3 +46,4 @@ c3
 48 59
 c3
 
+%endif STD_FILESYSTEM_H

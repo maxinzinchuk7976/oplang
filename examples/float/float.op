@@ -1,6 +1,6 @@
 %include std/elfheader.op
 
-488d3d*var_enter_integer
+488d3d*var_enter_float
 e8*fn_print
 e8*fn_scan_ss
 488905*var_float_array ; mov [float_array], rax
@@ -34,7 +34,7 @@ e8*fn_exit
 %include std/memory.op
 
 &var_float_array 00000000 &var_float_array1 00000000
-&var_enter_integer "Enter an integer number:" 00
+&var_enter_float "Enter an float number:" 00
 
 ;
 ;float f[2]

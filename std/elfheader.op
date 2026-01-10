@@ -1,3 +1,6 @@
+%ifndef ELF64_HEADER_H
+%def ELF64_HEADER_H
+
 &__elfheader_start
 %align 0
 %def LINUX
@@ -26,3 +29,5 @@
 00 00 01 00 00 00 00 00 ; filesize
 00 00 01 00 00 00 00 00 ; memsize
 00 00 00 00 00 00 00 00 ; aling
+
+%endif ELF64_HEADER_H

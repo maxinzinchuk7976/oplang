@@ -24,47 +24,48 @@
 485e
 c3
 
-&fn_buffer_resize ; rdi buffer, rsi size
-4850
-4852
-4856
-    483b7710 ; cmp rsi, [rdi+0x10]
-    7e1*fn_buffer_resize_done
-        4856 482b7710 e8*fn_buffer_check 485e
-    &fn_buffer_resize_done
-    48897710 ; mov [rdi+0x10], rsi
-485e
-485a
-4858
-c3
+%scope fn_buffer_resize ; rdi buffer, rsi size
+    4850
+    4852
+    4856
+        483b7710 ; cmp rsi, [rdi+0x10]
+        7e1*done
+            4856 482b7710 e8*fn_buffer_check 485e
+        &done
+        48897710 ; mov [rdi+0x10], rsi
+    485e
+    485a
+    4858
+    c3
+}
 
-
-&fn_buffer_check ; rdi buffer, rdx size
-4850
-4852
-4856
-    48035710 ; add rdx, [rdi+0x10]
-    48395708 ; cmp [rdi+0x08], rdx
-    7d1*fn_buffer_check_overflow
-        48d16708 ; shl [rdi+0x08], 1
-        488b7708 ; mov rsi, [rdi+0x08]
-        e8*fn_malloc
-        4857
-            488bd6 ; mov rdx, rsi
-            48d1ea ; shr rdx, 1
-            488b37 ; mov rsi, [rdi]
-            488bf8 ; mov rdi, rsi
-            e8*fn_memcpy  
-            488bfe ; mov rdi, rsi
-            488bf2 ; mov rsi, rdx
-            4850 e8*fn_munmap 4858
-        485f
-        488907 ; mov [rdi], rax
-    &fn_buffer_check_overflow
-485e
-485a
-4858
-c3
+%scope fn_buffer_check ; rdi buffer, rdx size
+    4850
+    4852
+    4856
+        48035710 ; add rdx, [rdi+0x10]
+        48395708 ; cmp [rdi+0x08], rdx
+        7d1*overflow
+            48d16708 ; shl [rdi+0x08], 1
+            488b7708 ; mov rsi, [rdi+0x08]
+            e8*fn_malloc
+            4857
+                488bd6 ; mov rdx, rsi
+                48d1ea ; shr rdx, 1
+                488b37 ; mov rsi, [rdi]
+                488bf8 ; mov rdi, rsi
+                e8*fn_memcpy  
+                488bfe ; mov rdi, rsi
+                488bf2 ; mov rsi, rdx
+                4850 e8*fn_munmap 4858
+            485f
+            488907 ; mov [rdi], rax
+        &overflow
+    485e
+    485a
+    4858
+    c3
+}
 
 &fn_buffer_write_memcpy ; rdi buffer, rsi address, rdx size
 4857

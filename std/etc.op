@@ -1,3 +1,6 @@
+%ifndef STD_ETC_H
+%def STD_ETC_H
+
 &exit
     bf 00000000
     b8 3c000000; mov rax, 0x3c
@@ -9,3 +12,5 @@ c3
     b8 3c000000; mov rax, 0x3c
     0f05 ; syscall
 c3
+
+%endif STD_ETC_H

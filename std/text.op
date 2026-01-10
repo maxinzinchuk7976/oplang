@@ -1,3 +1,6 @@
+%ifndef STD_TEXT_H
+%def STD_TEXT_H
+
 %include std/text/scan.op
 %include std/text/nscan.op
 %include std/text/print.op
@@ -45,169 +48,174 @@ c3
 485a ; pop rdx
 c3
 
-&fn_strlen ; rdi address
+%scope fn_strlen ; rdi address
     48 8b c7 ; mov rax, rdi
-    &_strlen_loop
+    &loop
     80 38 00 ; cmp BYTE [rax], 0
-    74 1*_strlen_done ; je strlen_done
+    74 1*done 
         48 ff c0 ; inc rax
-        eb 1*_strlen_loop
-    &_strlen_done
+        eb 1*loop
+    &done
     48 29 f8 ; sub rax, rdi
-c3
+    c3
+}
 
-&fn_strlen_rsi ; rsi address
+%scope fn_strlen_rsi ; rsi address
     48 8b c6 ; mov rax, rsi
-    &_strlen_rsi_loop
+    &loop
     80 38 00 ; cmp BYTE [rax], 0
-    74 1*_strlen_rsi_done ; je strlen_done
+    74 1*done 
         48 ff c0 ; inc rax
-        eb 1*_strlen_rsi_loop
-    &_strlen_rsi_done
+        eb 1*loop
+    &done
     48 29 f0 ; sub rax, rsi
-c3
+    c3
+}
 
-&fn_chrcmp ; al char, rdx sting
-48 51 ; push rcx
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 8b fa ; mov rdi, rdx
-    88 c2 ; mov dl, al
-    e8*fn_strlen
-    48 8b c8 ; mov rcx, rax
-    &fn_chrcmp_loop
-        ff c9 ; dec rcx
-        38 14 0f ; cmp [rcx+rdi], dl
-        74 1*fn_chrcmp_done ; je fn_chrcmp_done
-        83 f9 01
-        7d 1*fn_chrcmp_loop
-    &fn_chrcmp_done
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
-48 59 ; pop rcx
-c3
-
-
-&fn_strcmp ; rdi pattern, rax str, rdx size
-48 50 
-48 51 ; push rcx
-48 52 ; push rdx
-48 53 ; push rbx
-48 56 ; push rsi
-    48 8b f0 ; mov rsi, rax
-    e8*fn_strlen
-    39 c2 ; cmp edx, eax
-    75 1*fn_strcmp_done
-    48 8b c6 ; mov rax, rsi
-    48 33 c9 ; xor rcx, rcx
-    &fn_strcmp_loop
-        8a 1c 39 ; mov bl, [rdi+rcx]
-        80 fb 00 ; cmp bl, 0
-        74 1*fn_strcmp_done
-        8a 14 01 ; mov dl, [rax+rcx]
-        ff c1 ; inc ecx
-        38 da ; cmp bl, dl
-        74 1*fn_strcmp_loop
-    &fn_strcmp_done
-48 5e ; pop rsi
-48 5b ; pop rbx
-48 5a ; pop rdx
-48 59 ; pop rcx
-48 58
-c3
-
-
-&fn_pstrcmp ; rdi pattern, rax str
-48 50
-48 51 ; push rcx
-48 52 ; push rdx
-48 53 ; push rbx
-48 56 ; push rsi
-    48 8b f0 ; mov rsi, rax
-    e8*fn_strlen
-    488bd0 ; mov rdx, rax
-    488bc7 ; mov rax, rdi
-    488bfe ; mov rdi, rsi
-    488bf0 ; mov rsi, rax
-    e8*fn_strlen
-    39 c2 ; cmp edx, eax
-    75 1*fn_pstrcmp_done
-    48 8b c6 ; mov rax, rsi
-    48 33 c9 ; xor rcx, rcx
-    &fn_pstrcmp_loop
-        8a 1c 39 ; mov bl, [rdi+rcx]
-        80 fb 00 ; cmp bl, 0
-        74 1*fn_pstrcmp_done
-        8a 14 01 ; mov dl, [rax+rcx]
-        ff c1 ; inc ecx
-        38 da ; cmp bl, dl
-        74 1*fn_pstrcmp_loop
-    &fn_pstrcmp_done
-    
-48 5e ; pop rsi
-48 5b ; pop rbx
-48 5a ; pop rdx
-48 59 ; pop rcx
-48 58
-c3
-
-
-
-&fn_2chrsrch ; al char, rdx string, rdi string2
-48 51 ; push rcx
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    4850
+%scope fn_chrcmp ; al char, rdx sting
+    48 51 ; push rcx
+    48 52 ; push rdx
+    48 56 ; push rsi
+    48 57 ; push rdi
+        48 8b fa ; mov rdi, rdx
+        88 c2 ; mov dl, al
         e8*fn_strlen
         48 8b c8 ; mov rcx, rax
-    4858
-    &fn_2chrsrch_loop
-        ff c9 ; dec rcx
-        38 04 0a ; cmp [rcx+rdx], al
-        74 1*fn_2chrsrch_done ; je fn_chrsrch_done
-        38 04 0f ; cmp [rcx+rdi], al
-        74 1*fn_2chrsrch_done ; je fn_chrsrch_done
-        83 f9 01 ; cmp ecx, 1
-        7d 1*fn_2chrsrch_loop ; jge chrsrch_loop
-        b1 ff ; mov cl, -1
-    &fn_2chrsrch_done
-    488bc1; mov rax, rcx
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
-48 59 ; pop rcx
-c3
+        &loop
+            ff c9 ; dec rcx
+            38 14 0f ; cmp [rcx+rdi], dl
+            74 1*done
+            83 f9 01
+            7d 1*loop
+        &done
+    48 5f ; pop rdi
+    48 5e ; pop rsi
+    48 5a ; pop rdx
+    48 59 ; pop rcx
+    c3
+}
+
+%scope fn_strcmp ; rdi pattern, rax str, rdx size
+    48 50 
+    48 51 ; push rcx
+    48 52 ; push rdx
+    48 53 ; push rbx
+    48 56 ; push rsi
+        48 8b f0 ; mov rsi, rax
+        e8*fn_strlen
+        39 c2 ; cmp edx, eax
+        75 1*done
+        48 8b c6 ; mov rax, rsi
+        48 33 c9 ; xor rcx, rcx
+        &loop
+            8a 1c 39 ; mov bl, [rdi+rcx]
+            80 fb 00 ; cmp bl, 0
+            74 1*done
+            8a 14 01 ; mov dl, [rax+rcx]
+            ff c1 ; inc ecx
+            38 da ; cmp bl, dl
+            74 1*loop
+        &done
+    48 5e ; pop rsi
+    48 5b ; pop rbx
+    48 5a ; pop rdx
+    48 59 ; pop rcx
+    48 58
+    c3
+}
+
+%scope fn_pstrcmp ; rdi pattern, rax str
+    48 50
+    48 51 ; push rcx
+    48 52 ; push rdx
+    48 53 ; push rbx
+    48 56 ; push rsi
+        48 8b f0 ; mov rsi, rax
+        e8*fn_strlen
+        488bd0 ; mov rdx, rax
+        488bc7 ; mov rax, rdi
+        488bfe ; mov rdi, rsi
+        488bf0 ; mov rsi, rax
+        e8*fn_strlen
+        39 c2 ; cmp edx, eax
+        75 1*done
+        48 8b c6 ; mov rax, rsi
+        48 33 c9 ; xor rcx, rcx
+        &loop
+            8a 1c 39 ; mov bl, [rdi+rcx]
+            80 fb 00 ; cmp bl, 0
+            74 1*done
+            8a 14 01 ; mov dl, [rax+rcx]
+            ff c1 ; inc ecx
+            38 da ; cmp bl, dl
+            74 1*loop
+        &done
+        
+    48 5e ; pop rsi
+    48 5b ; pop rbx
+    48 5a ; pop rdx
+    48 59 ; pop rcx
+    48 58
+    c3
+}
 
 
-&fn_chrsrch ; al char, rdx string
-48 51 ; push rcx
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 8b fa ; mov rdi, rdx
-    88 c2 ; mov dl, al
-    e8*fn_strlen
-    48 8b c8 ; mov rcx, rax
-    &fn_chrsrch_loop
-        ff c9 ; dec rcx
-        38 14 0f ; cmp [rcx+rdi], dl
-        74 1*fn_chrsrch_done ; je fn_chrsrch_done
-        83 f9 01 ; cmp ecx, 1
-        7d 1*fn_chrsrch_loop ; jge chrsrch_loop
-        b1 ff ; mov cl, -1
-    &fn_chrsrch_done
-    8a c1 ; mov al, cl
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
-48 59 ; pop rcx
-c3
 
-&var_hex "0123456789abcdef" 00
-&var_hex_l "0123456789abcdef" 00
+%scope fn_2chrsrch ; al char, rdx string, rdi string2
+    48 51 ; push rcx
+    48 52 ; push rdx
+    48 56 ; push rsi
+    48 57 ; push rdi
+        4850
+            e8*fn_strlen
+            48 8b c8 ; mov rcx, rax
+        4858
+        &loop
+            ff c9 ; dec rcx
+            38 04 0a ; cmp [rcx+rdx], al
+            74 1*done 
+            38 04 0f ; cmp [rcx+rdi], al
+            74 1*done 
+            83 f9 01 ; cmp ecx, 1
+            7d 1*loop 
+            b1 ff ; mov cl, -1
+        &done
+        488bc1; mov rax, rcx
+    48 5f ; pop rdi
+    48 5e ; pop rsi
+    48 5a ; pop rdx
+    48 59 ; pop rcx
+    c3
+}
+
+%scope fn_chrsrch ; al char, rdx string
+    48 51 ; push rcx
+    48 52 ; push rdx
+    48 56 ; push rsi
+    48 57 ; push rdi
+        48 8b fa ; mov rdi, rdx
+        88 c2 ; mov dl, al
+        e8*fn_strlen
+        48 8b c8 ; mov rcx, rax
+        &loop
+            ff c9 ; dec rcx
+            38 14 0f ; cmp [rcx+rdi], dl
+            74 1*done 
+            83 f9 01 ; cmp ecx, 1
+            7d 1*loop 
+            b1 ff ; mov cl, -1
+        &done
+        8a c1 ; mov al, cl
+    48 5f ; pop rdi
+    48 5e ; pop rsi
+    48 5a ; pop rdx
+    48 59 ; pop rcx
+    c3
+}
+
+&var_hex &var_hex_l "0123456789abcdef" 00
 &var_hex_h "0123456789ABCDEF" 00
 &var_digits "0123456789" 00
 &var_endl 0a 00
+
+%endif STD_TEXT_H

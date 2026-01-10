@@ -1,78 +1,82 @@
 %ifndef STD_MEMORY_H
 %def STD_MEMORY_H
 
-&fn_mmalloc ; rsi size 
-4857
-    e8*fn_mmalloc_check
-    488b3d*var_mmalloc_address
-    48033d*var_mmalloc_chunk_usage
-    480135*var_mmalloc_chunk_usage
-    488bc7 ; mov rax, rdi
-485f
-c3
+%scope fn_mmalloc ; rsi size 
+    4857
+        e8*check
+        488b3d*address
+        48033d*usage
+        480135*usage
+        488bc7 ; mov rax, rdi
+    485f
+    c3
 
-&fn_mmalloc_check ; rsi size
-4857
-    488b3d*var_mmalloc_chunk_size
-    482b3d*var_mmalloc_chunk_usage
-    482bfe ; sub rdi, rsi
-    4883ff00 ; cmp rdi, 0
-    7d1*fn_mmalloc_check_overflow
-        48d125*var_mmalloc_chunk_size
-        4833c0 ; xor rax, rax
-        488905*var_mmalloc_address
-        488905*var_mmalloc_chunk_usage
-    &fn_mmalloc_check_overflow
-    488d3d*var_mmalloc_address
-    48833f00 ; cmp [rdi], 0
-    751*fn_mmalloc_check_address_isset
-        4856
-            488b35*var_mmalloc_chunk_size
-            e8*fn_malloc
-            488907 ; mov [rdi], rax
-        485e
-    &fn_mmalloc_check_address_isset
-485f
-c3
+    &check ; rsi size
+    4857
+        488b3d*size
+        482b3d*usage
+        482bfe ; sub rdi, rsi
+        4883ff00 ; cmp rdi, 0
+        7d1*overflow
+            48d125*size
+            4833c0 ; xor rax, rax
+            488905*address
+            488905*usage
+        &overflow
+        488d3d*address
+        48833f00 ; cmp [rdi], 0
+        751*isset
+            4856
+                488b35*size
+                e8*fn_malloc
+                488907 ; mov [rdi], rax
+            485e
+        &isset
+    485f
+    c3
 
+    &address 0000000000000000
+    &usage 0000000000000000
+    &size 0010000000000000
+}
 
-&fn_malloc ; rsi size
-48 57 ; push rdi
-48 56 ; push rsi
-48 52 ; push rdx
-48 51 ; push rcx
-49 52 ; push r10
-49 51 ; push r9
-49 50 ; push r8
-    48 8d 3d *var_malloc_next ; lea rdi, [malloc_next] ; lea rdi, [disp32]
-    48 8b 3f ; mov rdi, [rdi]
+%scope fn_malloc ; rsi size
+    48 57 ; push rdi
+    48 56 ; push rsi
+    48 52 ; push rdx
+    48 51 ; push rcx
+    49 52 ; push r10
+    49 51 ; push r9
+    49 50 ; push r8
+        48 8d 3d *next ; lea rdi, [next] ; lea rdi, [disp32]
+        48 8b 3f ; mov rdi, [rdi]
 
-    48 83 c6 0f ; add rsi, 0x0f
-    48 80 e6 f0 ; and lsi, 0xf0
-    
+        48 83 c6 0f ; add rsi, 0x0f
+        48 80 e6 f0 ; and lsi, 0xf0
+        
 
-    48 b8 09 00 00 00 00 00 00 00 ; mov rax, 9
-    48 ba 07 00 00 00 00 00 00 00 ; mov rdx, 7
-    49 b8 ff ff ff ff ff ff ff ff ; mov r8, -1
-    49 b9 00 00 00 00 00 00 00 00 ; mov r9, 0
-    49 ba 22 00 02 00 00 00 00 00 ; mov r10, 0x020022
+        48 b8 09 00 00 00 00 00 00 00 ; mov rax, 9
+        48 ba 07 00 00 00 00 00 00 00 ; mov rdx, 7
+        49 b8 ff ff ff ff ff ff ff ff ; mov r8, -1
+        49 b9 00 00 00 00 00 00 00 00 ; mov r9, 0
+        49 ba 22 00 02 00 00 00 00 00 ; mov r10, 0x020022
 
-    0f 05 ; syscall
+        0f 05 ; syscall
 
-    48 01 35 *var_malloc_next ; add  [malloc_next], rax
-    48 8d 3d *var_malloc_next ; lea rdi, [malloc_next]
-    48 81 07 ff 0f 00 00 ; add [rdi], 0x0fff
-    81 27 00 f0 ff ff ; and [rdi], 0xfffff000
-
-
-49 58 ; pop r8
-49 59 ; pop r9
-49 5a ; pop r10
-48 59 ; pop rcx
-48 5a ; pop rdx
-48 5e ; pop rsi
-48 5f ; pop rdi
-c3
+        48 01 35 *next ; add  [next], rax
+        48 8d 3d *next ; lea rdi, [next]
+        48 81 07 ff 0f 00 00 ; add [rdi], 0x0fff
+        81 27 00 f0 ff ff ; and [rdi], 0xfffff000
+    49 58 ; pop r8
+    49 59 ; pop r9
+    49 5a ; pop r10
+    48 59 ; pop rcx
+    48 5a ; pop rdx
+    48 5e ; pop rsi
+    48 5f ; pop rdi
+    c3
+    &next 0000500000000000
+}
 
 &fn_munmap ; rdi address, rsi size
 48 51 ; push rcx
@@ -102,11 +106,6 @@ c3
 48 59 ; pop rcx
 c3
 
-&var_mmalloc_address 0000000000000000
-&var_mmalloc_chunk_usage 0000000000000000
-&var_mmalloc_chunk_size 0010000000000000
 
-
-&var_malloc_next 0000500000000000
 
 %endif STD_MEMORY_H

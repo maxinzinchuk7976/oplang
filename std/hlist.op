@@ -1,3 +1,6 @@
+%ifndef STD_HLIST_H
+%def STD_HLIST_H
+
 
 ;int64 pointer 0x00-0x08
 ;int64 total   0x08-0x10 (Allocated/2)
@@ -25,46 +28,47 @@
 48 59 ; pop rcx
 c3
 
-&fn_hlist_double ; rdi list, rsi size
-48 52 ; push rdx
-48 56 ; push rsi
-48 57 ; push rdi
-    48 03 77 10 ; add rsi, [rdi+0x10]
-    48 8b d6 ; mov rdx, rsi
-    &fn_hlist_double_loop
-        48 8b 77 08 ; mov rsi, [rdi+0x08]
-        48 3b d6 ; cmp rdx, rsi
-        72 1*fn_hlist_double_done ; jb fn_hlist_double_done
-        48 c1 e6 02 ; shl rsi, 0x02
-        e8*fn_malloc
-        48 52 ; push rdx
-        48 56 ; push rsi
-        48 57 ; push rdi
-            48 8b 57 10 ; mov rdx, [rdi+0x10]
-            48 8b 37 ; mov rsi, [rdi]
-            48 8b f8 ; mov rdi, rax
-            e8*fn_memcpy
-        48 5f ; pop rdi
-        48 5e ; pop rsi
-        48 5a ; pop rdx
-        48 50 ; push rax
-        48 56 ; push rsi
-        48 57 ; push rdi
+%scope fn_hlist_double ; rdi list, rsi size
+    48 52 ; push rdx
+    48 56 ; push rsi
+    48 57 ; push rdi
+        48 03 77 10 ; add rsi, [rdi+0x10]
+        48 8b d6 ; mov rdx, rsi
+        &loop
             48 8b 77 08 ; mov rsi, [rdi+0x08]
-            48 c1 e6 01 ; shl rsi, 0x01
-            48 8b 3f ; mov rdi, [rdi]
-            e8*fn_munmap
-        48 5f ; pop rdi
-        48 5e ; pop rsi
-        48 58 ; pop rax
-        48 89 07 ; mov [rdi], rax
-        48 c1 67 08 01 ; shl [rdi+0x08], 0x01
-        eb 1*fn_hlist_double_loop
-    &fn_hlist_double_done
-48 5f ; pop rdi
-48 5e ; pop rsi
-48 5a ; pop rdx
-c3
+            48 3b d6 ; cmp rdx, rsi
+            72 1*done 
+            48 c1 e6 02 ; shl rsi, 0x02
+            e8*fn_malloc
+            48 52 ; push rdx
+            48 56 ; push rsi
+            48 57 ; push rdi
+                48 8b 57 10 ; mov rdx, [rdi+0x10]
+                48 8b 37 ; mov rsi, [rdi]
+                48 8b f8 ; mov rdi, rax
+                e8*fn_memcpy
+            48 5f ; pop rdi
+            48 5e ; pop rsi
+            48 5a ; pop rdx
+            48 50 ; push rax
+            48 56 ; push rsi
+            48 57 ; push rdi
+                48 8b 77 08 ; mov rsi, [rdi+0x08]
+                48 c1 e6 01 ; shl rsi, 0x01
+                48 8b 3f ; mov rdi, [rdi]
+                e8*fn_munmap
+            48 5f ; pop rdi
+            48 5e ; pop rsi
+            48 58 ; pop rax
+            48 89 07 ; mov [rdi], rax
+            48 c1 67 08 01 ; shl [rdi+0x08], 0x01
+            eb 1*loop
+        &done
+    48 5f ; pop rdi
+    48 5e ; pop rsi
+    48 5a ; pop rdx
+    c3
+}
 
 &fn_hlist_push ; rdi list, rsi size
 48 52 ; push rdx
@@ -87,25 +91,26 @@ c3
 48 5a ; pop rdx
 c3
 
-&fn_hlist_get ; rdi list, rcx index
-48 57
-48 52
-48 51
-    e8*fn_hlist_end
-    &fn_hlist_get_loop
-    48 33 d2 ; xor rdx, rdx
-    83 f9 00 ; cmp rcx, 0
-    74 1*fn_hlist_get_done
-        ff c9 ; dec rcx
-        8b 10 ; mov edx, [rax]
-        29 d0 ; sub rax, rdx
-        48 83 e8 04 ; sub rax, 4
-    eb 1*fn_hlist_get_loop
-    &fn_hlist_get_done
-48 59
-48 5a
-48 5f
-c3
+%scope fn_hlist_get ; rdi list, rcx index
+    48 57
+    48 52
+    48 51
+        e8*fn_hlist_end
+        &loop
+        48 33 d2 ; xor rdx, rdx
+        83 f9 00 ; cmp rcx, 0
+        74 1*done
+            ff c9 ; dec rcx
+            8b 10 ; mov edx, [rax]
+            29 d0 ; sub rax, rdx
+            48 83 e8 04 ; sub rax, 4
+        eb 1*loop
+        &done
+    48 59
+    48 5a
+    48 5f
+    c3
+}
 
 &fn_hlist_empty ; rdi list
     48 83 47 10 00 ; cmp [rdi+0x10], 0
@@ -122,3 +127,5 @@ c3
 48 59
 48 5f
 c3
+
+%endif STD_HLIST_H

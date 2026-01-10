@@ -5,8 +5,8 @@
     741*end
         e8*fn_envoriment_push_token_scope_open
     &end
-c3
-
+    c3
+}
 
 &fn_envoriment_push_token_scope_open ; rax name, rdi envoriment
 4850
