@@ -1,0 +1,73 @@
+%scope fn_assembly_resolve_expression_address ; rax expression, rdi envoriment
+    4856
+    4857
+        488bf0 ; mov rsi, rax
+        488b06 ; mov rax, [rsi]
+        e8*fn_envoriment_tree_search_keyword
+        751*done
+            803801 751*label
+                e8*fn_scope
+            &label 803802 751*done
+                e8*fn_label
+        &done
+
+    485f
+    485e
+    c3
+
+    &fn_label ; rsi expression, rdi envoriment
+        
+    c3
+
+    &fn_scope ; rsi expression, rdi envoriment
+
+    c3
+}
+
+
+; 0x000-0x040 reserved
+; 0x040-0x240 expression
+; 0x240-0x248 rbp
+%scope fn_tokenize_expession_read ; rsi buffer, rcx position, rdx size
+    4853
+    4856
+    4857
+        c8 4802 00 ; enter 0x248
+            488d7c2441 ; lea rdi, [rsp+0x41]
+            4833db
+            e8*fn_tokenize_string_read
+            81f8ffffffff 741*no_name
+            488907 ; mov [rdi], rax
+            4883c708 ; add rdi, 8
+            &loop
+                e8*fn_tokenize_skip_fillers
+                ffc9
+                8a040e ; mov al, [rcx+rsi]
+                3c":" 751*done
+                    e8*fn_tokenize_string_read 
+                    81f8ffffffff 741*done
+                        40800701 48ffc7 ; mov [rdi], 1 ; inc rdi
+                        488907 ; mov [rdi],rax
+                        4883c708 ; add rdi, 8
+                        ffc3 ; inc ebx
+            eb1*loop
+            &done
+            801c2440 ; mov [rsp+40], bl
+            488d742440 ; lea rsi, [rsp+0x40]
+            4829f7 ; sub rdi, rsi
+            e8*fn_nstrcpy
+        c9 
+    485f
+    485e
+    485b
+    c3
+    
+    &no_name
+        4833c0 ; xor rax, rax
+    
+    c9 
+    485f
+    485e
+    485b
+    c3
+}

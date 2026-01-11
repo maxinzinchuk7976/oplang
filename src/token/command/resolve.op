@@ -1,0 +1,4 @@
+%scope fn_token_command_resolve_handler
+    e8*fn_tokenize_expession_read
+    c3
+}

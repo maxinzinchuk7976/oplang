@@ -11,36 +11,54 @@
     c3
 }
 
-&fn_envoriment_push_token_label  ; rax name, rdi envoriment
-4850
-4856
-4857
-    4833f6; xor rsi, rsi
-    40b609; mov si, 9
+%scope fn_envoriment_push_token_label  ; rax name, rdi envoriment
     4850
-        e8*fn_envoriment_push_token
-        488bf0 ; mov rsi, rax
+    4856
+    4857
+        4850 e8*fn_envoriment_search_keyword
+            751*okay
+                4858
+                eb1*done
+            &okay
+        4858
+        4833f6; xor rsi, rsi
+        40b609; mov si, 9
+        4850
+            e8*fn_envoriment_push_token
+            488bf0 ; mov rsi, rax
+        4858
+        c60603 ; mov [rsi], 3
+        48894601 ; mov [rsi+1],rax
+        &done
+    485f
+    485e
     4858
-    c60603 ; mov [rsi], 3
-    48894601 ; mov [rsi+1],rax
-485f
-485e
-4858
-c3
+    c3
+}
 
-&fn_envoriment_push_keyword_label  ; rax name, rdi envoriment
-4856
-4857
-    4833f6; xor rsi, rsi
-    40b609; mov si, 17
-    e8*fn_envoriment_push_keyword
-    c60002 ; mov [rax], 2
-    c74009ffffffff
-    c7400dffffffff
-485f
-485e
-c3
-
+%scope fn_envoriment_push_keyword_label  ; rax name, rdi envoriment
+    4856
+    4857
+        4850 e8*fn_envoriment_search_keyword
+            751*okay
+                4858
+                488bf8 e8*fn_print
+                488d3d*REDEFINITION e8*fn_print
+                eb1*done
+            &okay
+        4858
+        4833f6; xor rsi, rsi
+        40b609; mov si, 17
+        e8*fn_envoriment_push_keyword
+        c60002 ; mov [rax], 2
+        c74009ffffffff
+        c7400dffffffff
+        &done
+    485f
+    485e
+    c3
+    &REDEFINITION " keyword IGNORED REDEFINITION WARNING" 0a00
+}
 
 %scope fn_assembly_handle_label ; rax token, rsi buffer, rdi envoriment
         488b4001 ; mov rax, [rax+1]
