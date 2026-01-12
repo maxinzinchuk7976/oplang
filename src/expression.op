@@ -1,27 +1,82 @@
 %scope fn_assembly_resolve_expression_address ; rax expression, rdi envoriment
+    4853
     4856
     4857
         488bf0 ; mov rsi, rax
-        488b06 ; mov rax, [rsi]
-        e8*fn_envoriment_tree_search_keyword
-        751*done
-            803801 751*label
-                e8*fn_scope
-            &label 803802 751*done
-                e8*fn_label
-        &done
-
+        488b06
+        
+        %scope keyword
+            3c01 751*field
+                488b4601 ; mov rax, [rsi]
+                4883c609
+                e8*fn_envoriment_tree_search_keyword
+                751*invalid
+                    803801 751*label
+                        e8*fn_scope eb1*default
+                    &label 803802 751*default
+                        e8*fn_label eb1*default
+                &invalid
+                4857
+                    488b7ef8 ; mov rdi, [rsi]
+                    e8*fn_print
+                    488d3d*keyword_NOT_FOUND
+                    e8*fn_print
+                485f
+                eb1*default
+        }
+        %scope field
+            3c02 751*default
+                488b4601 ; mov rax, [rsi]
+                4883c609
+                e8*fn_envoriment_search_keyword
+                751*invalid
+                    803801 751*label
+                        e8*fn_scope eb1*default
+                    &label 803802 751*default
+                        e8*fn_label eb1*default
+                &invalid
+                4857
+                    488b7ef8 ; mov rdi, [rsi]
+                    e8*fn_print
+                    488d3d*field_NOT_FOUND
+                    e8*fn_print
+                485f
+        }
+        &default
+        488bc3 ; mov rax, rbx
     485f
     485e
+    485b
     c3
 
-    &fn_label ; rsi expression, rdi envoriment
+    &fn_keyword ; rsi expression, rdi envoriment
         
     c3
 
-    &fn_scope ; rsi expression, rdi envoriment
+    %scope fn_label ; rsi expression, rdi envoriment, rax label keyword, rbx result
+            488b5809 ; mov rbx, [rax+17]
+            40803e02 751*okay
+                488d3d*ACCESS_FIELD_ERROR e8*fn_print
+                e8*fn_exit
+                c3
+            &okay
+        c3
 
+        &ACCESS_FIELD_ERROR 0a"CRITICAL ERROR: label DO NOT ABLE TO HAVE FIELDS" 0a0a00
+    }
+
+    &fn_scope ; rsi expression, rdi envoriment, rax scope keyword, rbx result
+    4857
+        488b7809 ; mov rdi, [rax+9]
+        488b5811 ; mov rbx, [rax+17]
+        488bc6 ; mov rax, rsi
+        e8*fn_assembly_resolve_expression_address
+        488bd8 ; mov rbx, rax
+    485f
     c3
+    &endl 0a00
+    &keyword_NOT_FOUND " keyword NOT FOUND" 0a00
+    &field_NOT_FOUND " field NOT FOUND" 0a00
 }
 
 
@@ -33,26 +88,25 @@
     4856
     4857
         c8 4802 00 ; enter 0x248
-            488d7c2441 ; lea rdi, [rsp+0x41]
+            488d7c2440 ; lea rdi, [rsp+0x40]
             4833db
             e8*fn_tokenize_string_read
             81f8ffffffff 741*no_name
+            c60701 48ffc7 ; mov [rdi], 1 ; inc rdi
             488907 ; mov [rdi], rax
             4883c708 ; add rdi, 8
             &loop
                 e8*fn_tokenize_skip_fillers
-                ffc9
-                8a040e ; mov al, [rcx+rsi]
+                8a440eff ; mov al, [rcx+rsi-1]
                 3c":" 751*done
                     e8*fn_tokenize_string_read 
                     81f8ffffffff 741*done
-                        40800701 48ffc7 ; mov [rdi], 1 ; inc rdi
+                        c60702 48ffc7 ; mov [rdi], 2 ; inc rdi
                         488907 ; mov [rdi],rax
                         4883c708 ; add rdi, 8
-                        ffc3 ; inc ebx
             eb1*loop
             &done
-            801c2440 ; mov [rsp+40], bl
+            40800700 48ffc7 ; mov [rdi], 0 ; inc rdi
             488d742440 ; lea rsi, [rsp+0x40]
             4829f7 ; sub rdi, rsi
             e8*fn_nstrcpy

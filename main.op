@@ -179,6 +179,3 @@ e8*fn_exit
 &var_root_buffer     0000000000000000
 &var_backpacth_list  0000000000000000
 &var_align           0000000000000000
-
-
-%resolve fn_start_file:ok

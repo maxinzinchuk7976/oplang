@@ -60,11 +60,17 @@
                     e9*loop
                 &scope
                 803805 ; cmp [rax], 5
-                751*default
+                751*resolve
                     488b55e0 ; mov rdx, [rbp-0x20]
                     488b75e8 ; mov rsi, [rbp-0x18]
                     488b4dd8 ; mov rcx, [rbp-0x28]
                     e8*fn_assembly_handle_scope
+                    e9*loop
+                &resolve
+                803806 ; cmp [rax], 6
+                751*default
+                    488b7de8 ; mov rdi, [rbp-0x18]
+                    e8*fn_assembly_handle_resolve
                     e9*loop
                 &default
             e9*loop
