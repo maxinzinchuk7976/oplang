@@ -10,7 +10,7 @@
         4829d0 ; sub rax, rdx
         803801 ; cmp [rax], 1
         751*default
-            e8*fn_backpatch_handle_relative 
+            e8*Token:Relative:Backpatch 
             eb1*loop
         &default
         488b00 e8*fn_print_rax

@@ -1,86 +1,82 @@
-%scope fn_token_command ; rdi envoriment, rsi buffer, rdx size, rcx position
-    4853
-        ffc1 ; inc rcx
-        e8*fn_tokenize_string_read
-        81f8 ffffffff ; cmp eax, 0xffffffff
-        741*end
-        4857
-            488d3d*__command_include
-            e8*fn_pstrcmp
-            751*scope
-                485f
-                e8*fn_token_command_include_handler
-                e9*end
-            &scope
-            488d3d*__command_scope
-            e8*fn_pstrcmp
-            751*define
-                485f
-                e8*fn_token_command_scope_handler
-                e8*fn_envoriment_push_keyword_scope
-                e9*end
-            &define
-            488d3d*__command_def
-            e8*fn_pstrcmp
-            751*ifdef
-                485f
-                e8*fn_token_command_define_handler
-                e9*end
-            &ifdef
-            488d3d*__command_ifdef
-            e8*fn_pstrcmp
-            751*ifndef
-                485f
-                e8*fn_token_command_ifdef_handler
-                eb1*end
-            &ifndef
-            488d3d*__command_ifndef
-            e8*fn_pstrcmp
-            751*endif
-                485f
-                e8*fn_token_command_ifndef_handler
-                eb1*end
-            &endif
-            488d3d*__command_endif
-            e8*fn_pstrcmp
-            751*align
-                485f
-                e8*fn_token_command_endif_handler
-                eb1*end
-            &align
-            488d3d*__command_align
-            e8*fn_pstrcmp
-            751*resolve
-                485f
-                e8*fn_token_command_align_handler
-                eb1*end
-            &resolve
-            488d3d*__command_resolve
-            e8*fn_pstrcmp
-            751*default
-                485f
-                e8*fn_token_command_resolve_handler
-                eb1*end
-        &default
-        485f
-        &end
-        
-    485b
-    c3
+%scope Command
+    %scope Tokenize ; rdi envoriment, rsi buffer, rdx size, rcx position
+        4853
+            ffc1 ; inc rcx
+            e8*fn_tokenize_string_read
+            81f8 ffffffff ; cmp eax, 0xffffffff
+            741*end
+            4857
+                488d3d*Include:Name
+                e8*fn_pstrcmp
+                751*scope
+                    485f
+                    e8*Include:Handle
+                    e9*end
+                &scope
+                488d3d*Scope:Name
+                e8*fn_pstrcmp
+                751*define
+                    485f
+                    e8*Scope:Handle
+                    e8*Token:Scope:Push
+                    e9*end
+                &define
+                488d3d*Define:Name
+                e8*fn_pstrcmp
+                751*ifdef
+                    485f
+                    e8*Define:Handle
+                    e9*end
+                &ifdef
+                488d3d*Ifdef:Name
+                e8*fn_pstrcmp
+                751*ifndef
+                    485f
+                    e8*Ifdef:Handle
+                    eb1*end
+                &ifndef
+                488d3d*Ifndef:Name
+                e8*fn_pstrcmp
+                751*endif
+                    485f
+                    e8*Ifndef:Handle
+                    eb1*end
+                &endif
+                488d3d*Endif:Name
+                e8*fn_pstrcmp
+                751*align
+                    485f
+                    e8*Endif:Handle
+                    eb1*end
+                &align
+                488d3d*Command:Align:Name
+                e8*fn_pstrcmp
+                751*resolve
+                    485f
+                    e8*Command:Align:Handle
+                    eb1*end
+                &resolve
+                488d3d*Command:Resolve:Name
+                e8*fn_pstrcmp
+                751*default
+                    485f
+                    e8*Command:Resolve:Handle
+                    eb1*end
+            &default
+            485f
+            &end
+            
+        485b
+        c3
+    }
+    %include src/token/command/scope.op
+    %include src/token/command/resolve.op
+    %include src/token/command/include.op
+    %include src/token/command/align.op
+    %include src/token/command/define.op
 }
 
 
-&__command_include  "include" 00
-&__command_scope    "scope" 00
-&__command_align    "align" 00
-&__command_def      "def" 00
-&__command_ifdef    "ifdef" 00
-&__command_ifndef   "ifndef" 00
-&__command_endif    "endif" 00
-&__command_resolve  "resolve" 00
 
-%include src/token/command/include.op
-%include src/token/command/scope.op
-%include src/token/command/define.op
-%include src/token/command/align.op
-%include src/token/command/resolve.op
+
+

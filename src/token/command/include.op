@@ -1,15 +1,17 @@
-
-%scope fn_token_command_include_handler ; rdi envoriment, rsi buffer, rdx size, rcx position, rax file
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*end
-        4856
-        4857
-            488bf7 ; mov rsi, rdi
-            488bf8 ; mov rdi, rax 
-            e8*fn_start_file
-        485f
-        485e
-    &end
-    c3
+%scope Include
+    %scope Handle ; rdi envoriment, rsi buffer, rdx size, rcx position, rax file
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            4856
+            4857
+                488bf7 ; mov rsi, rdi
+                488bf8 ; mov rdi, rax 
+                e8*fn_start_file
+            485f
+            485e
+        &end
+        c3
+    }
+    &Name  "include" 00
 }

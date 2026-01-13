@@ -1,32 +1,9 @@
-%scope fn_token_command_resolve_handler
-    e8*fn_tokenize_expession_read
-    e8*fn_envoriment_push_token_resolve
-    c3
-}
 
-%scope fn_envoriment_push_token_resolve  ; rax expression, rdi envoriment
-    4850
-    4856
-    4857
-        4833f6; xor rsi, rsi
-        40b609; mov si, 9
-        4850
-            e8*fn_envoriment_push_token
-            488bf0 ; mov rsi, rax
-        4858
-        c60606 ; mov [rsi], 6
-        48894601 ; mov [rsi+1],rax
-        &done
-    485f
-    485e
-    4858
-    c3
+%scope Resolve 
+    %scope Handle
+        e8*fn_tokenize_expession_read
+        e8*Token:Resolve:Tokenize
+        c3
+    }
+    &Name  "resolve" 00
 }
-
-%scope fn_assembly_handle_resolve ; rax token, rdi envoriment
-        488b4001 ; mov rax, [rax+1]
-        e8*fn_assembly_resolve_expression_address
-        e8*fn_print_rax
-    c3
-}
-

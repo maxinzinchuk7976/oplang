@@ -3,8 +3,7 @@
     4856
     4857
         488bf0 ; mov rsi, rax
-        488b06
-        
+        8a06
         %scope keyword
             3c01 751*field
                 488b4601 ; mov rax, [rsi]
@@ -106,7 +105,8 @@
                         4883c708 ; add rdi, 8
             eb1*loop
             &done
-            40800700 48ffc7 ; mov [rdi], 0 ; inc rdi
+            48ffc9 ;dec rcx
+            40c60700 48ffc7 ; mov [rdi], 0 ; inc rdi
             488d742440 ; lea rsi, [rsp+0x40]
             4829f7 ; sub rdi, rsi
             e8*fn_nstrcpy

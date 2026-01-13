@@ -22,40 +22,40 @@
                 488b542408 ; mov rdx, [rsp+0x08]
                 488b3c24 ; mov rdi, [rsp]
                 751*command
-                    e8*fn_token_hex
+                    e8*Token:Hex:Tokenize
                     eb1*loop
                 &command
                 803c0e"%" ; cmp [rcx+rsi], 0x25
                 751*bracket
-                    e8*fn_token_command
+                    e8*Token:Command:Tokenize
                     48893c24 ; mov [rsp], rdi
                     eb1*loop
                 &bracket
                 803c0e"}" ; cmp [rcx+rsi], 0x7d
                 751*annotation
-                    e8*fn_token_bracket
+                    e8*Token:Bracket:Tokenize
                     48893c24 ; mov [rsp], rdi
                     eb1*loop
                 &annotation
                 803c0e";" ; cmp [rcx+rsi], ';'
                 751*label
-                    e8*fn_token_annotation
+                    e8*Token:Annotation:Tokenize
                     eb1*loop
                 &label
                 803c0e"&" ; cmp [rcx+rsi], '&'
                 751*relative
-                    e8*fn_token_label
+                    e8*Token:Label:Tokenize
                     e9*loop
                 &relative
                 803c0e"*" ; cmp [rcx+rsi], '*'
                 751*string
                     b004
-                    e8*fn_token_relative
+                    e8*Token:Relative:Tokenize
                     e9*loop
                 &string
                 803c0e22  ; cmp [rcx+rsi], '"'
                 751*default
-                    e8*fn_token_string
+                    e8*Token:String:Tokenize
                     e9*loop
                 &default
                 ffc1 ; inc rcx
@@ -131,13 +131,19 @@
     c3
 }
 
-%include src/token/hex.op
-%include src/token/command.op
-%include src/token/bracket.op
-%include src/token/annotation.op
-%include src/token/label.op
-%include src/token/relative.op
-%include src/token/string.op
+
+
+%scope Token
+    %include src/token/relative.op
+    %include src/token/scope.op
+    %include src/token/resolve.op
+    %include src/token/string.op
+    %include src/token/label.op
+    %include src/token/annotation.op
+    %include src/token/command.op
+    %include src/token/bracket.op
+    %include src/token/hex.op
+}
 
 &var_delimiters ":%&;*} " 0a0900
 &var_fillers 200900

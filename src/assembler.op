@@ -35,20 +35,20 @@
                 803801 ; cmp [rax], 1
                 751*string
                     488b7de0 ; mov rdi, [rbp-0x20]
-                    e8*fn_assembly_handle_hex
+                    e8*Token:Hex:Handle
                     e9*loop
                 &string
                 803802 ; cmp [rax], 2
                 751*label
                     488b7de0 ; mov rdi, [rbp-0x20]
-                    e8*fn_assembly_handle_string
+                    e8*Token:String:Handle
                     e9*loop
                 &label
                 803803 ; cmp [rax], 3
                 751*relative
                     488b7de8 ; mov rdi, [rbp-0x18]
                     488b75e0 ; mov rsi, [rbp-0x20]
-                    e8*fn_assembly_handle_label
+                    e8*Token:Label:Handle
                     e9*loop
                 &relative
                 803804 ; cmp [rax], 4
@@ -56,7 +56,7 @@
                     488b7de0 ; mov rsi, [rbp-0x18]
                     488b75e8 ; mov rdi, [rbp-0x20]
                     488b55d8 ; mov rdx, [rbp-0x28]
-                    e8*fn_assembly_handle_relative
+                    e8*Token:Relative:Handle
                     e9*loop
                 &scope
                 803805 ; cmp [rax], 5
@@ -64,13 +64,13 @@
                     488b55e0 ; mov rdx, [rbp-0x20]
                     488b75e8 ; mov rsi, [rbp-0x18]
                     488b4dd8 ; mov rcx, [rbp-0x28]
-                    e8*fn_assembly_handle_scope
+                    e8*Token:Scope:Handle
                     e9*loop
                 &resolve
                 803806 ; cmp [rax], 6
                 751*default
                     488b7de8 ; mov rdi, [rbp-0x18]
-                    e8*fn_assembly_handle_resolve
+                    e8*Token:Resolve:Handle
                     e9*loop
                 &default
             e9*loop

@@ -1,9 +1,11 @@
-%scope fn_token_annotation
-    &loop
-        3bca ; cmp ecx, rdx
-        7d1*end
-        ffc1; inc rcx
-        803c0e0a ; cmp [rsi+rcx], 0a
-        751*loop
-    &end
-c3
+%scope Annotation
+    %scope Tokenize
+        &loop
+            3bca ; cmp ecx, rdx
+            7d1*end
+            ffc1; inc rcx
+            803c0e0a ; cmp [rsi+rcx], 0a
+            751*loop
+        &end
+    c3
+}

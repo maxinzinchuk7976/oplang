@@ -1,16 +1,19 @@
-%scope fn_token_command_align_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
-        e8*fn_tokenize_string_read
-        81f8 ffffffff ; cmp eax, 0xffffffff
-        741*end
-            4857
-                488bf8 ; mov rdi, rax
-                e8*fn_nscan_hex
-                488905*var_align
-                488d3d*newalign_str
-                e8*fn_print
-                e8*fn_print_rax
-            485f
-        &end
-    c3
-    &newalign_str "Aling has been set to 0x" 00
+%scope Align
+    %scope Handle ; rdi envoriment, rsi buffer, rdx size, rcx position
+            e8*fn_tokenize_string_read
+            81f8 ffffffff ; cmp eax, 0xffffffff
+            741*end
+                4857
+                    488bf8 ; mov rdi, rax
+                    e8*fn_nscan_hex
+                    488905*var_align
+                    488d3d*newalign_str
+                    e8*fn_print
+                    e8*fn_print_rax
+                485f
+            &end
+        c3
+        &newalign_str "Aling has been set to 0x" 00  
+    }
+    &Name    "align" 00
 }

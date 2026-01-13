@@ -1,13 +1,15 @@
-%scope fn_token_bracket ; rdi envoriment
-    ffc1 ; inc rcx 
-    48837f1800 ; cmp [rdi+0x18], 0
-    751*parent
-        488d3d*no_parent_error
-        e8*fn_print
-        e8*fn_exit
+%scope Bracket
+    %scope Tokenize ; rdi envoriment
+        ffc1 ; inc rcx 
+        48837f1800 ; cmp [rdi+0x18], 0
+        751*parent
+            488d3d*no_parent_error
+            e8*fn_print
+            e8*fn_exit
+            c3
+        &parent
+        488b7f18 ; mov rdi, [rdi+0x18]
         c3
-    &parent
-    488b7f18 ; mov rdi, [rdi+0x18]
-    c3
-    &no_parent_error 0a "CRITICAL ERROR: UNEXPECTED CLOSE BRAKET!" 0a0a00
+        &no_parent_error 0a "CRITICAL ERROR: UNEXPECTED CLOSE BRAKET!" 0a0a00
+    }
 }

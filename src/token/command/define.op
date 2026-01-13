@@ -1,56 +1,101 @@
-%scope fn_token_command_define_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*end
-        4857
-            488b3d*__token_command_define_list
-            e8*fn_slist_push_rax
-            488bf8 ; mov rdi, rax
-            e8*fn_print
-            488d3d*defined_str
-            e8*fn_print
-        485f
-    &end
-    c3
+%scope Define
+    %scope Handle ; rdi envoriment, rsi buffer, rdx size, rcx position
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            4857
+                488b3d*List
+                e8*fn_slist_push_rax
+                488bf8 ; mov rdi, rax
+                e8*fn_print
+                488d3d*defined_str
+                e8*fn_print
+            485f
+        &end
+        c3
 
-    &defined_str " have been defined" 0a00
+        &defined_str " have been defined" 0a00
+    }
+
+    %scope Ifloop ; rdi name, rsi buffer, rdx size, rcx position
+        &loop
+            3b ca ; cmp ecx, rdx
+            7d1*end
+            8a040e ; mov al, [rcx+rsi]
+            3c";"751*command
+                e8*Token:Annotation:Tokenize
+                eb1*loop
+            &command
+            3c"%"751*default
+                ffc1
+                e8*fn_tokenize_string_read
+                81f8 ffffffff ; cmp eax, 0xffffffff
+                741*loop
+                    4857
+                        488d3d*Endif:Name
+                        e8*fn_pstrcmp
+                    485f
+                    751*Ifloop
+                    e8*fn_tokenize_string_read
+                    81f8 ffffffff ; cmp eax, 0xffffffff
+                    741*loop
+                    e8*fn_pstrcmp
+                    741*end
+                eb1*loop
+            &default
+            ffc1
+            eb1*loop
+        &end
+        c3
+    }
+
+    &Name      "def" 00
+    &List 0000000000000000
 }
 
-&fn_token_command_endif_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
-    e8*fn_tokenize_string_read
-c3
-
-
-%scope fn_token_command_ifdef_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*end
-        4857
-            488b3d*__token_command_define_list
-            e8*fn_slist_contains
-            741*skip
-            488bf8 ; mov rdi, rax
-            e8*fn_token_command_define_ifloop
-        &skip
-        485f
-    &end
+%scope Endif
+    &Handle ; rdi envoriment, rsi buffer, rdx size, rcx position
+        e8*fn_tokenize_string_read
     c3
+    &Name    "endif" 00
 }
 
-%scope fn_token_command_ifndef_handler ; rdi envoriment, rsi buffer, rdx size, rcx position
-    e8*fn_tokenize_string_read
-    81f8 ffffffff ; cmp eax, 0xffffffff
-    741*end
-        4857
-            488b3d*__token_command_define_list
-            e8*fn_slist_contains
-            751*skip
-            488bf8 ; mov rdi, rax
-            e8*fn_token_command_define_ifloop
-        &skip
-        485f
-    &end
-    c3
+%scope Ifdef
+    %scope Handle ; rdi envoriment, rsi buffer, rdx size, rcx position
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            4857
+                488b3d*Define:List
+                e8*fn_slist_contains
+                741*skip
+                488bf8 ; mov rdi, rax
+                e8*Define:Ifloop
+            &skip
+            485f
+        &end
+        c3
+    }
+    &Name    "ifdef" 00
+}
+
+%scope Ifndef
+    %scope Handle ; rdi envoriment, rsi buffer, rdx size, rcx position
+        e8*fn_tokenize_string_read
+        81f8 ffffffff ; cmp eax, 0xffffffff
+        741*end
+            4857
+                488b3d*Define:List
+                e8*fn_slist_contains
+                751*skip
+                488bf8 ; mov rdi, rax
+                e8*Define:Ifloop
+            &skip
+            485f
+        &end
+        c3
+    }
+    &Name   "ifndef" 00
 }
 
 %scope fn_slist_contains ; rdi list, rax name
@@ -77,36 +122,3 @@ c3
     c3
 }
 
-%scope fn_token_command_define_ifloop ; rdi name, rsi buffer, rdx size, rcx position
-    &loop
-        3b ca ; cmp ecx, rdx
-        7d1*end
-        8a040e ; mov al, [rcx+rsi]
-        3c";"751*command
-            e8*fn_token_annotation
-            eb1*loop
-        &command
-        3c"%"751*default
-            ffc1
-            e8*fn_tokenize_string_read
-            81f8 ffffffff ; cmp eax, 0xffffffff
-            741*loop
-                4857
-                    488d3d*__command_endif
-                    e8*fn_pstrcmp
-                485f
-                751*fn_token_command_define_ifloop
-                e8*fn_tokenize_string_read
-                81f8 ffffffff ; cmp eax, 0xffffffff
-                741*loop
-                e8*fn_pstrcmp
-                741*end
-            eb1*loop
-        &default
-        ffc1
-        eb1*loop
-    &end
-    c3
-}
-
-&__token_command_define_list 0000000000000000
