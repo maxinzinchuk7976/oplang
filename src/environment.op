@@ -21,6 +21,7 @@
         48 89 42 10 ; mov [rdx+0x10], rax
         48 33 c0 ; xor rax, rax
         48 89 42 18 ; mov [rdx+0x18], rax
+        48 89 42 20 ; mov [rdx+0x20], rax
         48 8b c2 ; mov rax, rdx
     48 5f ; pop rdi
     48 5e ; pop rsi

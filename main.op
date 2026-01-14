@@ -1,5 +1,8 @@
 %include     std/elfheader.op
 
+
+
+
 ;entry 0x400078
 
 
@@ -41,7 +44,7 @@ e8*fn_hlist_init
 e8*fn_buffer_init
 488905*CompilerVaribles:Buffer
 
-488b3d*CompilerVaribles:OutputFile
+4833ff ; xor rdi, rdi
 488b35*CompilerVaribles:Environment
 488b15*CompilerVaribles:Buffer
 e8*Assembler:AssemblyEnvironment
@@ -73,7 +76,6 @@ b801000000
 0f05
 
 e8*fn_exit
-
 
 ; rdi filename, rsi envoriment
 ; 0x08-0x0c fd
@@ -183,3 +185,6 @@ e8*fn_exit
     &BackpatchList  0000000000000000
     &Align          0000000000000000
 }
+
+
+

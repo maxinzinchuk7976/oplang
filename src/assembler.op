@@ -8,7 +8,7 @@
 ; 0x30-0x38 position
 ; 0x38-0x40 list
 %scope Assembler
-    %scope AssemblyEnvironment ; rsi envoriment, rdx buffer, rcx backpatch_list
+    %scope AssemblyEnvironment ; rsi envoriment, rdx buffer, rcx backpatch_list, rdi position
         4851
         4852
         4853
@@ -21,6 +21,7 @@
                 488b36   ; mov rsi, [rsi]
                 488975c0 ; mov [rbp-0x40], rsi
                 488b4e18 ; mov rcx, [rsi+0x18]
+                482bcf   ; sub rcx, rdi
                 48894dc8 ; mov [rbp-0x38], rcx
 
                 &loop
@@ -69,9 +70,23 @@
                         e9*loop
                     &resolve
                     803806 ; cmp [rax], 6
-                    751*default
+                    751*scopeopen
                         488b7de8 ; mov rdi, [rbp-0x18]
                         e8*Token:Resolve:Handle
+                        e9*loop
+                    &scopeopen
+                    803807 ; cmp [rax], 7
+                    751*scopeclose
+                        488b55e0 ; mov rdx, [rbp-0x20]
+                        488b4dd8 ; mov rcx, [rbp-0x28]
+                        e8*Token:ScopeContinue:HandleOpen
+                        e9*loop
+                    &scopeclose
+                    803808 ; cmp [rax], 8
+                    751*default
+                        488b7de8 ; mov rdi, [rbp-0x18]
+                        e8*Token:ScopeContinue:HandleClose
+                        741*done
                         e9*loop
                     &default
                 e9*loop

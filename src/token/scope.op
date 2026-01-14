@@ -4,6 +4,15 @@
         4850
         4856
         4857
+            4850
+                e8*Environment:Search
+                751*okay
+                    488bf04858 ; mov rsi, rax ; pop rax
+                    488b7609 ; mov rsi, [rsi+9]
+                    e8*ScopeContinue:Open
+                    eb1*done
+                &okay
+            4858
             4833f6; xor rsi, rsi
             40b609; mov si, 09
             4850
@@ -12,6 +21,7 @@
             4858
             c60605 ; mov [rsi], 5
             48894601 ; mov [rsi+1], rax
+            &done
         485f
         485e
         4858
@@ -20,6 +30,14 @@
 
     %scope Push ; rax name, rdi envoriment
         4856
+            4850
+                e8*Environment:Search
+                751*okay
+                    488b78094858 ; mov rdi, [rax+9] ; pop rax
+                    e8*ScopeContinue:Push
+                    eb1*done
+                &okay
+            4858
             4833f6; xor rsi, rsi
             40b619; mov si, 25
             e8*Environment:PushKeyword
@@ -40,7 +58,64 @@
         488b7009 ; mov rsi, [rax+9]
         488b7a10 ; mov rdi, [rdx+16]
         48897811 ; mov [rax+17], rdi
-
+        4833ff ; xor rdi, rdi
         e8*Assembler:AssemblyEnvironment
     c3
+}
+
+%scope ScopeContinue    
+    %scope Open ; rax name, rdi envoriment, rsi envoriment
+        4850
+        4852
+        4856
+        4857
+            488bd6 ; mov rdx, rsi
+            4833f6; xor rsi, rsi
+            40b611; mov si, 17
+            e8*Environment:PushToken
+            488bf0 ; mov rsi, rax
+            c60607 ; mov [rsi], 7
+            48895601 ; mov [rsi+1], rdx
+            488b12 ; mov rdx. [rdx]
+            488b5218 ; mov rdx, [rdx+24]
+            48895609 ; mov [rsi+9], rdx
+        485f
+        485e
+        485a
+        4858
+        c3
+    }
+    
+    %scope Push ; rax name, rdi envoriment, rsi Token
+        4850
+        4856
+        4857
+            4833f6; xor rsi, rsi
+            40b601; mov si, 09
+            4850
+                e8*Environment:PushToken
+                488bf0 ; mov rsi, rax
+            4858
+            c60608 ; mov [rsi], 8
+            &end
+        485f
+        485e
+        4858
+        c3
+    }
+
+    %scope HandleOpen  ; rax token, rdx buffer, rcx backpatch_list
+        488b7001 ; mov rsi, [rax+1]
+        f6462001 ; test [rsi+0x20], 1
+        741*done
+            488b7809 ; mov rdi, [rax+9]
+            e8*Assembler:AssemblyEnvironment
+        &done
+        c3
+    }
+
+    %scope HandleClose; rdi envoriment, rax token
+        f6472001 ; test [rdi+0x20], 1
+        c3
+    }
 }
