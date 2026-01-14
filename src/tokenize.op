@@ -134,6 +134,7 @@
 
 
 %scope Token
+    %flag noncontinuous
     %include src/token/relative.op
     %include src/token/scope.op
     %include src/token/resolve.op

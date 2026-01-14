@@ -1,0 +1,37 @@
+%scope Flag
+    %scope Handle ; rdi envoriment
+            e8*fn_tokenize_string_read
+            81f8 ffffffff ; cmp eax, 0xffffffff
+            741*end
+                4857
+                488d3d*Continuous:Name
+                e8*fn_pstrcmp 751*noncontinuous
+                    485fe8*Continuous:Handle
+                    eb1*end
+                &noncontinuous
+                488d3d*Noncontinuous:Name
+                e8*fn_pstrcmp 751*default
+                    485fe8*Noncontinuous:Handle
+                    eb1*end
+                &default
+                485f
+            &end
+        c3
+    }
+    &Name "flag" 00
+
+    %scope Continuous
+        &Handle ; rdi envoriment
+            48834f2001 ; or [rdi+0x20], 1
+        c3
+        &Name "continuous" 00
+    }
+    
+    %scope Noncontinuous
+        &Handle ; rdi envoriment
+            4833c0b00148f7d0 ; mov rax, 1 ; not rax
+            48214720 ; nand [rdi+0x20], rax
+        c3
+        &Name "noncontinuous" 00
+    }
+}

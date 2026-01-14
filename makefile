@@ -6,3 +6,9 @@ run: build
 	cp oplang ./backup/oplang-$(TIMESTAMP)
 build: 
 	./oplang main.op oplang-temp
+
+test:
+	./oplang main.op op1
+	./op1 main.op op2
+	./op2 main.op op1
+	rm -fv op1 op2

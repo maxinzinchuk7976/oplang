@@ -51,9 +51,16 @@
                 &align
                 488d3d*Command:Align:Name
                 e8*fn_pstrcmp
-                751*resolve
+                751*flag
                     485f
                     e8*Command:Align:Handle
+                    eb1*end
+                &flag
+                488d3d*Command:Flag:Name
+                e8*fn_pstrcmp
+                751*resolve
+                    485f
+                    e8*Command:Flag:Handle
                     eb1*end
                 &resolve
                 488d3d*Command:Resolve:Name
@@ -74,6 +81,7 @@
     %include src/token/command/include.op
     %include src/token/command/align.op
     %include src/token/command/define.op
+    %include src/token/command/flag.op
 }
 
 
